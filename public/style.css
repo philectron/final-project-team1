@@ -1,0 +1,112 @@
+/*******************************************************************************
+ * General
+ ******************************************************************************/
+
+html {}
+
+body {}
+
+/*
+ * Links
+ */
+
+a {}
+
+/*
+ * Headings
+ */
+
+h1 {}
+
+h2 {}
+
+h3 {}
+
+h4,
+h5,
+h6 {}
+
+/*
+ * Strong and emphasis
+ */
+
+strong {}
+
+em {}
+
+/*
+ * Body text
+ */
+
+p {}
+
+/*
+ * Lists
+ */
+
+ol,
+ul {}
+
+li {}
+
+/*
+ * Images and videos
+ */
+
+img {}
+
+video {}
+
+/*******************************************************************************
+ * Site's header
+ ******************************************************************************/
+
+header {}
+
+/*
+ * Navigation bar and links
+ */
+
+nav {}
+
+.navlink {}
+
+.navlink.active {}
+
+/*
+ * Site's title
+ */
+
+.site-title {}
+
+.site-title i {}
+
+/*
+ * Account menu and its dropdown list
+ */
+
+#account-menu {}
+
+/*******************************************************************************
+ * Site's main body
+ ******************************************************************************/
+
+.container {}
+
+/*
+ * Sidebar
+ */
+
+.sidebar {}
+
+/*
+ * Main content on the right half of the main body
+ */
+
+.content {}
+
+/*
+ * Goal button
+ */
+
+#create-goal-button {}
