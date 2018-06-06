@@ -4,11 +4,9 @@
   "description": "CS 290 Final Project - PROJECT_NAME_HERE",
   "main": "server.js",
   "scripts": {
-    "build": "handlebars views/partials/PARTIALS_HERE.handlebars -f public/OUTPUT_HERE.js",
-    "prestart": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
-    "dev": "npm run prestart && nodemon server.js"
+    "dev": "nodemon server.js"
   },
   "repository": {
     "type": "git",
