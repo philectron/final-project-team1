@@ -2,8 +2,16 @@
  * General
  ******************************************************************************/
 
+body,
+html {
+  margin: 0;
+  padding: 0;
+}
+
 html {
   font-family: "PT Serif", Helvetica, sans-serif, Arial, monospace;
+  font-size: 16px;
+  line-height: 1.5;
 }
 
 body {}
@@ -12,15 +20,29 @@ body {}
  * Links
  */
 
-a {}
+a {
+  text-decoration: none;
+}
 
 a:hover {
   cursor: pointer;
+  text-decoration: underline;
 }
 
 /*
  * Headings
  */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: bold;
+  line-height: 1.25;
+  text-rendering: optimizeLegibility;
+}
 
 h1 {}
 
@@ -31,20 +53,6 @@ h3 {}
 h4,
 h5,
 h6 {}
-
-/*
- * Strong and emphasis
- */
-
-strong {}
-
-em {}
-
-/*
- * Body text
- */
-
-p {}
 
 /*
  * Lists
@@ -67,7 +75,17 @@ video {}
  * Site's header
  ******************************************************************************/
 
-header {}
+header {
+  background-color: orange;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.header-item {
+  align-self: center;
+  flex-grow: 1;
+}
 
 /*
  * Navigation bar and links
@@ -75,7 +93,9 @@ header {}
 
 nav {}
 
-.navlink {}
+.navlink {
+  display: inline-block;
+}
 
 .navlink.active {}
 
@@ -83,7 +103,11 @@ nav {}
  * Site's title
  */
 
-.site-title {}
+.site-title {
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
 
 .site-title i {}
 
@@ -91,39 +115,52 @@ nav {}
  * Account menu and its dropdown list
  */
 
-#account-menu {}
+#account-menu {
+  text-align: right;
+}
 
 /*******************************************************************************
  * Site's main body
  ******************************************************************************/
 
-.container {}
+.container {
+  display: flex;
+  flex-direction: row;
+}
 
 /*
- * Sidebar
+ * Sidebar on the left half of the main body
  */
 
-.sidebar {}
+.sidebar {
+  background-color: silver;
+  flex: 1 0 20%;
+}
 
 /*
- * Main content on the right half of the main body
+ * Main content of body
  */
 
-.content {}
+.content {
+  background-color: gold;
+  flex: 2 0 80%;
+}
 
 /*
  * Goal button
  */
 
-#create-goal-button {}
+#create-goal-button {
+  position: fixed;
+  right: 3em;
+  bottom: 3em;
+}
 
 /*******************************************************************************
-* Site's footer
-******************************************************************************/
+ * Site's footer
+ ******************************************************************************/
 
-footer {}
-
-footer>a {
-  color: inherit;
-  text-decoration: none;
+footer {
+  background-color: crimson;
+  bottom: 1em;
 }
