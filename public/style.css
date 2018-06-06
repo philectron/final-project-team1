@@ -2,7 +2,9 @@
  * General
  ******************************************************************************/
 
-html {}
+html {
+  font-family: "PT Serif", Helvetica, sans-serif, Arial, monospace;
+}
 
 body {}
 
@@ -11,6 +13,10 @@ body {}
  */
 
 a {}
+
+a:hover {
+  cursor: pointer;
+}
 
 /*
  * Headings
@@ -110,3 +116,14 @@ nav {}
  */
 
 #create-goal-button {}
+
+/*******************************************************************************
+* Site's footer
+******************************************************************************/
+
+footer {}
+
+footer>a {
+  color: inherit;
+  text-decoration: none;
+}
