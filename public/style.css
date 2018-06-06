@@ -76,15 +76,13 @@ video {}
  ******************************************************************************/
 
 header {
+  align-items: center;
   background-color: orange;
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
 }
 
 .header-item {
-  align-self: center;
-  flex-grow: 1;
+  flex: 1;
 }
 
 /*
@@ -109,7 +107,10 @@ nav {}
   text-align: center;
 }
 
-.site-title i {}
+.site-title a {
+  color: inherit;
+  text-decoration: none;
+}
 
 /*
  * Account menu and its dropdown list
@@ -125,7 +126,6 @@ nav {}
 
 .container {
   display: flex;
-  flex-direction: row;
 }
 
 /*
@@ -134,7 +134,7 @@ nav {}
 
 .sidebar {
   background-color: silver;
-  flex: 1 0 20%;
+  flex: 1;
 }
 
 /*
@@ -142,8 +142,64 @@ nav {}
  */
 
 .content {
+  background-color: lightgray;
+  flex: 4;
+}
+
+/*
+ * Bar charts and progress bars
+ */
+
+.graph-container {
   background-color: gold;
-  flex: 2 0 80%;
+  border: 1px solid black;
+  display: flex;
+  justify-content: space-evenly;
+  min-height: 30rem;
+}
+
+.graph {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 20px;
+}
+
+.graph-area {
+  display: flex;
+  flex-direction: column-reverse;
+  flex: 3;
+  width: 30%;
+}
+
+.graph-percent {
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+.graph-bar {
+  background-color: green;
+  height: 30%;  /* this needs to be templatized and determined by JS */
+}
+
+/* just for show. This will be removed after templatized */
+
+.height10 {
+  height: 10%;
+}
+
+.height50 {
+  height: 50%;
+}
+
+.height80 {
+  height: 80%;
+}
+
+.graph-description {
+  flex: 1;
+  text-align: center;
 }
 
 /*
@@ -151,9 +207,9 @@ nav {}
  */
 
 #create-goal-button {
+  bottom: 3em;
   position: fixed;
   right: 3em;
-  bottom: 3em;
 }
 
 /*******************************************************************************
@@ -163,4 +219,8 @@ nav {}
 footer {
   background-color: crimson;
   bottom: 1em;
+}
+
+footer>a {
+  color: inherit;
 }
