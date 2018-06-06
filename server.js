@@ -24,24 +24,24 @@ app.get('/', function(req, res, next) {
 // "About" page talks about us and the project itself. It's a tutorial for new
 // users how to use the web app.
 app.get('/about', function(req, res, next) {
-
+  res.status(200).render('about');
 });
 
 // "Calendar" page will show a calendar where the user's workout plans are displayed
 app.get('/calendar', function(req, res, next) {
-
+  res.status(200).render('calendar');
 });
 
 // "Stats" page will display the user's statistics over the entire course.
 app.get('/stats', function(req, res, next) {
-
+  res.status(200).render('stats');
 });
 
 // "Leaderboard" page. I'm not sure about this. I just want to find something to
 // integrate the database and multi-account into the web app. IMO, this is
 // expected to change.
 app.get('/leaderboard', function(req, res, next) {
-
+  res.status(200).render('leaderboard');
 });
 
 app.get('*', function(req, res) {
