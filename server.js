@@ -27,6 +27,11 @@ app.get('/about', function(req, res, next) {
 
 });
 
+// "Calendar" page will show a calendar where the user's workout plans are displayed
+app.get('/calendar', function(req, res, next) {
+
+});
+
 // "Stats" page will display the user's statistics over the entire course.
 app.get('/stats', function(req, res, next) {
 
