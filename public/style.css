@@ -155,19 +155,18 @@ nav {}
   border: 1px solid black;
   display: flex;
   flex-direction: column;
+  margin: 1rem 3rem;
 }
 
 .graph {
-  align-items: center;
-  display: flex;
-  flex: 1;
-  padding: 10px 20px;
+  margin: 10px 20px;
 }
 
 .graph-description {
-  flex: 1;
+  float: left;
+  margin-right: .5rem;
   text-align: left;
-  display: inline;
+  width: 7rem;
 }
 
 .graph-description p {
@@ -176,14 +175,13 @@ nav {}
 }
 
 .graph-area {
+  align-items: center;
   display: flex;
   flex: 4;
 }
 
 .graph-percent {
-  margin: 0;
-  padding: 0;
-  text-align: center;
+  margin: 0 0 0 .5rem;
 }
 
 /*
