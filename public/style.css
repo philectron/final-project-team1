@@ -80,6 +80,8 @@ header {
   align-items: center;
   background-color: orange;
   display: flex;
+  height: 3rem;
+  padding: 0 2rem;
 }
 
 .header-item {
@@ -90,19 +92,22 @@ header {
  * Navigation bar and links
  */
 
-nav {}
-
 .navlink {
   display: inline-block;
+  margin: 0 .5rem;
+  padding: 0 .5rem;
 }
 
-.navlink.active {}
+.navlink.active {
+  box-shadow: inset 0 -3px black;
+}
 
 /*
  * Site's title
  */
 
 .site-title {
+  font-size: 2rem;
   margin: 0;
   padding: 0;
   text-align: center;
@@ -119,6 +124,10 @@ nav {}
 
 #account-menu {
   text-align: right;
+}
+
+.account-menu-item {
+  margin: 0 1rem;
 }
 
 /*******************************************************************************

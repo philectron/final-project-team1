@@ -22,7 +22,8 @@ app.use(express.static('public'));
 app.get('/', function(req, res, next) {
   res.status(200).render('home', {
     graphs: graphData,
-    label: 'Your progress in becoming a GymRat'
+    label: 'Your progress in becoming a GymRat',
+    user: 'SuperUser'
   });
 });
 
