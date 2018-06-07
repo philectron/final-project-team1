@@ -1,6 +1,8 @@
 var express = require('express');
 var exphbs = require('express-handlebars');
 
+var graphData = require('./graphData');
+
 var app = express();
 var port = process.env.PORT || 3000;
 
@@ -18,7 +20,7 @@ app.use(express.static('public'));
 // "Home" page is the default page every user ends up on.
 // It should display only the goal for the day and the user's progress on that day.
 app.get('/', function(req, res, next) {
-  res.status(200).render('home');
+  res.status(200).render('home', { graphs: graphData });
 });
 
 // "About" page talks about us and the project itself. It's a tutorial for new

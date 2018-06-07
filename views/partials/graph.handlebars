@@ -1,0 +1,13 @@
+<div class="graph-container">
+  {{#each graphs}}
+    <div class="graph">
+      <div class="graph-area">
+        <div style="background-color: green; height: {{percent}}%;"></div>
+        <p class="graph-percent">{{percent}}%</p>
+      </div>
+      <div class="graph-description">
+        <p>{{description}}</p>
+      </div>
+    </div>
+  {{/each}}
+</div>

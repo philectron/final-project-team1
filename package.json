@@ -1,12 +1,14 @@
 {
   "name": "final-project-team1",
   "version": "1.0.0",
-  "description": "CS 290 Final Project - PROJECT_NAME_HERE",
+  "description": "CS 290 Final Project - GymRats",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "handlebars views/partials/graph.handlebars -f public/graphTemplate.js",
+    "prestart": "npm run build",
     "start": "node server.js",
-    "dev": "nodemon server.js"
+    "dev": "npm run prestart && nodemon server.js"
   },
   "repository": {
     "type": "git",

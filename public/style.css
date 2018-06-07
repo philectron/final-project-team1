@@ -154,47 +154,28 @@ nav {}
   background-color: gold;
   border: 1px solid black;
   display: flex;
-  justify-content: space-evenly;
-  min-height: 30rem;
+  height: 30rem;
 }
 
 .graph {
+  align-items: center;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  flex: 1;
   padding: 10px 20px;
 }
 
 .graph-area {
   display: flex;
   flex-direction: column-reverse;
-  flex: 3;
-  width: 30%;
+  flex: 4;
+  width: 2.5rem;
 }
 
 .graph-percent {
   margin: 0;
   padding: 0;
   text-align: center;
-}
-
-.graph-bar {
-  background-color: green;
-  height: 30%;  /* this needs to be templatized and determined by JS */
-}
-
-/* just for show. This will be removed after templatized */
-
-.height10 {
-  height: 10%;
-}
-
-.height50 {
-  height: 50%;
-}
-
-.height80 {
-  height: 80%;
 }
 
 .graph-description {

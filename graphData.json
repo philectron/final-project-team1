@@ -1,0 +1,38 @@
+[
+  {
+    "percent": 30,
+    "description": "Your running"
+  },
+  {
+    "percent": 80,
+    "description": "Your biking"
+  },
+  {
+    "percent": 50,
+    "description": "Your dead lift"
+  },
+  {
+    "percent": 10,
+    "description": "Your fruit intake"
+  },
+  {
+    "percent": 10,
+    "description": "Your vegetables intake"
+  },
+  {
+    "percent": 44,
+    "description": "Your fast food intake"
+  },
+  {
+    "percent": 33,
+    "description": "Your benchpress"
+  },
+  {
+    "percent": 78,
+    "description": "Your cardio"
+  },
+  {
+    "percent": 61,
+    "description": "Your flexibility"
+  }
+]
