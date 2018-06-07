@@ -154,32 +154,35 @@ nav {}
   background-color: gold;
   border: 1px solid black;
   display: flex;
-  height: 30rem;
+  flex-direction: column;
 }
 
 .graph {
   align-items: center;
   display: flex;
-  flex-direction: column;
   flex: 1;
   padding: 10px 20px;
 }
 
+.graph-description {
+  flex: 1;
+  text-align: left;
+  display: inline;
+}
+
+.graph-description p {
+  margin: 0;
+  padding: 0;
+}
+
 .graph-area {
   display: flex;
-  flex-direction: column-reverse;
   flex: 4;
-  width: 2.5rem;
 }
 
 .graph-percent {
   margin: 0;
   padding: 0;
-  text-align: center;
-}
-
-.graph-description {
-  flex: 1;
   text-align: center;
 }
 
