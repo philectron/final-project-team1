@@ -9,6 +9,7 @@ html {
 }
 
 html {
+  background-color: #fff;
   font-family: "PT Serif", Helvetica, sans-serif, Arial, monospace;
   font-size: 16px;
   line-height: 1.5;
@@ -124,8 +125,17 @@ nav {}
  * Site's main body
  ******************************************************************************/
 
+/*
+ * Different types of containers for different routes
+ */
+
 .container {
   display: flex;
+}
+
+.error-container {
+  font-size: 2rem;
+  text-align: center;
 }
 
 /*
@@ -156,6 +166,13 @@ nav {}
   display: flex;
   flex-direction: column;
   margin: 1rem 3rem;
+}
+
+.graph-label {
+  align-self: center;
+  margin-bottom: .5rem;
+  margin-top: .5rem;
+  text-align: center;
 }
 
 .graph {

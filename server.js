@@ -20,7 +20,10 @@ app.use(express.static('public'));
 // "Home" page is the default page every user ends up on.
 // It should display only the goal for the day and the user's progress on that day.
 app.get('/', function(req, res, next) {
-  res.status(200).render('home', { graphs: graphData });
+  res.status(200).render('home', {
+    graphs: graphData,
+    label: 'Your progress in becoming a GymRat'
+  });
 });
 
 // "About" page talks about us and the project itself. It's a tutorial for new
