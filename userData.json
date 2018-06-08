@@ -1,0 +1,32 @@
+{
+  "username": {
+    "name": "Gym Rat",
+    "profilePicUrl": "http://emblemsbf.com/img/548.jpg",
+    "goals": [
+      {
+        "description": "Running",
+        "goal": "15 miles",
+        "progress": "3 miles",
+        "percentage": 20
+      },
+      {
+        "description": "Moderate Cardio",
+        "goal": "150 minutes",
+        "progress": "20 minutes",
+        "percentage": 13
+      },
+      {
+        "description": "Vigorous Cardio",
+        "goal": "75 minutes",
+        "progress": "30 minutes",
+        "percentage": 40
+      },
+      {
+        "description": "Lifting",
+        "goal": "50 sets",
+        "progress": "3 sets",
+        "percentage": 6
+      }
+    ]
+  }
+}

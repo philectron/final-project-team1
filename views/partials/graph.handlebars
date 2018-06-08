@@ -1,13 +1,13 @@
 <div class="graph-container">
-  <h2 class="graph-label">{{label}}</h2>
-  {{#each graphs}}
+  <h2 class="graph-label">Your progress in becoming a rat in the gym</h2>
+  {{#each goals}}
     <div class="graph">
       <div class="graph-description">
         <p>{{description}}</p>
       </div>
       <div class="graph-area">
-        <div style="background-color: green; width: {{percent}}%; height: 2rem;"></div>
-        <p class="graph-percent">{{percent}}%</p>
+        <div style="background-color: green; width: {{getGoalPercentage goal progress}}%; height: 2rem;"></div>
+        <p class="graph-percent">{{getGoalPercentage goal progress}}%</p>
       </div>
     </div>
   {{/each}}
