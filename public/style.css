@@ -56,6 +56,15 @@ h5,
 h6 {}
 
 /*
+ * Paragraphs
+ */
+
+p {
+  margin-bottom: 1rem;
+  margin-top: 0;
+}
+
+/*
  * Lists
  */
 
@@ -72,6 +81,19 @@ img {}
 
 video {}
 
+/*
+ * General containers and contents boxes
+ */
+
+.container {
+  margin: 0 auto;
+}
+
+.content {
+  margin: 1.5rem auto;
+  max-width: 80rem;
+}
+
 /*******************************************************************************
  * Site's header
  ******************************************************************************/
@@ -82,6 +104,8 @@ header {
   display: flex;
   height: 3rem;
   padding: 0 2rem;
+  position: relative;
+  z-index: 2;
 }
 
 .header-item {
@@ -131,6 +155,32 @@ header {
 }
 
 /*******************************************************************************
+ * Site's sidebar
+ ******************************************************************************/
+
+.sidebar {
+  background-color: silver;
+  bottom: 0;
+  left: 0;
+  overflow-y: auto;
+  padding-top: 3rem;
+  position: fixed;
+  top: 0;
+  width: 18rem;
+  z-index: 1;
+}
+
+.sidebar .user-profile-pic {
+  border-radius: 50%;
+  margin: 0 auto;
+  width: 90%;
+}
+
+.sidebar .user-name {
+  margin: 0 auto;
+}
+
+/*******************************************************************************
  * Site's main body
  ******************************************************************************/
 
@@ -138,45 +188,22 @@ header {
  * Different types of containers for different routes
  */
 
-.container {
-  display: flex;
+main {
+  display: block;
 }
 
 .error-container {
   font-size: 2rem;
+  margin: 0;
   text-align: center;
 }
 
 /*
- * Sidebar on the left half of the main body
+ * Content styling for different types of containers
  */
 
-.sidebar {
-  background-color: silver;
-  flex: 0 1;
-}
-
-.sidebar-container {
-  padding: 1rem;
-}
-
-.sidebar-container>.user-profile-pic {
-  border-radius: 50%;
-  width: 90%;
-  margin: 0 auto;
-}
-
-.sidebar-container>.user-name {
-  margin: 0 auto;
-}
-
-/*
- * Main content of body
- */
-
-.content {
-  background-color: lightgray;
-  flex: 4;
+.article {
+  margin-left: 18rem;
 }
 
 /*
@@ -261,9 +288,14 @@ header {
  ******************************************************************************/
 
 footer {
-  background-color: crimson;
+  background-color: #eee;
+  display: block;
 }
 
-footer>a {
+footer>.container {
+  margin-left: 20rem;
+}
+
+footer a {
   color: inherit;
 }
