@@ -6,8 +6,8 @@
         <p>{{description}}</p>
       </div>
       <div class="graph-area">
-        <div style="background-color: green; width: {{getGoalPercentage goal progress}}%; height: 2rem;"></div>
-        <p class="graph-percent">{{getGoalPercentage goal progress}}%</p>
+        <div style="background-color: green; width: {{percentageOf goal progress}}%; height: 2rem;"></div>
+        <p class="graph-percent">{{percentageOf goal progress}}%</p>
       </div>
     </div>
   {{/each}}

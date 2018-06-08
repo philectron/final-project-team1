@@ -1,10 +1,6 @@
 var express = require('express');
 var exphbs = require('express-handlebars');
-var hbs = exphbs.create({
-  defaultLayout: 'default',
-  helpers: require('./helpers/handlebars').helpers,
-  extname: 'handlebars'
-});
+var hbs = require('./helpers/handlebars')(exphbs);
 
 const userData = require('./userData');
 

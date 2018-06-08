@@ -1,37 +1,32 @@
-// Credits: https://stackoverflow.com/questions/32707322/how-to-make-a-handlebars-helper-global-in-expressjs/42224612#42224612
-var register = function(Handlebars) {
-  var helpers = {
-    getGoalPercentage: function(goal, progress) {
-      // parse 'goal' and 'progress' from string to float
-      var goalFloat = parseFloat(goal),
-        progressFloat = parseFloat(progress);
+// Credits: https://stackoverflow.com/questions/32707322/how-to-make-a-handlebars-helper-global-in-expressjs
+module.exports = function hbsHelpers(hbs) {
+  return hbs.create({
+    defaultLayout: 'default',
 
-      if (!isNaN(goalFloat) && !isNaN(progressFloat)) {
-        // if the parsed values are both not NaN, return the floor of percentage
-        return Math.floor(progressFloat * 100.0 / goalFloat);
-      } else {
-        // otherwise, return 0
-        return 0;
+    helpers: {
+      percentageOf: function(num1, num2) {
+        // parse 'goal' and 'progress' from string to float
+        var num1Float = parseFloat(num1);
+        var num2Float = parseFloat(num2);
+
+        if (!isNaN(num1Float) && !isNaN(num2Float)) {
+          // if the parsed values are both not NaN, return the floor of percentage
+          var percentage;
+
+          // always do smaller * 100.0 / larger
+          if (num1Float > num2Float) {
+            percentage = Math.floor(num2Float * 100.0 / num1Float);
+          } else {
+            percentage = Math.floor(num1Float * 100.0 / num2Float);
+          }
+
+          return percentage;
+        } else {
+          // otherwise, return 0
+          return 0;
+        }
       }
+      // additional helpers go here
     }
-    // any more helpers will go here
-    // remember to put a comma at the end of the previous helper
-    // example:
-    //
-    // helperName: function(var, options) {
-    //  ...
-    // }
-  };
-
-  if (Handlebars && typeof Handlebars.registerHelper === "function") {
-    for (var prop in helpers) {
-      Handlebars.registerHelper(prop, helpers[prop]);
-    }
-  } else {
-    return helpers;
-  }
-
-};
-
-module.exports.register = register;
-module.exports.helpers = register(null);
+  });
+}
