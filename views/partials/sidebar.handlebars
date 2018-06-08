@@ -1,49 +1,11 @@
 <div class="sidebar">
-  <!-- TODO -->
-  <p>This should be on the left half of the main body.</p>
-  <p>This should be on the left half of the main body.</p>
-  <p>This should be on the left half of the main body.</p>
-  <p>This should be on the left half of the main body.</p>
-  <p>This should be on the left half of the main body.</p>
-  <p>This should be on the left half of the main body.</p>
-  <p>This should be on the left half of the main body.</p>
-  <p>This should be on the left half of the main body.</p>
-  <p>This should be on the left half of the main body.</p>
-  <p>This should be on the left half of the main body.</p>
-  <p>This should be on the left half of the main body.</p>
-  <p>This should be on the left half of the main body.</p>
-  <p>This should be on the left half of the main body.</p>
-  <p>This should be on the left half of the main body.</p>
-  <p>This should be on the left half of the main body.</p>
-  <p>This should be on the left half of the main body.</p>
-  <p>This should be on the left half of the main body.</p>
-  <p>This should be on the left half of the main body.</p>
-  <p>This should be on the left half of the main body.</p>
-  <p>This should be on the left half of the main body.</p>
-  <p>This should be on the left half of the main body.</p>
-  <p>This should be on the left half of the main body.</p>
-  <p>This should be on the left half of the main body.</p>
-  <p>This should be on the left half of the main body.</p>
-  <p>This should be on the left half of the main body.</p>
-  <p>This should be on the left half of the main body.</p>
-  <p>This should be on the left half of the main body.</p>
-  <p>This should be on the left half of the main body.</p>
-  <p>This should be on the left half of the main body.</p>
-  <p>This should be on the left half of the main body.</p>
-  <p>This should be on the left half of the main body.</p>
-  <p>This should be on the left half of the main body.</p>
-  <p>This should be on the left half of the main body.</p>
-  <p>This should be on the left half of the main body.</p>
-  <p>This should be on the left half of the main body.</p>
-  <p>This should be on the left half of the main body.</p>
-  <p>This should be on the left half of the main body.</p>
-  <p>This should be on the left half of the main body.</p>
-  <p>This should be on the left half of the main body.</p>
-  <p>This should be on the left half of the main body.</p>
-  <p>This should be on the left half of the main body.</p>
-  <p>This should be on the left half of the main body.</p>
-  <p>This should be on the left half of the main body.</p>
-  <p>This should be on the left half of the main body.</p>
-  <p>This should be on the left half of the main body.</p>
-
+  <div class="sidebar-container">
+    <img class="user-profile-pic" src="{{profilePicUrl}}">
+    <h2 class="user-name">{{name}}</h2>
+    <ul class="goal-list">
+      {{#each goals}}
+        <li class="goal-item">{{description}}</li>
+      {{/each}}
+    </ul>
+  </div>
 </div>

@@ -153,7 +153,21 @@ header {
 
 .sidebar {
   background-color: silver;
-  flex: 1;
+  flex: 0 1;
+}
+
+.sidebar-container {
+  padding: 1rem;
+}
+
+.sidebar-container>.user-profile-pic {
+  border-radius: 50%;
+  width: 90%;
+  margin: 0 auto;
+}
+
+.sidebar-container>.user-name {
+  margin: 0 auto;
 }
 
 /*
