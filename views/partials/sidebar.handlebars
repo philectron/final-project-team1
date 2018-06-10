@@ -1,9 +1,9 @@
 <div class="sidebar">
   <div class="content">
-    <img class="user-profile-pic" src="{{profilePicUrl}}">
-    <h2 class="user-name">{{name}}</h2>
+    <img class="user-profile-pic" src="{{user.profilePicUrl}}">
+    <h2 class="user-name">{{user.name}}</h2>
     <ul class="goal-list">
-      {{#each goals}}
+      {{#each user.goals}}
         <li class="goal-item">{{description}}</li>
       {{/each}}
     </ul>

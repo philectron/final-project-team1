@@ -21,7 +21,10 @@ app.use(express.static('public'));
 // "Home" page is the default page every user ends up on.
 // It should display only the goal for the day and the user's progress on that day.
 app.get('/', function(req, res, next) {
-  res.status(200).render('home', userData['username']);
+  res.status(200).render('home', {
+    user: userData['username'],
+    hasSidebar: true
+  });
 });
 
 // "About" page talks about us and the project itself. It's a tutorial for new
