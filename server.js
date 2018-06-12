@@ -23,7 +23,9 @@ app.use(express.static('public'));
 app.get('/', function(req, res, next) {
   res.status(200).render('home', {
     user: userData['username'],
-    hasSidebar: true
+    hasSidebar: true,
+    activities: userData['username'].activities,
+    goals: userData['username'].goals
   });
 });
 
@@ -35,7 +37,7 @@ app.get('/about', function(req, res, next) {
 
 // "Calendar" page will show a calendar where the user's workout plans are displayed
 app.get('/calendar', function(req, res, next) {
-  res.status(200).render('calendar');
+  res.status(200).render('calendar', {days: userData["username"].days});
 });
 
 // "Stats" page will display the user's statistics over the entire course.
