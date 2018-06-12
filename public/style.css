@@ -256,6 +256,24 @@ main {
   margin: 0 0 0 .5rem;
 }
 
+.week{
+  border: 2px solid green;
+  padding: 10px;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  white-space: nowrap;
+  max-width: 1425px;
+
+}
+
+.day{
+  border: 2px solid black;
+  height: 200px;
+  width: 155px;
+  display: inline-block;
+  margin: 10px;
+  padding: 10px;
+}
 /*
  * Goal button
  */
