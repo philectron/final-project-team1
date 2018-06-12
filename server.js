@@ -22,10 +22,10 @@ app.use(express.static('public'));
 // It should display only the goal for the day and the user's progress on that day.
 app.get('/', function(req, res, next) {
   res.status(200).render('home', {
-    user: userData['username'],
+    user: userData['users'][0].username,
     hasSidebar: true,
-    activities: userData['username'].activities,
-    goals: userData['username'].goals
+    activities: userData['users'][0].username.activities,
+    goals: userData['users'][0].username.goals
   });
 });
 
@@ -37,7 +37,7 @@ app.get('/about', function(req, res, next) {
 
 // "Calendar" page will show a calendar where the user's workout plans are displayed
 app.get('/calendar', function(req, res, next) {
-  res.status(200).render('calendar', {days: userData["username"].days});
+  res.status(200).render('calendar', {days: userData['users'][0].username.days});
 });
 
 // "Stats" page will display the user's statistics over the entire course.
@@ -49,7 +49,7 @@ app.get('/stats', function(req, res, next) {
 // integrate the database and multi-account into the web app. IMO, this is
 // expected to change.
 app.get('/leaderboard', function(req, res, next) {
-  res.status(200).render('leaderboard');
+  res.status(200).render('leaderboard', {users: userData['users']});
 });
 
 app.get('*', function(req, res) {

@@ -1,78 +1,88 @@
 {
-  "username": {
-    "name": "Gym Rat",
-    "profilePicUrl": "https://i.imgur.com/mPStaKV.png",
-    "goals": [
-      {
-        "description": "Running",
-        "goal": "15 miles",
-        "progress": "3 miles",
-        "percentage": 20
-      },
-      {
-        "description": "Moderate Cardio",
-        "goal": "150 minutes",
-        "progress": "20 minutes",
-        "percentage": 13
-      },
-      {
-        "description": "Vigorous Cardio",
-        "goal": "75 minutes",
-        "progress": "30 minutes",
-        "percentage": 40
-      },
-      {
-        "description": "Lifting",
-        "goal": "50 sets",
-        "progress": "3 sets",
-        "percentage": 6
-      }
-    ],
+"users":[
+  {
+    "username": {
+      "name": "Gym Rat",
+      "profilePicUrl": "https://i.imgur.com/mPStaKV.png",
+      "totalProgress":[{
+        "description": "Total Progress",
+        "goal": "290",
+        "progress": "56",
+        "percentage": 19
+      }],
+      "goals": [
+        {
+          "description": "Running",
+          "goal": "15 minutes",
+          "progress": "3 minutes",
+          "percentage": 20
+        },
+        {
+          "description": "Moderate Cardio",
+          "goal": "150 minutes",
+          "progress": "20 minutes",
+          "percentage": 13
+        },
+        {
+          "description": "Vigorous Cardio",
+          "goal": "75 minutes",
+          "progress": "30 minutes",
+          "percentage": 40
+        },
+        {
+          "description": "Lifting",
+          "goal": "50 minutes",
+          "progress": "3 minutes",
+          "percentage": 6
+        }
+      ],
 
-    "days": [
-      {
-        "weekday": "Sunday",
-        "content": "Run 10 mins"
-      },
-      {
-        "weekday": "Monday",
-        "content": "Run 15 mins"
-      },
-      {
-        "weekday": "Tuesday",
-        "content": "Run 20 mins"
-      },
-      {
-        "weekday": "Wednesday",
-        "content": "Run 25 mins"
-      },
-      {
-        "weekday": "Thursday",
-        "content": "Run 30 mins"
-      },
-      {
-        "weekday": "Friday",
-        "content": "Run 35 mins"
-      },
-      {
-        "weekday": "Saturday",
-        "content": "Run 40 mins"
-      }
-    ],
+      "days": [
+        {
+          "weekday": "Sunday",
+          "content": "Run 10 mins"
+        },
+        {
+          "weekday": "Monday",
+          "content": "Run 15 mins"
+        },
+        {
+          "weekday": "Tuesday",
+          "content": "Run 20 mins"
+        },
+        {
+          "weekday": "Wednesday",
+          "content": "Run 25 mins"
+        },
+        {
+          "weekday": "Thursday",
+          "content": "Run 30 mins"
+        },
+        {
+          "weekday": "Friday",
+          "content": "Run 35 mins"
+        },
+        {
+          "weekday": "Saturday",
+          "content": "Run 40 mins"
+        }
+      ],
 
-    "activities": [
-      {
-        "content": "Ran 15 minutes",
-        "percent": "15"
-      },
-      {
-        "content": "Lifted 15 minutes",
-        "percent": "15"
-      },
-      {
-        "content": "Swam 15 minutes",
-        "percent": "15"
-      }
-    ]
+      "activities": [
+        {
+          "content": "Ran 15 minutes",
+          "percent": "15"
+        },
+        {
+          "content": "Lifted 15 minutes",
+          "percent": "15"
+        },
+        {
+          "content": "Swam 15 minutes",
+          "percent": "15"
+        }
+      ]
+    }
   }
+]
 }

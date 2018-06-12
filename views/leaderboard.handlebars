@@ -1,5 +1,8 @@
 <main class="container">
   <div class="content">
-    <p>This is the content of Leaderboard. There should be no sidebar here.</p>
+    <p>This is the content of Leaderboard. There should be no sidebar here.{{name}}</p>
+    {{#each users}}
+      {{> userRank}}
+    {{/each}}
   </div>
 </main>
