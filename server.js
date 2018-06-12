@@ -3,7 +3,6 @@ var exphbs = require('express-handlebars');
 var hbs = require('./helpers/handlebars')(exphbs);
 
 const userData = require('./userData');
-console.log(userData["username"].days);
 
 var app = express();
 var port = process.env.PORT || 3000;
@@ -24,7 +23,9 @@ app.use(express.static('public'));
 app.get('/', function(req, res, next) {
   res.status(200).render('home', {
     user: userData['username'],
-    hasSidebar: true
+    hasSidebar: true,
+    activities: userData['username'].activities,
+    goals: userData['username'].goals
   });
 });
 

@@ -58,6 +58,21 @@
         "weekday": "Saturday",
         "content": "Run 40 mins"
       }
+    ],
+
+    "activities": [
+      {
+        "content": "Ran 15 minutes",
+        "percent": "15"
+      },
+      {
+        "content": "Lifted 15 minutes",
+        "percent": "15"
+      },
+      {
+        "content": "Swam 15 minutes",
+        "percent": "15"
+      }
     ]
   }
 }

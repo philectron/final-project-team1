@@ -246,7 +246,22 @@ main {
 .graph-percent {
   margin: 0 0 0 .5rem;
 }
+/* Activity Feed */
+.activityFeed{
+  background-color: gold;
+  border: 1px solid black;
+  display: flex;
+  flex-direction: column;
+  margin: 1rem 3rem;
+  overflow-y: scroll;
+}
+.activity{
+  border: 1px solid black;
+  width: 95%;
+  margin: 10px;
+}
 
+/* Calendar */
 .week{
   border: 2px solid green;
   padding: 10px;
@@ -297,6 +312,35 @@ main {
   width: 1.5rem;
 }
 
+
+#changePlannerButton {
+  background-color: red;
+  border-radius: 50%;
+  border: none;
+  bottom: 3rem;
+  box-shadow: 2px 2px 12px rgba(0, 0, 0, .5);
+  height: 4rem;
+  position: fixed;
+  right: 3rem;
+  width: 4rem;
+}
+
+#changePlannerButton:hover {
+  background-color: black;
+  cursor: pointer;
+}
+
+#changePlannerButton:active {
+  transform: scale(.9);
+}
+
+#changePlannerButton svg {
+  color: #fff;
+  font-weight: 100;
+  height: 1.5rem;
+  width: 1.5rem;
+}
+
 /*******************************************************************************
  * Site's footer
  ******************************************************************************/
@@ -334,6 +378,17 @@ footer a {
   z-index: 1010;
   overflow: scroll;
 }
+
+#homeModal {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1010;
+  overflow: scroll;
+}
+
 
 .daySelect{
   margin: 10px;
