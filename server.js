@@ -3,6 +3,7 @@ var exphbs = require('express-handlebars');
 var hbs = require('./helpers/handlebars')(exphbs);
 
 const userData = require('./userData');
+console.log(userData["username"].days);
 
 var app = express();
 var port = process.env.PORT || 3000;
@@ -35,7 +36,7 @@ app.get('/about', function(req, res, next) {
 
 // "Calendar" page will show a calendar where the user's workout plans are displayed
 app.get('/calendar', function(req, res, next) {
-  res.status(200).render('calendar');
+  res.status(200).render('calendar', {days: userData["username"].days});
 });
 
 // "Stats" page will display the user's statistics over the entire course.

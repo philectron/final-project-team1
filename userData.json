@@ -27,6 +27,37 @@
         "progress": "3 sets",
         "percentage": 6
       }
+    ],
+
+    "days": [
+      {
+        "weekday": "Sunday",
+        "content": "Run 10 mins"
+      },
+      {
+        "weekday": "Monday",
+        "content": "Run 15 mins"
+      },
+      {
+        "weekday": "Tuesday",
+        "content": "Run 20 mins"
+      },
+      {
+        "weekday": "Wednesday",
+        "content": "Run 25 mins"
+      },
+      {
+        "weekday": "Thursday",
+        "content": "Run 30 mins"
+      },
+      {
+        "weekday": "Friday",
+        "content": "Run 35 mins"
+      },
+      {
+        "weekday": "Saturday",
+        "content": "Run 40 mins"
+      }
     ]
   }
 }
