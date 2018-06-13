@@ -393,17 +393,12 @@ footer {
   background-color: #eee;
   display: block;
   color: black;
-  position: absolute;
-  bottom: 0px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
   width: 100%;
   text-align: center;
   z-index: -1;
-}
-
-footer.with-sidebar{
-  width: 60%;
-  margin: 0px;
-  margin-left: 20%;
 }
 
 footer a, footer a:link, footer a:hover, footer a:visited {
