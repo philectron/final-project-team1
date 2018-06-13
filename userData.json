@@ -1,13 +1,12 @@
 {
 "users":[
   {
-    "username": {
       "name": "Gym Rat",
       "profilePicUrl": "https://i.imgur.com/mPStaKV.png",
       "totalProgress":[{
         "description": "Total Progress",
-        "goal": "290",
-        "progress": "56",
+        "goal": "290 minutes",
+        "progress": "56 minutes",
         "percentage": 19
       }],
       "goals": [
@@ -82,7 +81,6 @@
           "percent": "15"
         }
       ]
-    }
   }
 ]
 }

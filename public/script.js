@@ -17,7 +17,6 @@ function updateTextArea(){
   var cal = document.getElementById('weekCalendar');
 
   text.value = cal.getElementsByTagName('p')[drop.value].innerHTML;
-
 }
 
 function hideModal(){
@@ -35,7 +34,6 @@ function acceptModal(){
 }
 
 function showHomeModal(){
-  console.log("here");
   var modalBackdrop = document.getElementById('calendarModalBackdrop');
   var homeModal = document.getElementById('homeModal');
 
@@ -57,6 +55,10 @@ function acceptModal2(){
   hideModal2();
 
 }
+
+
+
+
 
 window.addEventListener('DOMContentLoaded', function () {
   var button = document.getElementById('changePlannerButton');
@@ -99,11 +101,19 @@ window.addEventListener('DOMContentLoaded', function () {
     modalAcceptButton2.addEventListener('click', acceptModal2);
   }
 
-
-
   var modalSelect = document.getElementById('daySelectDropdown')
   if(modalSelect){
     modalSelect.addEventListener('change', updateTextArea);
+  }
+
+
+  var changeUserText = document.getElementById('changeUserDrop');
+  if(changeUserText){
+    changeUserText.addEventListener('click', function(event){
+      if(event.target.innerHTML == 'Phi' || event.target.innerHTML == "Gym Rat"){
+        alert(event.target.innerHTML);
+      }
+    });;
   }
 
 });

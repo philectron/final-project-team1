@@ -22,10 +22,11 @@ app.use(express.static('public'));
 // It should display only the goal for the day and the user's progress on that day.
 app.get('/', function(req, res, next) {
   res.status(200).render('home', {
-    user: userData['users'][0].username,
+    userList: userData['users'],
+    user: userData['users'][0],
     hasSidebar: true,
-    activities: userData['users'][0].username.activities,
-    goals: userData['users'][0].username.goals
+    activities: userData['users'][0].activities,
+    goals: userData['users'][0].goals
   });
 });
 
@@ -37,7 +38,7 @@ app.get('/about', function(req, res, next) {
 
 // "Calendar" page will show a calendar where the user's workout plans are displayed
 app.get('/calendar', function(req, res, next) {
-  res.status(200).render('calendar', {days: userData['users'][0].username.days});
+  res.status(200).render('calendar', {days: userData['users'][0].days});
 });
 
 // "Leaderboard" page. I'm not sure about this. I just want to find something to

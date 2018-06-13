@@ -539,3 +539,32 @@ footer a, footer a:link, footer a:hover, footer a:visited {
 .modal-footer .modal-accept-button:hover {
   background-color: #087dde;
 }
+
+#changeUser{
+  position: fixed;
+  bottom: 0;
+  left: 0;
+}
+
+#changeUserDrop{
+  position: fixed;
+  overflow-y: scroll;
+  left: 0;
+  display:none;
+  bottom: 3rem;
+  max-height: 400px;
+  width: 300px;
+  border: 2px solid black;
+  background-color: grey;
+}
+
+#changeUser:hover #changeUserDrop{display: block};
+
+.otherUser{
+  height: 50px;
+  width: 250px;
+}
+
+.otherUser:hover{
+  background-color: black;
+}
