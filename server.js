@@ -45,23 +45,33 @@ app.get('/', function(req, res, next) {
 // "About" page talks about us and the project itself. It's a tutorial for new
 // users how to use the web app.
 app.get('/about', function(req, res, next) {
-  res.status(200).render('about');
+  res.status(200).render('about', {
+    user: currentUser
+  });
 });
 
 // "Calendar" page will show a calendar where the user's workout plans are displayed
 app.get('/calendar', function(req, res, next) {
-  res.status(200).render('calendar', {days: currentUser.days});
+  res.status(200).render('calendar', {
+    user: currentUser,
+    days: currentUser.days
+  });
 });
 
 // "Leaderboard" page. I'm not sure about this. I just want to find something to
 // integrate the database and multi-account into the web app. IMO, this is
 // expected to change.
 app.get('/leaderboard', function(req, res, next) {
-  res.status(200).render('leaderboard', {users: allUsers});
+  res.status(200).render('leaderboard', {
+    userList: allUsers,
+    user: currentUser
+  });
 });
 
 app.get('*', function(req, res) {
-  res.status(404).render('404');
+  res.status(404).render('404', {
+    user: currentUser
+  });
 });
 
 MongoClient.connect(mongoURL, function(err, client) {
@@ -70,17 +80,16 @@ MongoClient.connect(mongoURL, function(err, client) {
   }
   mongoDB = client.db(mongoDBName);
 
-  var username = 'Gym Rat';
   var userCollection = mongoDB.collection('users');
-  userCollection.find().toArray(function (err, userDocs) {
+  userCollection.find().toArray(function (err, userTable) {
     if (err) {
       throw err;
     }
-    allUsers = userDocs;
+    allUsers = userTable;
     currentUser = allUsers[0];
-
-    console.log(allUsers);
   });
 
-  app.listen(port);
+  app.listen(port, function() {
+    console.log("== Server is listening on port", port);
+  });
 });

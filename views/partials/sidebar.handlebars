@@ -8,13 +8,10 @@
       {{/each}}
     </ul>
 
-
-
     <div id="changeUser">
       <h3>Change User</h3>
       <div id="changeUserDrop">
-        <div class="otherUser">Phi</div>
-        {{#each this}}
+        {{#each userList}}
           <div class="otherUser">{{name}}</div>
         {{/each}}
         <div class="otherUser" id="newUser">Add a new user...</div>
