@@ -56,7 +56,28 @@ function acceptModal2(){
 
 }
 
+function changeModalBody(modalTabs, i, modalBodyHTMLs) {
+  return function() {
+    // visually deselect the current selected modal tab
+    var selectedModalTab = document.querySelector('.modal-tab-selected');
+    selectedModalTab.classList.remove('modal-tab-selected');
 
+    // visually select this new modal tab
+    modalTabs[i].classList.add('modal-tab-selected');
+
+    var modalBody = document.getElementById('modal-body');
+
+    // remove the old content inside the modal's body
+    while (modalBody.firstChild) {
+      modalBody.removeChild(modalBody.firstChild);
+    }
+
+    console.log(modalBodyHTMLs[i]);
+
+    // add the corresponding content of the new selected tab
+    modalBody.insertAdjacentHTML('beforeend', modalBodyHTMLs[i]);
+  };
+}
 
 
 
@@ -69,6 +90,23 @@ window.addEventListener('DOMContentLoaded', function () {
   var homeButton = document.getElementById('create-goal-button');
   if(homeButton){
     homeButton.addEventListener('click', showHomeModal);
+  }
+
+  // contains Handlebars HTML strings of the modal body. The ordering of this
+  // array is the same as the ordering of the modal tabs
+  var modalBodyHTMLs = [
+    Handlebars.templates.modalLogActivity(),
+    Handlebars.templates.modalCreateGoal()
+  ];
+
+  console.log(modalBodyHTMLs[0]);
+  console.log(modalBodyHTMLs[1]);
+  var modalTabs = document.getElementsByClassName('modal-tab');
+  if (modalTabs) {
+    for (var i = 0; i < modalTabs.length; i++) {
+      modalTabs[i].addEventListener('click', changeModalBody(
+        modalTabs, i, modalBodyHTMLs));
+    }
   }
 
   var modalCloseButton = document.querySelector('#calendarModal .modal-close-button');

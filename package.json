@@ -5,7 +5,10 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "handlebars views/partials/goal.handlebars -f public/goalTemplate.js",
+    "buildGoalTemplate": "handlebars views/partials/goal.handlebars -f public/goalTemplate.js",
+    "buildModalLogActivityTemplate": "handlebars views/partials/modalLogActivity.handlebars -f public/modalLogActivityTemplate.js",
+    "buildModalCreateGoalTemplate": "handlebars views/partials/modalCreateGoal.handlebars -f public/modalCreateGoalTemplate.js",
+    "build": "npm run buildGoalTemplate && npm run buildModalLogActivityTemplate && npm run buildModalCreateGoalTemplate",
     "prestart": "npm run build",
     "start": "node server.js",
     "dev": "npm run prestart && nodemon server.js"

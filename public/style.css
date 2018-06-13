@@ -99,6 +99,14 @@ video {}
   max-width: 80rem;
 }
 
+/*
+ * A change in appearance for selected components
+ */
+
+.modal-tab-selected {
+  background-color: #eee;
+}
+
 /*******************************************************************************
  * Site's header
  ******************************************************************************/
@@ -467,15 +475,30 @@ footer a, footer a:link, footer a:hover, footer a:visited {
   padding: 10px 20px;
 }
 
-.modal-header h3 {
+.modal-tab-bar {
+  display: flex;
+  margin-right: 1rem;
+}
+
+.modal-tab {
+  border-radius: 3px;
+  box-shadow: 0 3px 3px rgba(0, 0, 0, .5);
+  display: inline-block;
+  flex: 1;
   margin: 0;
-  font-size: 28px;
+  padding: 5px 0;
+  text-align: center;
+}
+
+.modal-tab:hover {
+  cursor: pointer;
+  background-color: #eee;
 }
 
 .modal-close-button {
   position: absolute;
   right: 10px;
-  top: 5px;
+  top: 10px;
   font-size: 24px;
   border: none;
   background: none;
@@ -527,12 +550,12 @@ footer a, footer a:link, footer a:hover, footer a:visited {
 }
 
 .modal-footer .modal-accept-button {
-  background-color: #319df6;
+  background-color: rgb(0, 204, 153);
   color: #fff;
 }
 
 .modal-footer .modal-accept-button:hover {
-  background-color: #087dde;
+  background-color: rgb(0, 240, 153);
 }
 
 #changeUser{
