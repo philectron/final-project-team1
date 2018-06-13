@@ -445,6 +445,16 @@ footer a, footer a:link, footer a:hover, footer a:visited {
   overflow: scroll;
 }
 
+#newUserModal {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1010;
+  overflow: scroll;
+}
+
 
 .daySelect{
   margin: 10px;

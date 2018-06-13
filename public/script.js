@@ -57,7 +57,26 @@ function acceptModal2(){
 }
 
 
+function hideModal3(){
+  var modalBackdrop = document.getElementById('calendarModalBackdrop');
+  var modal = document.getElementById('newUserModal');
 
+  modalBackdrop.classList.add('hidden');
+  modal.classList.add('hidden');
+}
+
+function addNewUser(){
+    var modalBackdrop = document.getElementById('calendarModalBackdrop');
+    modalBackdrop.classList.remove('hidden');
+    var newUserModal = document.getElementById('newUserModal');
+    newUserModal.classList.remove('hidden');
+}
+
+function createNewUser(){
+  var name = document.getElementById('username-text-input').value;
+  var pic = document.getElementById('profimage-text-input').value;
+  hideModal3();
+}
 
 
 window.addEventListener('DOMContentLoaded', function () {
@@ -101,6 +120,21 @@ window.addEventListener('DOMContentLoaded', function () {
     modalAcceptButton2.addEventListener('click', acceptModal2);
   }
 
+  var modalCloseButton3 = document.querySelector('#newUserModal .modal-close-button');
+  if (modalCloseButton3) {
+    modalCloseButton3.addEventListener('click', hideModal3);
+  }
+
+  var modalCancelButton3 = document.querySelector('#newUserModal .modal-cancel-button');
+  if (modalCancelButton3) {
+    modalCancelButton3.addEventListener('click', hideModal3);
+  }
+
+  var modalAcceptButton3 = document.querySelector('#newUserModal .modal-accept-button');
+  if (modalAcceptButton3) {
+    modalAcceptButton3.addEventListener('click', createNewUser);
+  }
+
   var modalSelect = document.getElementById('daySelectDropdown')
   if(modalSelect){
     modalSelect.addEventListener('change', updateTextArea);
@@ -113,7 +147,13 @@ window.addEventListener('DOMContentLoaded', function () {
       if(event.target.innerHTML == 'Phi' || event.target.innerHTML == "Gym Rat"){
         alert(event.target.innerHTML);
       }
+      else if(event.target.innerHTML == "Add a new user..."){
+        addNewUser();
+      }
     });;
+
+
+
   }
 
 });
