@@ -195,6 +195,10 @@ header {
   margin-left: 18rem;
 }
 
+.goal-list {
+
+}
+
 /*******************************************************************************
  * Site's main body
  ******************************************************************************/
@@ -301,6 +305,8 @@ main {
   overflow-x: scroll;
   overflow-y: hidden;
   white-space: nowrap;
+  margin-left: 3rem;
+  margin-right: 3rem;
 }
 
 .day{
@@ -393,7 +399,7 @@ footer {
   background-color: #eee;
   display: block;
   color: black;
-  position: absolute;
+  position: fixed;
   bottom: 0px;
   width: 100%;
   text-align: center;
