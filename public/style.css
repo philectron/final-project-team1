@@ -536,7 +536,7 @@ footer a, footer a:link, footer a:hover, footer a:visited {
 
 .modal-footer button {
   font-size: 20px;
-  background-color: #fff;
+  background-color:  #fff;
   color: #333;
   border: 1px solid #333;
   border-radius: 5px;
@@ -546,16 +546,16 @@ footer a, footer a:link, footer a:hover, footer a:visited {
 }
 
 .modal-footer .modal-cancel-button:hover {
-  background-color: #eee;
+  background-color:  #eee;
 }
 
 .modal-footer .modal-accept-button {
-  background-color: #319df6;
+  background-color:  rgb(204, 89, 28);
   color: #fff;
 }
 
 .modal-footer .modal-accept-button:hover {
-  background-color: #087dde;
+  background-color:  rgb(224, 100, 40);
 }
 
 #changeUser{
