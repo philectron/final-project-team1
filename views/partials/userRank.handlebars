@@ -2,9 +2,7 @@
   <h1 class="rankName">{{name}}</h1>
   <div class="graph-container">
     <h2 class="graph-label">{{name}}'s weekly stats</h2>
-    {{#each totalProgress}}
-      {{>goal}}
-    {{/each}}
+    {{> totalProgress goals}}
     {{#each goals}}
       {{>goal}}
     {{/each}}
