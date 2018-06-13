@@ -40,11 +40,6 @@ app.get('/calendar', function(req, res, next) {
   res.status(200).render('calendar', {days: userData['users'][0].username.days});
 });
 
-// "Stats" page will display the user's statistics over the entire course.
-app.get('/stats', function(req, res, next) {
-  res.status(200).render('stats');
-});
-
 // "Leaderboard" page. I'm not sure about this. I just want to find something to
 // integrate the database and multi-account into the web app. IMO, this is
 // expected to change.
