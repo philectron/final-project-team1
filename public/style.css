@@ -1,5 +1,5 @@
 /*******************************************************************************
- * General
+ * Generalaaa
  ******************************************************************************/
 
 body,
@@ -9,7 +9,7 @@ html {
 }
 
 html {
-  background-color: rgb(240, 240, 240);
+  background-color: rgb(160, 160, 160);
   font-family: "PT Serif", Helvetica, sans-serif, Arial, monospace;
   font-size: 16px;
   line-height: 1.5;
@@ -105,7 +105,7 @@ video {}
 
 header {
   align-items: center;
-  background-color: rgb(0, 204, 153);
+  background-color: rgb(204, 89, 28);
   display: flex;
   height: 3rem;
   padding: 0 2rem;
@@ -169,7 +169,7 @@ header {
  ******************************************************************************/
 
 .sidebar {
-  background-color: rgb(160, 160, 160);
+  background-color: rgb(60, 60, 60);
   bottom: 0;
   left: 0;
   overflow-y: auto;
@@ -222,7 +222,7 @@ main {
  */
 
 .graph-container {
-  background-color: rgb(160, 160, 160);
+  background-color: rgb(60, 60, 60);
   display: flex;
   flex-direction: column;
   margin: 1rem 3rem;
@@ -265,7 +265,8 @@ main {
 }
 /* Activity Feed */
 .activityFeed{
-  background-color: rgb(0, 204, 153);
+  border-radius: 1%;
+  background-color: rgb(60, 60, 60);
   display: flex;
   flex-direction: column;
   margin: 1rem 3rem;
@@ -273,7 +274,8 @@ main {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 .activity{
-  background-color: rgb(160, 160, 160);
+  border-radius: 1%;
+  background-color:  rgb(204, 89, 28);
   width: 95%;
   margin: 10px;
   display: inline;
@@ -285,12 +287,12 @@ main {
 }
 
 #leaderboardHeader{
-  color: rgb(160, 160, 160);
+  color: rgb(60, 60, 60);
   text-align: center;
 }
 
 .rankName{
-    color: rgb(160, 160, 160);
+    color: rgb(60, 60, 60);
 }
 
 /* Calendar */
@@ -298,7 +300,7 @@ main {
   color: rgb(160,160,160);
 }
 .week{
-  background-color: rgb(0, 208, 153);
+  background-color: rgb(204, 89, 28);
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   padding: 10px;
   display: flex;
@@ -311,7 +313,7 @@ main {
 
 .day{
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-  background-color: rgb(160, 160, 160);
+  background-color: rgb(60, 60, 60);
   display: block;
   flex: 3;
   margin: 10px;
@@ -335,7 +337,7 @@ main {
  */
 
 #create-goal-button {
-  background-color: rgb(160, 160, 160);
+  background-color: rgb(60, 60, 60);
   border-radius: 50%;
   border: none;
   bottom: 3rem;
@@ -347,7 +349,7 @@ main {
 }
 
 #create-goal-button:hover {
-  background-color: rgb(0, 208, 153);
+  background-color: rgb(204, 89, 28);
   cursor: pointer;
 }
 
@@ -364,7 +366,7 @@ main {
 
 
 #changePlannerButton {
-  background-color: rgb(160, 160, 160);
+  background-color: rgb(60, 60, 60);
   border-radius: 50%;
   border: none;
   bottom: 3rem;
@@ -376,7 +378,7 @@ main {
 }
 
 #changePlannerButton:hover {
-  background-color: rgb(0, 208, 153);
+  background-color: rgb(204, 89, 28);
   cursor: pointer;
 }
 
@@ -396,7 +398,7 @@ main {
  ******************************************************************************/
 
 footer {
-  background-color: #eee;
+  background-color: rgb(160, 160, 160);
   display: block;
   color: black;
   position: fixed;
@@ -442,6 +444,16 @@ footer a, footer a:link, footer a:hover, footer a:visited {
 }
 
 #homeModal {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1010;
+  overflow: scroll;
+}
+
+#newUserModal {
   position: fixed;
   top: 0;
   bottom: 0;
@@ -524,7 +536,7 @@ footer a, footer a:link, footer a:hover, footer a:visited {
 
 .modal-footer button {
   font-size: 20px;
-  background-color: #fff;
+  background-color:  #fff;
   color: #333;
   border: 1px solid #333;
   border-radius: 5px;
@@ -534,14 +546,46 @@ footer a, footer a:link, footer a:hover, footer a:visited {
 }
 
 .modal-footer .modal-cancel-button:hover {
-  background-color: #eee;
+  background-color:  #eee;
 }
 
 .modal-footer .modal-accept-button {
-  background-color: #319df6;
+  background-color:  rgb(204, 89, 28);
   color: #fff;
 }
 
 .modal-footer .modal-accept-button:hover {
-  background-color: #087dde;
+  background-color:  rgb(224, 100, 40);
+}
+
+#changeUser{
+  position: fixed;
+  bottom: 0;
+  left: 2rem;
+
+}
+
+#changeUserDrop{
+  position: fixed;
+  overflow-y: scroll;
+  left: 2rem;
+  display:none;
+  bottom: 3rem;
+  max-height: 400px;
+  width: 10%;
+  background-color: grey;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+#changeUser:hover #changeUserDrop{display: block};
+
+.otherUser{
+  height: 50px;
+  width: 10%;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
+}
+
+.otherUser:hover{
+  background-color: rgb(204, 89, 28);
 }

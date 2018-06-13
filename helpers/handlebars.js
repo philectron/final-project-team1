@@ -25,6 +25,24 @@ module.exports = function hbsHelpers(hbs) {
           // otherwise, return 0
           return 0;
         }
+      },
+      sum: function(numbers){
+        var total = 0;
+        var total2 = 0;
+        for(var i = 0; i < numbers.length; i++){
+          var num1Float = parseFloat(numbers[i].goal);
+          var num2Float = parseFloat(numbers[i].progress);
+          if(!isNaN(num1Float) && !isNaN(num2Float)){
+            total += num1Float;
+            total2 += num2Float;
+          }
+        }
+        if (total > total2) {
+          percentage = Math.floor(total2 * 100.0 / total);
+        } else {
+          percentage = Math.floor(total * 100.0 / total2);
+        }
+        return percentage;
       }
       // additional helpers go here
     }
