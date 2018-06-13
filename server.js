@@ -9,7 +9,7 @@ const mongoUser = process.env.MONGO_USER;
 const mongoPassword = process.env.MONGO_PASSWORD;
 const mongoDBName = process.env.MONGO_DB_NAME;
 const mongoURL = 'mongodb://' + mongoUser + ':' + mongoPassword + '@' +
-mongoHost + ':' + mongoPort + '/' + mongoDBName;
+                  mongoHost + ':' + mongoPort + '/' + mongoDBName;
 
 var mongoDB = null;
 var allUsers = null;
