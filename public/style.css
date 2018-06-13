@@ -280,7 +280,19 @@ main {
   margin-left: 10px;
 }
 
+#leaderboardHeader{
+  color: rgb(160, 160, 160);
+  text-align: center;
+}
+
+.rankName{
+    color: rgb(160, 160, 160);
+}
+
 /* Calendar */
+#calHeader{
+  color: rgb(160,160,160);
+}
 .week{
   background-color: rgb(0, 208, 153);
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
@@ -452,6 +464,7 @@ footer a, footer a:link, footer a:hover, footer a:visited {
   margin: 40px auto;
   background-color: #fff;
   border-radius: 15px;
+  color: black;
 }
 
 .modal-header {
