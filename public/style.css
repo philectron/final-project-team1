@@ -510,22 +510,15 @@ footer a, footer a:link, footer a:hover, footer a:visited {
   padding: 20px;
 }
 
-.content-input-element label {
-  font-weight: 600;
-  flex: 1 75px;
-  margin-right: 10px;
-}
-
-.content-input-element input,
 .content-input-element textarea {
-  flex: 6 200px;
+  display: block;
   padding: 8px;
+  margin-left: auto;
+  margin-right: auto;
   font-size: 20px;
   border: 1px solid #aaa;
-}
-
-.content-input-element textarea {
   min-height: 64px;
+  width: 75%;
 }
 
 .modal-footer {

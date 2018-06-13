@@ -5,11 +5,39 @@
       <div class="modal-tab-bar">
         <h3 class="modal-tab modal-tab-selected">Log Activity</h3>
         <h3 class="modal-tab">Create Goal</h3>
+        <h3 class="modal-tab">Remove Goal</h3>
       </div>
       <button type="button" class="modal-close-button">&times;</button>
     </div>
 
-    <div id="modal-body">
-      {{>modalLogActivity}}
+    {{!-- modal-body must have the same ordering as modal-header --}}
+    <div class="modal-body">
+      <select class="daySelect" id="select-log-activity" size="5">
+        {{#each this}}
+          {{> option}}
+        {{/each}}
+      </select>
+      <div class="content-input-element">
+        <textarea id="text-input-log-activity" placeholder="Enter an activity length"></textarea>
+      </div>
+    </div>
+
+    <div class="modal-body hidden">
+      <div class="content-input-element">
+        <textarea id="text-input-create-goal" placeholder="Enter a new goal"></textarea>
+      </div>
+    </div>
+
+    <div class="modal-body hidden">
+      <select class="daySelect" id="select-remove-goal" size="5">
+        {{#each this}}
+          {{> option}}
+        {{/each}}
+      </select>
+    </div>
+
+    <div class="modal-footer">
+      <button type="button" class="modal-cancel-button">Cancel</button>
+      <button type="button" class="modal-accept-button">Accept</button>
     </div>
 </div>

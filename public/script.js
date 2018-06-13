@@ -56,7 +56,7 @@ function acceptModal2(){
 
 }
 
-function changeModalBody(modalTabs, i, modalBodyHTMLs) {
+function changeModalBody(modalTabs, i) {
   return function() {
     // visually deselect the current selected modal tab
     var selectedModalTab = document.querySelector('.modal-tab-selected');
@@ -65,17 +65,19 @@ function changeModalBody(modalTabs, i, modalBodyHTMLs) {
     // visually select this new modal tab
     modalTabs[i].classList.add('modal-tab-selected');
 
-    var modalBody = document.getElementById('modal-body');
-
-    // remove the old content inside the modal's body
-    while (modalBody.firstChild) {
-      modalBody.removeChild(modalBody.firstChild);
+    // select modal bodies
+    var modalBodies = document.getElementsByClassName('modal-body');
+    if (modalBodies) {
+      // hide the previously selected modal body
+      for (var j = 0; j < modalBodies.length ; j++) {
+        if (!modalBodies[j].classList.contains('hidden')) {
+          modalBodies[j].classList.add('hidden');
+          break;
+        }
+      }
+      // show the newly selected modal body
+      modalBodies[i].classList.remove('hidden');
     }
-
-    console.log(modalBodyHTMLs[i]);
-
-    // add the corresponding content of the new selected tab
-    modalBody.insertAdjacentHTML('beforeend', modalBodyHTMLs[i]);
   };
 }
 
@@ -92,20 +94,10 @@ window.addEventListener('DOMContentLoaded', function () {
     homeButton.addEventListener('click', showHomeModal);
   }
 
-  // contains Handlebars HTML strings of the modal body. The ordering of this
-  // array is the same as the ordering of the modal tabs
-  var modalBodyHTMLs = [
-    Handlebars.templates.modalLogActivity(),
-    Handlebars.templates.modalCreateGoal()
-  ];
-
-  console.log(modalBodyHTMLs[0]);
-  console.log(modalBodyHTMLs[1]);
   var modalTabs = document.getElementsByClassName('modal-tab');
   if (modalTabs) {
     for (var i = 0; i < modalTabs.length; i++) {
-      modalTabs[i].addEventListener('click', changeModalBody(
-        modalTabs, i, modalBodyHTMLs));
+      modalTabs[i].addEventListener('click', changeModalBody(modalTabs, i));
     }
   }
 
