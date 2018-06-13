@@ -1,5 +1,5 @@
 /*******************************************************************************
- * General
+ * Generalaaa
  ******************************************************************************/
 
 body,
@@ -553,28 +553,31 @@ footer a, footer a:link, footer a:hover, footer a:visited {
 #changeUser{
   position: fixed;
   bottom: 0;
-  left: 0;
+  left: 2rem;
+
 }
 
 #changeUserDrop{
   position: fixed;
   overflow-y: scroll;
-  left: 0;
+  left: 2rem;
   display:none;
   bottom: 3rem;
   max-height: 400px;
-  width: 300px;
-  border: 2px solid black;
+  width: 10%;
   background-color: grey;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 #changeUser:hover #changeUserDrop{display: block};
 
 .otherUser{
   height: 50px;
-  width: 250px;
+  width: 10%;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
 }
 
 .otherUser:hover{
-  background-color: black;
+  background-color: rgb(0, 208, 153);
 }
