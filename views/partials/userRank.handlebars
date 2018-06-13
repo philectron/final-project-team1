@@ -1,11 +1,11 @@
 <div class="rankContainer">
-  <h1>{{username.name}}</h1>
+  <h1 class="rankName">{{name}}</h1>
   <div class="graph-container">
-    <h2 class="graph-label">Your progress to becoming gym rat {{username.name}}</h2>
-    {{#each username.totalProgress}}
+    <h2 class="graph-label">{{name}}'s weekly stats</h2>
+    {{#each totalProgress}}
       {{>goal}}
     {{/each}}
-    {{#each username.goals}}
+    {{#each goals}}
       {{>goal}}
     {{/each}}
   </div>

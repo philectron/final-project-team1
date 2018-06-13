@@ -1,5 +1,5 @@
 /*******************************************************************************
- * General
+ * Generalaaa
  ******************************************************************************/
 
 body,
@@ -284,7 +284,19 @@ main {
   margin-left: 10px;
 }
 
+#leaderboardHeader{
+  color: rgb(160, 160, 160);
+  text-align: center;
+}
+
+.rankName{
+    color: rgb(160, 160, 160);
+}
+
 /* Calendar */
+#calHeader{
+  color: rgb(160,160,160);
+}
 .week{
   background-color: rgb(0, 208, 153);
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
@@ -439,6 +451,16 @@ footer a, footer a:link, footer a:hover, footer a:visited {
   overflow: scroll;
 }
 
+#newUserModal {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1010;
+  overflow: scroll;
+}
+
 
 .daySelect{
   margin: 10px;
@@ -458,6 +480,7 @@ footer a, footer a:link, footer a:hover, footer a:visited {
   margin: 40px auto;
   background-color: #fff;
   border-radius: 15px;
+  color: black;
 }
 
 .modal-header {
@@ -531,4 +554,36 @@ footer a, footer a:link, footer a:hover, footer a:visited {
 
 .modal-footer .modal-accept-button:hover {
   background-color: #087dde;
+}
+
+#changeUser{
+  position: fixed;
+  bottom: 0;
+  left: 2rem;
+
+}
+
+#changeUserDrop{
+  position: fixed;
+  overflow-y: scroll;
+  left: 2rem;
+  display:none;
+  bottom: 3rem;
+  max-height: 400px;
+  width: 10%;
+  background-color: grey;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+#changeUser:hover #changeUserDrop{display: block};
+
+.otherUser{
+  height: 50px;
+  width: 10%;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
+}
+
+.otherUser:hover{
+  background-color: rgb(0, 208, 153);
 }
