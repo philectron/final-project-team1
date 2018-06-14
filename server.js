@@ -185,7 +185,6 @@ function updateUsers() {
     if (err) {
       throw err;
     }
-    //console.log(userTable);
     allUsers = userTable;
     currentUser = allUsers[count];
   });
@@ -197,7 +196,6 @@ function changeUser(userName){
     if (err) {
       throw err;
     }
-    //console.log(userTable);
     allUsers = userTable;
     count = 0;
     while(allUsers[count]){
@@ -227,7 +225,10 @@ MongoClient.connect(mongoURL, function(err, client) {
     }
     allUsers = userTable;
     currentUser = allUsers[0];
-    console.log(currentUser);
+    for (var i = 0; i < allUsers.length; i++) {
+      console.log(allUsers[i]);
+    }
+    console.log('========================================');
   });
 
   app.listen(port, function() {
