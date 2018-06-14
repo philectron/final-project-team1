@@ -206,6 +206,12 @@ function acceptModal2(){
     var percentage = percentageOf(goal, progress);
     var index = selectDropDown.selectedIndex;
 
+    var targetGraph = document.getElementsByClassName('graph')[index];
+    var targetGraphBar = targetGraph.querySelector('.graph-bar');
+    var targetGraphPercent = targetGraph.querySelector('.graph-percent');
+    var temp = targetGraphPercent.innerText.replace("%", "");
+    var oldPercent = parseFloat(temp);
+
     /* validate inputs */
     if (progress === '' || goal === '' || isNaN(progress) || isNaN(goal)) {
       alert('Required fields are missing');
@@ -218,20 +224,29 @@ function acceptModal2(){
       return;
     }
 
+    var contentString = description + " " + progress + " " + "minutes.";
+    var percentage2 = percentage + percentageOf(goal, oldPercent);
+    console.log(percentage2);
+
     var requestBody = JSON.stringify({
       description: description,
       goal: goal,
       progress: progress,
-      percentage: percentage
+      percentage: percentage,
+      activity: {
+        content: contentString,
+        percent: percentage
+      }
     });
 
     request.addEventListener('load', function(event) {
       if (event.target.status === 200) {
-        var targetGraph = document.getElementsByClassName('graph')[index];
-        var targetGraphBar = targetGraph.querySelector('.graph-bar');
-        var targetGraphPercent = targetGraph.querySelector('.graph-percent');
-        targetGraphBar.style.width = percentage + '%';
-        targetGraphPercent.innerText = percentage + '%';
+         var targetGraph = document.getElementsByClassName('graph')[index];
+         var targetGraphBar = targetGraph.querySelector('.graph-bar');
+         var targetGraphPercent = targetGraph.querySelector('.graph-percent');
+         targetGraphBar.style.width = percentage + '%';
+         targetGraphPercent.innerText = percentage + '%';
+      //  document.location.reload();
       } else {
         alert('Error logging activity: ' + event.target.response);
       }
