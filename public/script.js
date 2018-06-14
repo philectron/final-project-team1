@@ -35,9 +35,9 @@ function showCalendarModal(){
   var modal = document.getElementById('calendar-modal');
   var drop = document.getElementById('calendar-day-select');
   var text = document.getElementById('calendar-goal-input');
-  var cal = document.getElementById('weekCalendar');
+  var cal = document.getElementById('week-calendar');
 
-  text.value = cal.getElementsByTagName('p')[drop.value].innerHTML;
+  text.value = cal.getElementsByTagName('p')[drop.value].innerText;
 
   modalBackdrop.classList.remove('hidden');
   modal.classList.remove('hidden');
@@ -51,9 +51,9 @@ function showCalendarModal(){
 function updateTextArea(){
   var drop = document.getElementById('calendar-day-select');
   var text = document.getElementById('calendar-goal-input');
-  var cal = document.getElementById('weekCalendar');
+  var cal = document.getElementById('week-calendar');
 
-  text.value = cal.getElementsByTagName('p')[drop.value].innerHTML;
+  text.value = cal.getElementsByTagName('p')[drop.value].innerText;
 }
 
 function hideModal(){
@@ -71,7 +71,7 @@ function acceptModal(){
 
   var drop = document.getElementById('calendar-day-select');
   var text = document.getElementById('calendar-goal-input');
-  var cal = document.getElementById('weekCalendar');
+  var cal = document.getElementById('week-calendar');
 
   var requestBody = JSON.stringify({
     weekday: DAY_OF_WEEK[drop.value],
@@ -189,6 +189,23 @@ function removeIthGoalHomeModal(i) {
   document.getElementById('select-remove-goal').remove(i);
 }
 
+function checkGraphAreaDone() {
+  var graphAreas = document.getElementsByClassName('graph-area');
+  var checkMark = document.createElement('i');
+  checkMark.classList.add('fas', 'fa-check');
+
+  for (var i = 0; i < graphAreas.length; i++) {
+    var graphBar = graphAreas[i].children[0];
+    var graphPercent = graphAreas[i].children[1];
+    if (parseInt(graphBar.style.width.replace('%', '')) >= 100) {
+      graphBar.style.width = '100%';
+      graphBar.style.backgroundColor = 'green';
+      graphPercent.innerText = '';
+      graphAreas[i].appendChild(checkMark);
+    }
+  }
+}
+
 function acceptModal2(){
   var request = new XMLHttpRequest();
   if (numberModalTab == 0) {
@@ -206,12 +223,6 @@ function acceptModal2(){
     var percentage = percentageOf(goal, progress);
     var index = selectDropDown.selectedIndex;
 
-    var targetGraph = document.getElementsByClassName('graph')[index];
-    var targetGraphBar = targetGraph.querySelector('.graph-bar');
-    var targetGraphPercent = targetGraph.querySelector('.graph-percent');
-    var temp = targetGraphPercent.innerText.replace("%", "");
-    var oldPercent = parseFloat(temp);
-
     /* validate inputs */
     if (progress === '' || goal === '' || isNaN(progress) || isNaN(goal)) {
       alert('Required fields are missing');
@@ -224,9 +235,12 @@ function acceptModal2(){
       return;
     }
 
-    var contentString = description + " " + progress + " " + "minutes.";
-    var percentage2 = percentage + percentageOf(goal, oldPercent);
-    console.log(percentage2);
+    var targetGraph = document.getElementsByClassName('graph')[index];
+    var targetGraphBar = targetGraph.querySelector('.graph-bar');
+    var targetGraphPercent = targetGraph.querySelector('.graph-percent');
+    var oldPercent = parseFloat(targetGraphPercent.innerText.replace('%', ''));
+    var contentString = description + ' ' + progress + ' ' + 'minutes.';
+    var percentage = percentage + percentageOf(goal, oldPercent);
 
     var requestBody = JSON.stringify({
       description: description,
@@ -241,11 +255,9 @@ function acceptModal2(){
 
     request.addEventListener('load', function(event) {
       if (event.target.status === 200) {
-         var targetGraph = document.getElementsByClassName('graph')[index];
-         var targetGraphBar = targetGraph.querySelector('.graph-bar');
-         var targetGraphPercent = targetGraph.querySelector('.graph-percent');
          targetGraphBar.style.width = percentage + '%';
          targetGraphPercent.innerText = percentage + '%';
+         checkGraphAreaDone();
       //  document.location.reload();
       } else {
         alert('Error logging activity: ' + event.target.response);
@@ -360,7 +372,6 @@ function addNewUser() {
   var userModal = document.getElementById('user-modal');
   modalBackdrop.classList.remove('hidden');
   userModal.classList.remove('hidden');
-  console.log("showing");
 }
 
 function createNewUser(){
@@ -368,58 +379,54 @@ function createNewUser(){
   var pic = document.getElementById('profimage-text-input').value;
 
   var request = new XMLHttpRequest();
-  var requestURL = '/newUser';
+  var requestURL = '/user/add';
   request.open('POST', requestURL);
 
-
-  var requestBody = JSON.stringify(
-    {
-        "name": name,
-        "profilePicUrl": pic,
-        "totalProgress":[{
-          "description": "Total Progress",
-          "goal": "0 minutes",
-          "progress": "0 minutes",
-          "percentage": 0
-        }],
-        "goals": [],
-        "days": [
-          {
-            "weekday": "Sunday",
-            "content": ""
-          },
-          {
-            "weekday": "Monday",
-            "content": ""
-          },
-          {
-            "weekday": "Tuesday",
-            "content": ""
-          },
-          {
-            "weekday": "Wednesday",
-            "content": ""
-          },
-          {
-            "weekday": "Thursday",
-            "content": ""
-          },
-          {
-            "weekday": "Friday",
-            "content": ""
-          },
-          {
-            "weekday": "Saturday",
-            "content": ""
-          }
-        ],
-        "activities": []
+  var requestBody = JSON.stringify({
+    "name": name,
+    "profilePicUrl": pic,
+    "totalProgress":[{
+      "description": "Total Progress",
+      "goal": "0 minutes",
+      "progress": "0 minutes",
+      "percentage": 0
+    }],
+    "goals": [],
+    "days": [
+      {
+        "weekday": "Sunday",
+        "content": ""
+      },
+      {
+        "weekday": "Monday",
+        "content": ""
+      },
+      {
+        "weekday": "Tuesday",
+        "content": ""
+      },
+      {
+        "weekday": "Wednesday",
+        "content": ""
+      },
+      {
+        "weekday": "Thursday",
+        "content": ""
+      },
+      {
+        "weekday": "Friday",
+        "content": ""
+      },
+      {
+        "weekday": "Saturday",
+        "content": ""
+      }
+    ],
+    "activities": []
   });
 
   request.addEventListener('load', function (event) {
     if (event.target.status === 200) {
-      console.log("added");
-      //document.location.reload();
       changeUser(name);
     } else {
       alert("Error adding new plan: " + event.target.response);
@@ -432,26 +439,23 @@ function createNewUser(){
 
 function changeUser(userName) {
   var request = new XMLHttpRequest();
-  var requestURL = '/changeUser';
+  var requestURL = '/user/change';
   request.open('POST', requestURL);
 
   var requestBody = JSON.stringify({name: userName});
   request.addEventListener('load', function (event) {
     if (event.target.status === 200) {
       document.location.reload();
-      console.log("changed?");
     } else {
       alert("Error adding new plan: " + event.target.response);
     }
   });
   request.setRequestHeader('Content-Type', 'application/json');
   request.send(requestBody);
-
-
 }
 
-
 window.addEventListener('DOMContentLoaded', function () {
+  checkGraphAreaDone();
   var button = document.getElementById('change-planner-button');
   if(button){
     button.addEventListener('click', showCalendarModal);
@@ -533,7 +537,6 @@ window.addEventListener('DOMContentLoaded', function () {
       }
       else {
         changeUser(event.target.innerText);
-        //try to change user
       }
     });
   }

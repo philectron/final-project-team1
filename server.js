@@ -143,7 +143,7 @@ app.post('/calendar/update', function(req, res, next) {
   }
 });
 
-app.post('/newUser', function(req, res, next){
+app.post('/user/add', function(req, res, next){
   if(req.body && req.body.name && req.body.profilePicUrl){
     mongoDB.collection('users').insertOne(req.body);
     updateUsers();
@@ -155,7 +155,7 @@ app.post('/newUser', function(req, res, next){
   }
 });
 
-app.post('/changeUser', function(req, res, next){
+app.post('/user/change', function(req, res, next){
   if(req.body && req.body.name){
     //updateUsers();
     changeUser(req.body.name);
