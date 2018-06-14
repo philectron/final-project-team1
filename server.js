@@ -84,6 +84,35 @@ app.post('/calendar/update', function(req, res, next) {
   }
 });
 
+app.post('/goals/remove', function(req, res, next) {
+  if (req.body && req.body.goal) {
+    mongoDB.collection('users').updateOne(
+      { name: currentUser.name, "goals.description": req.body.goal },
+      { $pull: {"goals" : {"description":req.body.goal}}}
+    );
+    res.status(200).send('Removed goal');
+    updateUsers();
+  } else {
+    res.status(400).send('Bad request');
+  }
+});
+
+app.post('/goals/add', function(req, res, next) {
+  if(req.body && req.body.goal) {
+    console.log(req.body);
+    mongoDB.collection('users').updateOne(
+      { name: currentUser.name },
+      { $addToSet: {"goals" : req.body}}
+    );
+    res.status(200).send('Added goal.');
+    updateUsers();
+  } else {
+    res.status(400).send('Bad request');
+  }
+
+});
+
+
 app.post('/newUser', function(req, res, next){
   if(req.body && req.body.name && req.body.profilePicUrl){
     mongoDB.collection('users').insertOne(req.body);

@@ -8,6 +8,9 @@ const DAY_OF_WEEK = [
   'Saturday'
 ]
 
+var numberModalTab;
+
+
 function showCalendarModal(){
   var modalBackdrop = document.getElementById('calendarModalBackdrop');
   var modal = document.getElementById('calendarModal');
@@ -99,7 +102,54 @@ function hideModal2(){
 }
 
 function acceptModal2(){
-  //do something
+  var request = new XMLHttpRequest();
+  if(numberModalTab == 1){
+    var requestURL = '/goals/add';
+    request.open('POST', requestURL);
+
+    var goal = document.getElementById('text-input-create-goal');
+    var text = goal.value;
+
+    var requestBody = JSON.stringify({
+      description: text,
+      goal: "100 minutes",
+      progress: "0 minutes",
+      percentage: 0
+    });
+
+    request.addEventListener('load', function (event) {
+      if(event.target.status == 200){
+        console.log("Successfully added.");
+      }else{
+        alert("Error adding goal.");
+      }
+    });
+    request.setRequestHeader('Content-Type', 'application/json');
+    request.send(requestBody);
+
+  }else if(numberModalTab == 2){
+    var requestURL = '/goals/remove';
+    request.open('POST', requestURL);
+
+    var goal = document.getElementById('select-remove-goal');
+    var text = goal.options[goal.selectedIndex].text;
+
+    var requestBody = JSON.stringify({
+      goal: text
+    });
+
+    request.addEventListener('load', function (event) {
+      if(event.target.status == 200){
+        console.log("Successfully removed.");
+      }else{
+        alert("Error removing goal.");
+      }
+    });
+
+    request.setRequestHeader('Content-Type', 'application/json');
+    request.send(requestBody);
+  }
+
   hideModal2();
 
 }
@@ -112,6 +162,7 @@ function changeModalBody(modalTabs, i) {
 
     // visually select this new modal tab
     modalTabs[i].classList.add('modal-tab-selected');
+    numberModalTab = i;
 
     // select modal bodies
     var modalBodies = document.getElementsByClassName('modal-body');
