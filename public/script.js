@@ -255,9 +255,11 @@ function acceptModal2(){
 
     request.addEventListener('load', function(event) {
       if (event.target.status === 200) {
-         targetGraphBar.style.width = percentage + '%';
-         targetGraphPercent.innerText = percentage + '%';
-         checkGraphAreaDone();
+         var targetGraph = document.getElementsByClassName('graph')[index];
+         var targetGraphBar = targetGraph.querySelector('.graph-bar');
+         var targetGraphPercent = targetGraph.querySelector('.graph-percent');
+         targetGraphBar.style.width = percentage2 + '%';
+         targetGraphPercent.innerText = percentage2 + '%';
       //  document.location.reload();
       } else {
         alert('Error logging activity: ' + event.target.response);
