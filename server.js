@@ -225,10 +225,12 @@ MongoClient.connect(mongoURL, function(err, client) {
     }
     allUsers = userTable;
     currentUser = allUsers[0];
+
+    // a JSON print on terminal to visualize the database
     for (var i = 0; i < allUsers.length; i++) {
       console.log(allUsers[i]);
+      console.log('========================================');
     }
-    console.log('========================================');
   });
 
   app.listen(port, function() {
