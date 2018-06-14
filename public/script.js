@@ -130,15 +130,97 @@ function hideModal3(){
 
 function addNewUser(){
     var modalBackdrop = document.getElementById('calendarModalBackdrop');
-    modalBackdrop.classList.remove('hidden');
     var newUserModal = document.getElementById('newUserModal');
+    modalBackdrop.classList.remove('hidden');
     newUserModal.classList.remove('hidden');
+    console.log("showing");
 }
 
 function createNewUser(){
   var name = document.getElementById('username-text-input').value;
   var pic = document.getElementById('profimage-text-input').value;
+
+  var request = new XMLHttpRequest();
+  var requestURL = '/newUser';
+  request.open('POST', requestURL);
+
+
+  var requestBody = JSON.stringify(
+    {
+        "name": name,
+        "profilePicUrl": pic,
+        "totalProgress":[{
+          "description": "Total Progress",
+          "goal": "0 minutes",
+          "progress": "0 minutes",
+          "percentage": 0
+        }],
+        "goals": [],
+        "days": [
+          {
+            "weekday": "Sunday",
+            "content": ""
+          },
+          {
+            "weekday": "Monday",
+            "content": ""
+          },
+          {
+            "weekday": "Tuesday",
+            "content": ""
+          },
+          {
+            "weekday": "Wednesday",
+            "content": ""
+          },
+          {
+            "weekday": "Thursday",
+            "content": ""
+          },
+          {
+            "weekday": "Friday",
+            "content": ""
+          },
+          {
+            "weekday": "Saturday",
+            "content": ""
+          }
+        ],
+        "activities": []
+  });
+
+  request.addEventListener('load', function (event) {
+    if (event.target.status === 200) {
+      console.log("added");
+      //document.location.reload();
+      changeUser(name);
+    } else {
+      alert("Error adding new plan: " + event.target.response);
+    }
+  });
+  request.setRequestHeader('Content-Type', 'application/json');
+  request.send(requestBody);
   hideModal3();
+}
+
+function changeUser(userName){
+  var request = new XMLHttpRequest();
+  var requestURL = '/changeUser';
+  request.open('POST', requestURL);
+
+  var requestBody = JSON.stringify({name: userName});
+  request.addEventListener('load', function (event) {
+    if (event.target.status === 200) {
+      document.location.reload();
+      console.log("changed?");
+    } else {
+      alert("Error adding new plan: " + event.target.response);
+    }
+  });
+  request.setRequestHeader('Content-Type', 'application/json');
+  request.send(requestBody);
+
+
 }
 
 
@@ -214,11 +296,12 @@ window.addEventListener('DOMContentLoaded', function () {
   var changeUserText = document.getElementById('changeUserDrop');
   if(changeUserText){
     changeUserText.addEventListener('click', function(event){
-      if(event.target.innerHTML == 'Phi' || event.target.innerHTML == "Gym Rat"){
-        alert(event.target.innerHTML);
-      }
-      else if(event.target.innerHTML == "Add a new user..."){
+      if(event.target.innerHTML == "Add a new user..."){
         addNewUser();
+      }
+      else{
+        changeUser(event.target.innerText);
+        //try to change user
       }
     });;
 

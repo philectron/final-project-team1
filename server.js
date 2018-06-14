@@ -3,12 +3,13 @@ var exphbs = require('express-handlebars');
 var hbs = require('./helpers/handlebars')(exphbs);
 var bodyParser = require('body-parser');
 var MongoClient = require('mongodb').MongoClient;
+var ObjectId = require('mongodb').ObjectId;
 
-const mongoHost = process.env.MONGO_HOST;
+const mongoHost = process.env.MONGO_HOST || 'classmongo.engr.oregonstate.edu';
 const mongoPort = process.env.MONGO_PORT || 27017;
-const mongoUser = process.env.MONGO_USER;
-const mongoPassword = process.env.MONGO_PASSWORD;
-const mongoDBName = process.env.MONGO_DB_NAME;
+const mongoUser = process.env.MONGO_USER || 'cs290_luuph';
+const mongoPassword = process.env.MONGO_PASSWORD || '9';
+const mongoDBName = process.env.MONGO_DB_NAME || 'cs290_luuph';
 const mongoURL = 'mongodb://' + mongoUser + ':' + mongoPassword + '@' +
                   mongoHost + ':' + mongoPort + '/' + mongoDBName;
 
@@ -17,7 +18,7 @@ var allUsers = null;
 var currentUser = null;
 
 var app = express();
-var port = process.env.PORT || 3000;
+const port = process.env.PORT;
 
 app.engine('handlebars', hbs.engine);
 app.set('view engine', 'handlebars');
@@ -83,6 +84,29 @@ app.post('/calendar/update', function(req, res, next) {
   }
 });
 
+app.post('/newUser', function(req, res, next){
+  if(req.body && req.body.name && req.body.profilePicUrl){
+    mongoDB.collection('users').insertOne(req.body);
+    updateUsers();
+    //changeUser(req.body.name);
+    res.status(200).send('New user added');
+  }
+  else{
+    res.status(400).send('Bad request');
+  }
+});
+
+app.post('/changeUser', function(req, res, next){
+  if(req.body && req.body.name){
+    //updateUsers();
+    changeUser(req.body.name);
+    res.status(200).send('user changed');
+  }
+  else{
+    res.status(400).send('Bad request');
+  }
+});
+
 app.get('*', function(req, res) {
   res.status(404).render('404', {
     user: currentUser
@@ -96,9 +120,32 @@ function updateUsers() {
     if (err) {
       throw err;
     }
+    //console.log(userTable);
     allUsers = userTable;
     currentUser = allUsers[0];
   });
+}
+
+function changeUser(userName){
+  var userCollection = mongoDB.collection('users');
+  userCollection.find().toArray(function (err, userTable) {
+    if (err) {
+      throw err;
+    }
+    //console.log(userTable);
+    allUsers = userTable;
+    var count = 0;
+    while(allUsers[count]){
+      if(allUsers[count].name == userName){
+        currentUser = allUsers[count];
+        break;
+      }
+      else{
+        count += 1;
+      }
+    }
+  });
+
 }
 
 MongoClient.connect(mongoURL, function(err, client) {
@@ -108,6 +155,7 @@ MongoClient.connect(mongoURL, function(err, client) {
   mongoDB = client.db(mongoDBName);
 
   var userCollection = mongoDB.collection('users');
+  //userCollection.remove({"_id": ObjectId("5b21e48df2da1a5ed9235704")});
   userCollection.find().toArray(function (err, userTable) {
     if (err) {
       throw err;
@@ -118,6 +166,8 @@ MongoClient.connect(mongoURL, function(err, client) {
   });
 
   app.listen(port, function() {
-    console.log("== Server is listening on port", port);
+    console.log('========================================');
+    console.log('  Server is listening on port', port);
+    console.log('========================================');
   });
 });
