@@ -150,7 +150,7 @@ function appendGoalRemoveGoalTab(goalDescription) {
   var newGoalOption = document.createElement('option');
   newGoalOption.text = goalDescription;
 
-  document.getElementById('select-remove-goal').add(newGoalOption);
+  document.getElementById('remove-goal-select').add(newGoalOption);
 }
 
 function removeIthGoalGraph(i) {
@@ -163,25 +163,25 @@ function removeIthGoalSidebar(i) {
 
 function removeIthGoalHomeModal(i) {
   document.getElementById('log-activity-select').remove(i);
-  document.getElementById('select-remove-goal').remove(i);
+  document.getElementById('remove-goal-select').remove(i);
 }
 
-// function checkGraphAreaDone() {
-//   var graphAreas = document.getElementsByClassName('graph-area');
-//   var checkMark = document.createElement('i');
-//   checkMark.classList.add('fas', 'fa-check');
+function checkGraphAreaDone() {
+  var graphAreas = document.getElementsByClassName('graph-area');
+  var checkMark = document.createElement('i');
+  checkMark.classList.add('fas', 'fa-check');
 
-//   for (var i = 0; i < graphAreas.length; i++) {
-//     var graphBar = graphAreas[i].children[0];
-//     var graphPercent = graphAreas[i].children[1];
-//     if (parseInt(graphBar.style.width.replace('%', '')) >= 100) {
-//       graphBar.style.width = '100%';
-//       graphBar.style.backgroundColor = 'green';
-//       graphPercent.innerText = '';
-//       graphAreas[i].appendChild(checkMark);
-//     }
-//   }
-// }
+  for (var i = 0; i < graphAreas.length; i++) {
+    var graphBar = graphAreas[i].children[0];
+    var graphPercent = graphAreas[i].children[1];
+    if (parseInt(graphBar.style.width.replace('%', '')) >= 100) {
+      graphBar.style.width = '100%';
+      graphBar.style.backgroundColor = 'green';
+      graphPercent.innerText = '';
+      graphPercent.appendChild(checkMark);
+    }
+  }
+}
 
 function acceptModal2(){
   var request = new XMLHttpRequest();
@@ -320,7 +320,7 @@ function acceptModal2(){
     var requestURL = '/goal/remove';
     request.open('POST', requestURL);
 
-    var selectDropDown = document.getElementById('select-remove-goal');
+    var selectDropDown = document.getElementById('remove-goal-select');
     var description = selectDropDown.value;
     var index = selectDropDown.selectedIndex;
 
@@ -545,4 +545,6 @@ window.addEventListener('DOMContentLoaded', function () {
       }
     });
   }
+
+  checkGraphAreaDone();
 });
