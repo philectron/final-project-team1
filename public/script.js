@@ -8,7 +8,26 @@ const DAY_OF_WEEK = [
   'Saturday'
 ]
 
-var numberModalTab;
+var numberModalTab = 0;
+
+function percentageOf(num1, num2) {
+  if (!isNaN(num1) && !isNaN(num2)) {
+    // if the parsed values are both not NaN, return the floor of percentage
+    var percentage;
+
+    // always do smaller * 100.0 / larger
+    if (num1 > num2) {
+      percentage = Math.floor(num2 * 100.0 / num1);
+    } else {
+      percentage = Math.floor(num1 * 100.0 / num2);
+    }
+
+    return percentage;
+  } else {
+    // otherwise, return 0
+    return 0;
+  }
+}
 
 
 function showCalendarModal(){
@@ -89,8 +108,20 @@ function showHomeModal(){
           .selected = true;
 
   // default value for <textarea>: empty textbox
-  document.getElementById('text-input-log-activity').value = '';
-  document.getElementById('text-input-create-goal').value = '';
+  document.getElementById('log-activity-progress-input').value = '';
+  var firstGraphGoal = document.querySelector('.graph-goal')
+                               .innerText
+                               .split(' ')[0];
+  document.getElementById('log-activity-goal-input').value = firstGraphGoal;
+}
+
+function updateActivityGoal(event) {
+  var selectedGraph = selectGraphByDescription(event.target.value);
+  var selectedGraphGoal = Math.floor(parseInt(
+    selectedGraph.querySelector('.graph-goal').innerText
+  ));
+
+  document.getElementById('log-activity-goal-input').value = selectedGraphGoal;
 }
 
 function hideModal2(){
@@ -101,9 +132,71 @@ function hideModal2(){
   modal.classList.add('hidden');
 }
 
+// Returns the graph that matches the description input by user in log activity
+// This should always return an existing graph. If it can't find the graph with
+// the correct description, it will return the first graph's DOM.
+function selectGraphByDescription(graphDescription) {
+  var description = graphDescription.trim();
+  var graphs = document.getElementsByClassName('graph');
+
+  for (var i = 0; i < graphs.length; i++) {
+    if (graphs[i].innerText.split('\n')[0].trim() === description) {
+      return graphs[i];
+    }
+  }
+  return graphs[0];
+}
+
 function acceptModal2(){
   var request = new XMLHttpRequest();
-  if(numberModalTab == 1){
+  if (numberModalTab == 0) {
+    var requestURL = '/activity/log';
+    request.open('POST', requestURL);
+
+    var description = document.getElementById('select-log-activity').value;
+    var progress = parseFloat(
+      document.getElementById('log-activity-progress-input').value
+    );
+    var goal = parseFloat(
+      document.getElementById('log-activity-goal-input').value
+    );
+    var percentage = percentageOf(goal, progress);
+
+    /* validate inputs */
+    if (progress === '' || goal === '') {
+      alert('Required fields are missing');
+      return;
+    } else if (progress < 0 || goal < 0) {
+      alert('Progress and goal must be positive');
+      return;
+    } else if (progress > goal) {
+      alert('Progress must be smaller than goal. Try setting a new goal instead');
+      return;
+    }
+
+    var requestBody = JSON.stringify({
+      description: description,
+      goal: goal,
+      progress: progress,
+      percentage: percentage
+    });
+
+    request.addEventListener('load', function(event) {
+      if (event.target.status === 200) {
+        var targetGraph = selectGraphByDescription(description);
+        var targetGraphBar = targetGraph.querySelector('.graph-bar');
+        var targetGraphPercent = targetGraph.querySelector('.graph-percent');
+        targetGraphBar.style.width = percentage + '%';
+        targetGraphPercent.innerText = percentage + '%';
+      } else {
+        alert('Error loggin activity: ' + event.target.response);
+      }
+    });
+
+    request.setRequestHeader('Content-Type', 'application/json');
+    request.send(requestBody);
+  }
+  else if(numberModalTab == 1){
     var requestURL = '/goals/add';
     request.open('POST', requestURL);
 
@@ -330,6 +423,11 @@ window.addEventListener('DOMContentLoaded', function () {
   var modalAcceptButton2 = document.querySelector('#homeModal .modal-accept-button');
   if (modalAcceptButton2) {
     modalAcceptButton2.addEventListener('click', acceptModal2);
+  }
+
+  var modalLogActivitySelect = document.getElementById('select-log-activity');
+  if (modalLogActivitySelect) {
+    modalLogActivitySelect.addEventListener('change', updateActivityGoal);
   }
 
   var modalCloseButton3 = document.querySelector('#newUserModal .modal-close-button');

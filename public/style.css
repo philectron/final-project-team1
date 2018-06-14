@@ -87,6 +87,24 @@ img {}
 video {}
 
 /*
+ * input fields
+ */
+
+/* For Firefox */
+
+input[type='number'] {
+  -moz-appearance:textfield;
+}
+
+/* Webkit browsers like Safari and Chrome */
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/*
  * General containers and contents
  */
 
@@ -468,7 +486,8 @@ footer a, footer a:link, footer a:hover, footer a:visited {
 
 
 .daySelect{
-  margin: 10px;
+  display: block;
+  margin: 0 auto 1rem;
   width: 90%;
   background-color: #f1f1f1;
 }
@@ -528,6 +547,12 @@ footer a, footer a:link, footer a:hover, footer a:visited {
   padding: 20px;
 }
 
+.content-input-element {
+  align-items: center;
+  display: flex;
+  justify-content: space-evenly;
+}
+
 .content-input-element textarea {
   display: block;
   padding: 8px;
@@ -537,6 +562,14 @@ footer a, footer a:link, footer a:hover, footer a:visited {
   border: 1px solid #aaa;
   min-height: 64px;
   width: 75%;
+}
+
+.content-input-element input {
+  height: 2rem;
+}
+
+.content-input-element p {
+  margin: 0;
 }
 
 .modal-footer {

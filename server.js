@@ -71,6 +71,24 @@ app.get('/leaderboard', function(req, res, next) {
   });
 });
 
+app.post('/activity/log', function(req, res, next) {
+  if (req.body && req.body.description && req.body.goal
+      && req.body.progress && req.body.percentage) {
+    mongoDB.collection('users').updateOne(
+      { name: currentUser.name, 'goals.description': req.body.description },
+      { $set: {
+        'goals.$.goal': req.body.goal,
+        'goals.$.progress': req.body.progress,
+        'goals.$.percentage': req.body.percentage
+      }}
+    );
+    res.status(200).send('Activity logged');
+    updateUsers();
+  } else {
+    res.status(400).send('Bad request');
+  }
+});
+
 app.post('/calendar/update', function(req, res, next) {
   if (req.body && req.body.weekday && req.body.content) {
     mongoDB.collection('users').updateOne(
@@ -191,7 +209,7 @@ MongoClient.connect(mongoURL, function(err, client) {
     }
     allUsers = userTable;
     currentUser = allUsers[0];
-    // console.log(currentUser);
+    console.log(currentUser);
   });
 
   app.listen(port, function() {
