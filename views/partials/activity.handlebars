@@ -1,4 +1,8 @@
 <div class="activity">
   <p>Activity: {{content}}</p>
-  <p>Progress: You completed an additional {{percent}}% of your weekly goal.</p>
+  {{#if done}}
+    <p>Congrats! You have completed this weekly goal!</p>
+  {{else}}
+    <p>Progress: You completed an additional {{percent}}% of your weekly goal.</p>
+  {{/if}}
 </div>

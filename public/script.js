@@ -225,11 +225,10 @@ function acceptModal2(){
     var targetGraphPercent = targetGraph.querySelector('.graph-percent');
     var activityFeedContent = description + ' for ' + progressInc + ' minutes';
     var percentageInc = percentageOf(goal, progressInc);
-
+    var isActivityDone = false;
 
     var requestBody = JSON.stringify({
       description: description,
-      goal: goal,
       progress: newProgress,
       percentage: percentage,
       activity: {
@@ -242,6 +241,8 @@ function acceptModal2(){
       if (event.target.status === 200) {
         // update target graph's bar width, color, and percentage
         targetGraphBar.style.width = percentage + '%';
+        // update the graph's bar's progress
+        targetGraph.querySelector('.graph-progress').innerText = newProgress;
 
         // if the user has met his/her goal
         if (percentage >= 100) {
@@ -253,12 +254,21 @@ function acceptModal2(){
 
           targetGraphPercent.innerText = '';
           targetGraphPercent.appendChild(checkMark);
+          // mark activity as done
+          isActivityDone = true;
         } else {
           targetGraphPercent.innerText = percentage + '%';
+          isActivityDone = false;
         }
-        // update target graph's progress inside
-        targetGraphBar.querySelector('.graph-progress').innerText =
-          newProgress + ' minutes';
+
+        // update activity feed
+        var activityFeed = document.querySelector('.activity-feed');
+        var activityHTML = Handlebars.templates.activity({
+          content: activityFeedContent,
+          percent: percentageInc,
+          done: isActivityDone
+        });
+        activityFeed.insertAdjacentHTML('beforeend', activityHTML);
       } else {
         alert('Error logging activity: ' + event.target.response);
       }

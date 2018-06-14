@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "buildGoalTemplate": "handlebars views/partials/goal.handlebars -f public/goalTemplate.js",
-    "build": "npm run buildGoalTemplate",
+    "buildActivity": "handlebars views/partials/activity.handlebars -f public/activityTemplate.js",
+    "build": "npm run buildGoalTemplate\n  npm run buildActivity",
     "prestart": "npm run build",
     "start": "node server.js",
     "dev": "npm run prestart && nodemon server.js"

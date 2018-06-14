@@ -74,19 +74,25 @@ app.get('/leaderboard', function(req, res, next) {
 });
 
 app.post('/activity/log', function(req, res, next) {
-  if (req.body && req.body.description && req.body.goal
-      && req.body.progress && req.body.percentage) {
+  if (req.body && req.body.description && req.body.progress
+      && !isNaN(req.body.progress) && !isNaN(req.body.percentage)
+      && req.body.activity.content && !isNaN(req.body.activity.percent)) {
     mongoDB.collection('users').updateOne(
       { name: currentUser.name, 'goals.description': req.body.description },
-      { $inc: {
+      { $set: {
         'goals.$.progress': req.body.progress,
         'goals.$.percentage': req.body.percentage
       }}
     );
-    console.log(req.body.activity.percent);
     mongoDB.collection('users').updateOne(
-      {name: currentUser.name},
-      {$addToSet: {"activities": {content: req.body.activity.content,percent: req.body.activity.percent}}});
+      { name: currentUser.name },
+      { $addToSet: {
+        "activities": {
+          content: req.body.activity.content,
+          percent: req.body.activity.percent
+        }
+      }}
+    );
     res.status(200).send('Activity logged');
     updateUsers();
   } else {
