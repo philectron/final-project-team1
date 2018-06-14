@@ -19,6 +19,11 @@ function showCalendarModal(){
 
   modalBackdrop.classList.remove('hidden');
   modal.classList.remove('hidden');
+
+  // default value for <option>: first element selected
+  document.getElementById('daySelectDropdown')
+          .getElementsByTagName('option')[0]
+          .selected = true;
 }
 
 function updateTextArea(){
@@ -53,13 +58,6 @@ function acceptModal(){
 
   request.addEventListener('load', function (event) {
     if (event.target.status === 200) {
-      // var photoCardTemplate = Handlebars.templates.photoCard;
-      // var newPhotoCardHTML = photoCardTemplate({
-      //   photoURL: photoURL,
-      //   caption: caption
-      // });
-      // var photoCardContainer = document.querySelector('.photo-card-container');
-      // photoCardContainer.insertAdjacentHTML('beforeend', newPhotoCardHTML);
       cal.getElementsByTagName('p')[drop.value].innerText = text.value;
     } else {
       alert("Error adding new plan: " + event.target.response);
@@ -79,6 +77,17 @@ function showHomeModal(){
   modalBackdrop.classList.remove('hidden');
   homeModal.classList.remove('hidden');
 
+  // default value for <option>: first option selected
+  document.getElementById('select-log-activity')
+          .getElementsByTagName('option')[0]
+          .selected = true;
+  document.getElementById('select-remove-goal')
+          .getElementsByTagName('option')[0]
+          .selected = true;
+
+  // default value for <textarea>: empty textbox
+  document.getElementById('text-input-log-activity').value = '';
+  document.getElementById('text-input-create-goal').value = '';
 }
 
 function hideModal2(){
