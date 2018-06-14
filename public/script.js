@@ -124,7 +124,10 @@ function showHomeModal(){
 }
 
 function updateActivityGoal(event) {
-  var selectedGraph = selectGraphByDescription(event.target.value);
+  var selectDropDown = document.getElementById('select-log-activity');
+  var selectedGraph = document.getElementsByClassName('graph')[
+    selectDropDown.selectedIndex
+  ];
   var selectedGraphGoal = Math.floor(parseInt(
     selectedGraph.querySelector('.graph-goal').innerText
   ));
@@ -138,21 +141,6 @@ function hideModal2(){
 
   modalBackdrop.classList.add('hidden');
   modal.classList.add('hidden');
-}
-
-// Returns the graph that matches the description input by user in log activity
-// This should always return an existing graph. If it can't find the graph with
-// the correct description, it will return the first graph's DOM.
-function selectGraphByDescription(graphDescription) {
-  var description = graphDescription.trim();
-  var graphs = document.getElementsByClassName('graph');
-
-  for (var i = 0; i < graphs.length; i++) {
-    if (graphs[i].innerText.split('\n')[0].trim() === description) {
-      return graphs[i];
-    }
-  }
-  return graphs[0];
 }
 
 function appendGoalGraphContainer(description, goal, progress) {
@@ -189,7 +177,8 @@ function acceptModal2(){
     var requestURL = '/activity/log';
     request.open('POST', requestURL);
 
-    var description = document.getElementById('select-log-activity').value;
+    var selectDropDown = document.getElementById('select-log-activity');
+    var description = selectDropDown.value;
     var progress = parseFloat(
       document.getElementById('log-activity-progress-input').value
     );
@@ -219,7 +208,9 @@ function acceptModal2(){
 
     request.addEventListener('load', function(event) {
       if (event.target.status === 200) {
-        var targetGraph = selectGraphByDescription(description);
+        var targetGraph = document.getElementsByClassName('graph')[
+          selectDropDown.selectedIndex
+        ];
         var targetGraphBar = targetGraph.querySelector('.graph-bar');
         var targetGraphPercent = targetGraph.querySelector('.graph-percent');
         targetGraphBar.style.width = percentage + '%';
