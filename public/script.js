@@ -31,10 +31,10 @@ function percentageOf(num1, num2) {
 
 
 function showCalendarModal(){
-  var modalBackdrop = document.getElementById('calendarModalBackdrop');
-  var modal = document.getElementById('calendarModal');
-  var drop = document.getElementById('daySelectDropdown');
-  var text = document.getElementById('content-text-input');
+  var modalBackdrop = document.querySelector('.modal-backdrop');
+  var modal = document.getElementById('calendar-modal');
+  var drop = document.getElementById('calendar-day-select');
+  var text = document.getElementById('calendar-goal-input');
   var cal = document.getElementById('weekCalendar');
 
   text.value = cal.getElementsByTagName('p')[drop.value].innerHTML;
@@ -43,22 +43,22 @@ function showCalendarModal(){
   modal.classList.remove('hidden');
 
   // default value for <option>: first element selected
-  document.getElementById('daySelectDropdown')
+  document.getElementById('calendar-day-select')
           .getElementsByTagName('option')[0]
           .selected = true;
 }
 
 function updateTextArea(){
-  var drop = document.getElementById('daySelectDropdown');
-  var text = document.getElementById('content-text-input');
+  var drop = document.getElementById('calendar-day-select');
+  var text = document.getElementById('calendar-goal-input');
   var cal = document.getElementById('weekCalendar');
 
   text.value = cal.getElementsByTagName('p')[drop.value].innerHTML;
 }
 
 function hideModal(){
-  var modalBackdrop = document.getElementById('calendarModalBackdrop');
-  var modal = document.getElementById('calendarModal');
+  var modalBackdrop = document.querySelector('.modal-backdrop');
+  var modal = document.getElementById('calendar-modal');
 
   modalBackdrop.classList.add('hidden');
   modal.classList.add('hidden');
@@ -69,8 +69,8 @@ function acceptModal(){
   var requestURL = '/calendar/update';
   request.open('POST', requestURL);
 
-  var drop = document.getElementById('daySelectDropdown');
-  var text = document.getElementById('content-text-input');
+  var drop = document.getElementById('calendar-day-select');
+  var text = document.getElementById('calendar-goal-input');
   var cal = document.getElementById('weekCalendar');
 
   var requestBody = JSON.stringify({
@@ -93,28 +93,28 @@ function acceptModal(){
 }
 
 function showHomeModal(){
-  var modalBackdrop = document.getElementById('calendarModalBackdrop');
-  var homeModal = document.getElementById('homeModal');
+  var modalBackdrop = document.querySelector('.modal-backdrop');
+  var goalModal = document.getElementById('goal-modal');
 
   modalBackdrop.classList.remove('hidden');
-  homeModal.classList.remove('hidden');
+  goalModal.classList.remove('hidden');
 
   // default value for <option>: first option selected
-  document.getElementById('select-log-activity')
+  document.getElementById('log-activity-select')
           .getElementsByTagName('option')[0]
           .selected = true;
-  document.getElementById('select-remove-goal')
+  document.getElementById('remove-goal-select')
           .getElementsByTagName('option')[0]
           .selected = true;
 
   // default value for <textarea>: empty textbox
-  var homeModalInputs = homeModal.getElementsByTagName('input');
-  for (var i = 0; i < homeModalInputs.length; i++) {
-    homeModalInputs[i].value = '';
+  var goalModalInputs = goalModal.getElementsByTagName('input');
+  for (var i = 0; i < goalModalInputs.length; i++) {
+    goalModalInputs[i].value = '';
   }
-  var homeModalTextAreas = homeModal.getElementsByTagName('textarea');
-  for (var i = 0; i < homeModalTextAreas.length; i++) {
-    homeModalTextAreas[i].value = '';
+  var goalModalTextAreas = goalModal.getElementsByTagName('textarea');
+  for (var i = 0; i < goalModalTextAreas.length; i++) {
+    goalModalTextAreas[i].value = '';
   }
 
   var firstGraphGoal = document.querySelector('.graph-goal')
@@ -124,7 +124,7 @@ function showHomeModal(){
 }
 
 function updateActivityGoal(event) {
-  var selectDropDown = document.getElementById('select-log-activity');
+  var selectDropDown = document.getElementById('log-activity-select');
   var selectedGraph = document.getElementsByClassName('graph')[
     selectDropDown.selectedIndex
   ];
@@ -136,8 +136,8 @@ function updateActivityGoal(event) {
 }
 
 function hideModal2(){
-  var modalBackdrop = document.getElementById('calendarModalBackdrop');
-  var modal = document.getElementById('homeModal');
+  var modalBackdrop = document.querySelector('.modal-backdrop');
+  var modal = document.getElementById('goal-modal');
 
   modalBackdrop.classList.add('hidden');
   modal.classList.add('hidden');
@@ -166,7 +166,7 @@ function appendGoalLogActivityTab(goalDescription) {
   var newGoalOption = document.createElement('option');
   newGoalOption.text = goalDescription;
 
-  document.getElementById('select-log-activity').add(newGoalOption);
+  document.getElementById('log-activity-select').add(newGoalOption);
 }
 
 function appendGoalRemoveGoalTab(goalDescription) {
@@ -185,7 +185,7 @@ function removeIthGoalSidebar(i) {
 }
 
 function removeIthGoalHomeModal(i) {
-  document.getElementById('select-log-activity').remove(i);
+  document.getElementById('log-activity-select').remove(i);
   document.getElementById('select-remove-goal').remove(i);
 }
 
@@ -195,7 +195,7 @@ function acceptModal2(){
     var requestURL = '/activity/log';
     request.open('POST', requestURL);
 
-    var selectDropDown = document.getElementById('select-log-activity');
+    var selectDropDown = document.getElementById('log-activity-select');
     var description = selectDropDown.value;
     var progress = parseFloat(
       document.getElementById('log-activity-progress-input').value
@@ -244,7 +244,7 @@ function acceptModal2(){
     var requestURL = '/goal/add';
     request.open('POST', requestURL);
 
-    var description = document.getElementById('text-input-create-goal').value;
+    var description = document.getElementById('create-goal-text-input').value;
     var goal = parseFloat(
       document.getElementById('create-goal-goal-input').value
     );
@@ -317,7 +317,7 @@ function changeModalBody(modalTabs, i) {
     numberModalTab = i;
 
     // select modal bodies
-    var modalBodies = document.getElementsByClassName('modal-body');
+    var modalBodies = document.getElementsByClassName('modal-body-section');
     if (modalBodies) {
       // hide the previously selected modal body
       for (var j = 0; j < modalBodies.length ; j++) {
@@ -333,19 +333,19 @@ function changeModalBody(modalTabs, i) {
 }
 
 function hideModal3(){
-  var modalBackdrop = document.getElementById('calendarModalBackdrop');
-  var modal = document.getElementById('newUserModal');
+  var modalBackdrop = document.querySelector('.modal-backdrop');
+  var modal = document.getElementById('user-modal');
 
   modalBackdrop.classList.add('hidden');
   modal.classList.add('hidden');
 }
 
-function addNewUser(){
-    var modalBackdrop = document.getElementById('calendarModalBackdrop');
-    var newUserModal = document.getElementById('newUserModal');
-    modalBackdrop.classList.remove('hidden');
-    newUserModal.classList.remove('hidden');
-    console.log("showing");
+function addNewUser() {
+  var modalBackdrop = document.querySelector('.modal-backdrop');
+  var userModal = document.getElementById('user-modal');
+  modalBackdrop.classList.remove('hidden');
+  userModal.classList.remove('hidden');
+  console.log("showing");
 }
 
 function createNewUser(){
@@ -415,7 +415,7 @@ function createNewUser(){
   hideModal3();
 }
 
-function changeUser(userName){
+function changeUser(userName) {
   var request = new XMLHttpRequest();
   var requestURL = '/changeUser';
   request.open('POST', requestURL);
@@ -437,7 +437,7 @@ function changeUser(userName){
 
 
 window.addEventListener('DOMContentLoaded', function () {
-  var button = document.getElementById('changePlannerButton');
+  var button = document.getElementById('change-planner-button');
   if(button){
     button.addEventListener('click', showCalendarModal);
   }
@@ -454,76 +454,72 @@ window.addEventListener('DOMContentLoaded', function () {
     }
   }
 
-  var modalCloseButton = document.querySelector('#calendarModal .modal-close-button');
+  var modalCloseButton = document.querySelector('#calendar-modal .modal-close-button');
   if (modalCloseButton) {
     modalCloseButton.addEventListener('click', hideModal);
   }
 
-  var modalCancelButton = document.querySelector('#calendarModal .modal-cancel-button');
+  var modalCancelButton = document.querySelector('#calendar-modal .modal-cancel-button');
   if (modalCancelButton) {
     modalCancelButton.addEventListener('click', hideModal);
   }
 
-  var modalAcceptButton = document.querySelector('#calendarModal .modal-accept-button');
+  var modalAcceptButton = document.querySelector('#calendar-modal .modal-accept-button');
   if (modalAcceptButton) {
     modalAcceptButton.addEventListener('click', acceptModal);
   }
 
-  var modalCloseButton2 = document.querySelector('#homeModal .modal-close-button');
+  var modalCloseButton2 = document.querySelector('#goal-modal .modal-close-button');
   if (modalCloseButton2) {
     modalCloseButton2.addEventListener('click', hideModal2);
   }
 
-  var modalCancelButton2 = document.querySelector('#homeModal .modal-cancel-button');
+  var modalCancelButton2 = document.querySelector('#goal-modal .modal-cancel-button');
   if (modalCancelButton2) {
     modalCancelButton2.addEventListener('click', hideModal2);
   }
 
-  var modalAcceptButton2 = document.querySelector('#homeModal .modal-accept-button');
+  var modalAcceptButton2 = document.querySelector('#goal-modal .modal-accept-button');
   if (modalAcceptButton2) {
     modalAcceptButton2.addEventListener('click', acceptModal2);
   }
 
-  var modalLogActivitySelect = document.getElementById('select-log-activity');
+  var modalLogActivitySelect = document.getElementById('log-activity-select');
   if (modalLogActivitySelect) {
     modalLogActivitySelect.addEventListener('change', updateActivityGoal);
   }
 
-  var modalCloseButton3 = document.querySelector('#newUserModal .modal-close-button');
+  var modalCloseButton3 = document.querySelector('#user-modal .modal-close-button');
   if (modalCloseButton3) {
     modalCloseButton3.addEventListener('click', hideModal3);
   }
 
-  var modalCancelButton3 = document.querySelector('#newUserModal .modal-cancel-button');
+  var modalCancelButton3 = document.querySelector('#user-modal .modal-cancel-button');
   if (modalCancelButton3) {
     modalCancelButton3.addEventListener('click', hideModal3);
   }
 
-  var modalAcceptButton3 = document.querySelector('#newUserModal .modal-accept-button');
+  var modalAcceptButton3 = document.querySelector('#user-modal .modal-accept-button');
   if (modalAcceptButton3) {
     modalAcceptButton3.addEventListener('click', createNewUser);
   }
 
-  var modalSelect = document.getElementById('daySelectDropdown')
+  var modalSelect = document.getElementById('calendar-day-select')
   if(modalSelect){
     modalSelect.addEventListener('change', updateTextArea);
   }
 
 
-  var changeUserText = document.getElementById('changeUserDrop');
-  if(changeUserText){
-    changeUserText.addEventListener('click', function(event){
-      if(event.target.innerHTML == "Add a new user..."){
+  var changeUserText = document.getElementById('user-list');
+  if (changeUserText) {
+    changeUserText.addEventListener('click', function(event) {
+      if (event.target.innerText == 'Add a new user...') {
         addNewUser();
       }
-      else{
+      else {
         changeUser(event.target.innerText);
         //try to change user
       }
-    });;
-
-
-
+    });
   }
-
 });

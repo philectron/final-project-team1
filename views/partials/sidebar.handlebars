@@ -8,15 +8,14 @@
       {{/each}}
     </ul>
 
-    <div id="changeUser">
+    <div id="user-drop">
       <h3>Change User</h3>
-      <div id="changeUserDrop">
+      <ul id="user-list">
         {{#each userList}}
-          <div class="otherUser">{{name}}</div>
+          <li class="user-option">{{name}}</li>
         {{/each}}
-        <div class="otherUser" id="newUser">Add a new user...</div>
-      </div>
+        <li class="user-option" id="newUser">Add a new user...</li>
+      </ul>
     </div>
-
   </div>
 </div>

@@ -1,11 +1,15 @@
-<div id="calendarModalBackdrop" class="hidden"></div>
-<div id="calendarModal" class="hidden">
+<div class="modal-backdrop hidden"></div>
+<div id="calendar-modal" class="hidden">
   <div class="modal-dialog">
     <div class="modal-header">
-          <h3>Edit Planner</h3>
-          <button type="button" class="modal-close-button">&times;</button>
+      <div class="modal-tab-bar">
+        <h3 class="modal-tab modal-tab-selected">Edit Planner</h3>
+      </div>
+      <button type="button" class="modal-close-button">&times;</button>
     </div>
-      <select class="daySelect" id="daySelectDropdown">
+
+    <div class="modal-body">
+      <select id="calendar-day-select" class="select-menu">
         <option value="0">Sunday</option>
         <option value="1">Monday</option>
         <option value="2">Tuesday</option>
@@ -14,17 +18,15 @@
         <option value="5">Friday</option>
         <option value="6">Saturday</option>
       </select>
-        <div class="modal-body">
-          <div class="content-input-element">
-            <label for="content-text-input">Content text</label>
-            <textarea id="content-text-input"></textarea>
-          </div>
-        </div>
-
-        <div class="modal-footer">
-          <button type="button" class="modal-cancel-button">Cancel</button>
-          <button type="button" class="modal-accept-button">Change content</button>
-        </div>
-
+      <div class="content-input-element">
+        <input id="calendar-goal-input" placeholder="Day's goal">
+      </div>
     </div>
+
+    <div class="modal-footer">
+      <button type="button" class="modal-cancel-button">Cancel</button>
+      <button type="button" class="modal-accept-button">Change goal</button>
+    </div>
+
+  </div>
 </div>
