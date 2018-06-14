@@ -244,8 +244,8 @@ function acceptModal2(){
          var targetGraph = document.getElementsByClassName('graph')[index];
          var targetGraphBar = targetGraph.querySelector('.graph-bar');
          var targetGraphPercent = targetGraph.querySelector('.graph-percent');
-         targetGraphBar.style.width = percentage + '%';
-         targetGraphPercent.innerText = percentage + '%';
+         targetGraphBar.style.width = percentage2 + '%';
+         targetGraphPercent.innerText = percentage2 + '%';
       //  document.location.reload();
       } else {
         alert('Error logging activity: ' + event.target.response);
