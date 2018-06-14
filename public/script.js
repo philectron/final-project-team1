@@ -1,3 +1,13 @@
+const DAY_OF_WEEK = [
+  'Sunday',
+  'Monday',
+  'Tuesday',
+  'Wednesday',
+  'Thursday',
+  'Friday',
+  'Saturday'
+]
+
 function showCalendarModal(){
   var modalBackdrop = document.getElementById('calendarModalBackdrop');
   var modal = document.getElementById('calendarModal');
@@ -28,9 +38,38 @@ function hideModal(){
 }
 
 function acceptModal(){
-  //do something
-  hideModal();
+  var request = new XMLHttpRequest();
+  var requestURL = '/calendar/update';
+  request.open('POST', requestURL);
 
+  var drop = document.getElementById('daySelectDropdown');
+  var text = document.getElementById('content-text-input');
+  var cal = document.getElementById('weekCalendar');
+
+  var requestBody = JSON.stringify({
+    weekday: DAY_OF_WEEK[drop.value],
+    content: text.value
+  });
+
+  request.addEventListener('load', function (event) {
+    if (event.target.status === 200) {
+      // var photoCardTemplate = Handlebars.templates.photoCard;
+      // var newPhotoCardHTML = photoCardTemplate({
+      //   photoURL: photoURL,
+      //   caption: caption
+      // });
+      // var photoCardContainer = document.querySelector('.photo-card-container');
+      // photoCardContainer.insertAdjacentHTML('beforeend', newPhotoCardHTML);
+      cal.getElementsByTagName('p')[drop.value].innerText = text.value;
+    } else {
+      alert("Error adding new plan: " + event.target.response);
+    }
+  });
+
+  request.setRequestHeader('Content-Type', 'application/json');
+  request.send(requestBody);
+
+  hideModal();
 }
 
 function showHomeModal(){

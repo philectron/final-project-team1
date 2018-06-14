@@ -1,6 +1,7 @@
 var express = require('express');
 var exphbs = require('express-handlebars');
 var hbs = require('./helpers/handlebars')(exphbs);
+var bodyParser = require('body-parser');
 var MongoClient = require('mongodb').MongoClient;
 
 const mongoHost = process.env.MONGO_HOST;
@@ -20,6 +21,7 @@ var port = process.env.PORT || 3000;
 
 app.engine('handlebars', hbs.engine);
 app.set('view engine', 'handlebars');
+app.use(bodyParser.json());
 app.use(express.static('public'));
 
 
@@ -68,11 +70,36 @@ app.get('/leaderboard', function(req, res, next) {
   });
 });
 
+app.post('/calendar/update', function(req, res, next) {
+  if (req.body && req.body.weekday && req.body.content) {
+    mongoDB.collection('users').updateOne(
+      { name: currentUser.name, "days.weekday": req.body.weekday },
+      { $set: { "days.$.content" : req.body.content }}
+    );
+    res.status(200).send('New plan created');
+    updateUsers();
+  } else {
+    res.status(400).send('Bad request');
+  }
+});
+
 app.get('*', function(req, res) {
   res.status(404).render('404', {
     user: currentUser
   });
 });
+
+
+function updateUsers() {
+  var userCollection = mongoDB.collection('users');
+  userCollection.find().toArray(function (err, userTable) {
+    if (err) {
+      throw err;
+    }
+    allUsers = userTable;
+    currentUser = allUsers[0];
+  });
+}
 
 MongoClient.connect(mongoURL, function(err, client) {
   if (err) {
@@ -87,6 +114,7 @@ MongoClient.connect(mongoURL, function(err, client) {
     }
     allUsers = userTable;
     currentUser = allUsers[0];
+    // console.log(currentUser);
   });
 
   app.listen(port, function() {
