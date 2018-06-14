@@ -18,7 +18,6 @@ var allUsers = null;
 var currentUser = null;
 var count = 0;
 
-
 var app = express();
 const port = process.env.PORT || 22222;
 
@@ -27,16 +26,12 @@ app.set('view engine', 'handlebars');
 app.use(bodyParser.json());
 app.use(express.static('public'));
 
+/*******************************************************************************
+ * GET requests
+ ******************************************************************************/
 
-/**
- * Make routes for whatever we make in the <nav> section (aka, the .navlinks)
- * The list of links is not final yet, as we need to all agree what's on the list.
- *
- * These below are just my proposal and are subject to change.
- */
-
-// "Home" page is the default page every user ends up on.
-// It should display only the goal for the day and the user's progress on that day.
+// "Home" page is the default page every user ends up on. It should display only
+// the goal for the day and the user's progress on that day.
 app.get('/', function(req, res, next) {
   res.status(200).render('home', {
     userList: allUsers,
@@ -55,7 +50,8 @@ app.get('/about', function(req, res, next) {
   });
 });
 
-// "Calendar" page will show a calendar where the user's workout plans are displayed
+// "Calendar" page will show a calendar where the user's workout plans are
+// displayed.
 app.get('/calendar', function(req, res, next) {
   res.status(200).render('calendar', {
     user: currentUser,
@@ -63,9 +59,8 @@ app.get('/calendar', function(req, res, next) {
   });
 });
 
-// "Leaderboard" page. I'm not sure about this. I just want to find something to
-// integrate the database and multi-account into the web app. IMO, this is
-// expected to change.
+// "Leaderboard" page to integrate the database and multi-account into the web
+// app.
 app.get('/leaderboard', function(req, res, next) {
   res.status(200).render('leaderboard', {
     userList: allUsers,
@@ -73,6 +68,13 @@ app.get('/leaderboard', function(req, res, next) {
   });
 });
 
+/*******************************************************************************
+ * POST requests
+ ******************************************************************************/
+
+/*
+ * Incrementally log activity to DB.
+ */
 app.post('/activity/log', function(req, res, next) {
   if (req.body && req.body.description && req.body.progress
       && !isNaN(req.body.progress) && !isNaN(req.body.percentage)
@@ -100,6 +102,9 @@ app.post('/activity/log', function(req, res, next) {
   }
 });
 
+/*
+ * Add a new goal to DB.
+ */
 app.post('/goal/add', function(req, res, next) {
   if (req.body && req.body.description && req.body.goal
      && req.body.progress !== undefined && req.body.percentage !== undefined) {
@@ -121,6 +126,9 @@ app.post('/goal/add', function(req, res, next) {
   }
 });
 
+/*
+ * Remove an exisiting goal from DB.
+ */
 app.post('/goal/remove', function(req, res, next) {
   if (req.body && req.body.description !== '') {
     mongoDB.collection('users').updateOne(
@@ -136,6 +144,9 @@ app.post('/goal/remove', function(req, res, next) {
   }
 });
 
+/*
+ * Update the weekly plan.
+ */
 app.post('/calendar/update', function(req, res, next) {
   if (req.body && req.body.weekday && req.body.content) {
     mongoDB.collection('users').updateOne(
@@ -149,6 +160,9 @@ app.post('/calendar/update', function(req, res, next) {
   }
 });
 
+/*
+ * Add a new user to DB.
+ */
 app.post('/user/add', function(req, res, next){
   if(req.body && req.body.name && req.body.profilePicUrl){
     mongoDB.collection('users').insertOne(req.body);
@@ -161,6 +175,9 @@ app.post('/user/add', function(req, res, next){
   }
 });
 
+/*
+ * Change user session.
+ */
 app.post('/user/change', function(req, res, next){
   if(req.body && req.body.name){
     //updateUsers();
@@ -172,13 +189,19 @@ app.post('/user/change', function(req, res, next){
   }
 });
 
+/*******************************************************************************
+ * 404 Handler
+ ******************************************************************************/
+
 app.get('*', function(req, res) {
   res.status(404).render('404', {
     user: currentUser
   });
 });
 
-
+/*
+ * Update current user's data to make things more continuous.
+ */
 function updateUsers() {
   var userCollection = mongoDB.collection('users');
   userCollection.find().toArray(function (err, userTable) {
@@ -190,6 +213,9 @@ function updateUsers() {
   });
 }
 
+/*
+ * Switch between user sessions.
+ */
 function changeUser(userName){
   var userCollection = mongoDB.collection('users');
   userCollection.find().toArray(function (err, userTable) {
@@ -211,6 +237,10 @@ function changeUser(userName){
 
 }
 
+/*******************************************************************************
+ * Connect to MongoDB and start server.
+ ******************************************************************************/
+
 MongoClient.connect(mongoURL, function(err, client) {
   if (err) {
     throw err;
@@ -218,7 +248,6 @@ MongoClient.connect(mongoURL, function(err, client) {
   mongoDB = client.db(mongoDBName);
 
   var userCollection = mongoDB.collection('users');
-  //userCollection.remove({"_id": ObjectId("5b21e48df2da1a5ed9235704")});
   userCollection.find().toArray(function (err, userTable) {
     if (err) {
       throw err;
