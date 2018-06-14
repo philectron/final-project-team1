@@ -5,11 +5,11 @@ var bodyParser = require('body-parser');
 var MongoClient = require('mongodb').MongoClient;
 var ObjectId = require('mongodb').ObjectId;
 
-const mongoHost = 'classmongo.engr.oregonstate.edu';
-const mongoPort = 27017;
-const mongoUser = 'cs290_luuph';
-const mongoPassword = '9';
-const mongoDBName = 'cs290_luuph';
+const mongoHost = process.env.MONGO_HOST || 'classmongo.engr.oregonstate.edu';
+const mongoPort = process.env.MONGO_PORT || 27017;
+const mongoUser = process.env.MONGO_USER || 'cs290_luuph';
+const mongoPassword = process.env.MONGO_PASSWORD || '9';
+const mongoDBName = process.env.MONGO_DB_NAME || 'cs290_luuph';
 const mongoURL = 'mongodb://' + mongoUser + ':' + mongoPassword + '@' +
                   mongoHost + ':' + mongoPort + '/' + mongoDBName;
 
@@ -18,7 +18,7 @@ var allUsers = null;
 var currentUser = null;
 
 var app = express();
-var port = process.env.PORT || 54545;
+const port = process.env.PORT;
 
 app.engine('handlebars', hbs.engine);
 app.set('view engine', 'handlebars');
@@ -168,6 +168,8 @@ MongoClient.connect(mongoURL, function(err, client) {
   });
 
   app.listen(port, function() {
-    console.log("== Server is listening on port", port);
+    console.log('========================================');
+    console.log('  Server is listening on port', port);
+    console.log('========================================');
   });
 });
