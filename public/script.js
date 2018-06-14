@@ -12,23 +12,17 @@ var numberModalTab = 0;
 
 function percentageOf(num1, num2) {
   if (!isNaN(num1) && !isNaN(num2)) {
-    // if the parsed values are both not NaN, return the floor of percentage
-    var percentage;
-
-    // always do smaller * 100.0 / larger
-    if (num1 > num2) {
-      percentage = Math.floor(num2 * 100.0 / num1);
+    // if num2 > num1, return 100. Otherwise, return floor(num2 * 100.0 / num1)
+    if (num2 >= num1) {
+      return 100;
     } else {
-      percentage = Math.floor(num1 * 100.0 / num2);
+      return Math.floor(num2 * 100.0 / num1);
     }
-
-    return percentage;
   } else {
-    // otherwise, return 0
+    // if either num1 or num2 is not a number, return 0
     return 0;
   }
 }
-
 
 function showCalendarModal(){
   var modalBackdrop = document.querySelector('.modal-backdrop');
@@ -116,23 +110,6 @@ function showHomeModal(){
   for (var i = 0; i < goalModalTextAreas.length; i++) {
     goalModalTextAreas[i].value = '';
   }
-
-  var firstGraphGoal = document.querySelector('.graph-goal')
-                               .innerText
-                               .split(' ')[0];
-  document.getElementById('log-activity-goal-input').value = firstGraphGoal;
-}
-
-function updateActivityGoal(event) {
-  var selectDropDown = document.getElementById('log-activity-select');
-  var selectedGraph = document.getElementsByClassName('graph')[
-    selectDropDown.selectedIndex
-  ];
-  var selectedGraphGoal = Math.floor(parseInt(
-    selectedGraph.querySelector('.graph-goal').innerText
-  ));
-
-  document.getElementById('log-activity-goal-input').value = selectedGraphGoal;
 }
 
 function hideModal2(){
@@ -189,22 +166,22 @@ function removeIthGoalHomeModal(i) {
   document.getElementById('select-remove-goal').remove(i);
 }
 
-function checkGraphAreaDone() {
-  var graphAreas = document.getElementsByClassName('graph-area');
-  var checkMark = document.createElement('i');
-  checkMark.classList.add('fas', 'fa-check');
+// function checkGraphAreaDone() {
+//   var graphAreas = document.getElementsByClassName('graph-area');
+//   var checkMark = document.createElement('i');
+//   checkMark.classList.add('fas', 'fa-check');
 
-  for (var i = 0; i < graphAreas.length; i++) {
-    var graphBar = graphAreas[i].children[0];
-    var graphPercent = graphAreas[i].children[1];
-    if (parseInt(graphBar.style.width.replace('%', '')) >= 100) {
-      graphBar.style.width = '100%';
-      graphBar.style.backgroundColor = 'green';
-      graphPercent.innerText = '';
-      graphAreas[i].appendChild(checkMark);
-    }
-  }
-}
+//   for (var i = 0; i < graphAreas.length; i++) {
+//     var graphBar = graphAreas[i].children[0];
+//     var graphPercent = graphAreas[i].children[1];
+//     if (parseInt(graphBar.style.width.replace('%', '')) >= 100) {
+//       graphBar.style.width = '100%';
+//       graphBar.style.backgroundColor = 'green';
+//       graphPercent.innerText = '';
+//       graphAreas[i].appendChild(checkMark);
+//     }
+//   }
+// }
 
 function acceptModal2(){
   var request = new XMLHttpRequest();
@@ -212,55 +189,76 @@ function acceptModal2(){
     var requestURL = '/activity/log';
     request.open('POST', requestURL);
 
+    // get index based on the option selected in the menu
     var selectDropDown = document.getElementById('log-activity-select');
-    var description = selectDropDown.value;
-    var progress = parseFloat(
-      document.getElementById('log-activity-progress-input').value
-    );
-    var goal = parseFloat(
-      document.getElementById('log-activity-goal-input').value
-    );
-    var percentage = percentageOf(goal, progress);
     var index = selectDropDown.selectedIndex;
 
+    // get the target '.graph' article in the graph container section
+    var targetGraph = document.getElementsByClassName('graph')[index];
+
+    // the graph's current goal can be found inside the '.graph' DOM
+    var goal = parseFloat(targetGraph.querySelector('.graph-goal').innerText);
+    // the graph's current progress can be found inside the '.graph' DOM
+    var oldProgress = parseFloat(targetGraph.querySelector('.graph-progress').innerText);
+
+    // the graph description is the selected value of the menu
+    var description = selectDropDown.value;
+    // the graph progress to add into the existing one is the value of <input>
+    var progressInc = parseFloat(
+      document.getElementById('log-activity-progress-input').value
+    );
+
     /* validate inputs */
-    if (progress === '' || goal === '' || isNaN(progress) || isNaN(goal)) {
+    if (progressInc === '' || isNaN(progressInc)) {
       alert('Required fields are missing');
       return;
-    } else if (progress < 0 || goal < 0) {
-      alert('Progress and goal must be positive');
-      return;
-    } else if (progress > goal) {
-      alert('Progress must be smaller than goal. Try setting a new goal instead');
+    } else if (progressInc < 0) {
+      alert('The progress you made must be positive');
       return;
     }
 
-    var targetGraph = document.getElementsByClassName('graph')[index];
+    var newProgress = oldProgress + progressInc;
+    var percentage = percentageOf(goal, newProgress);
+    var percentageInc = percentageOf(goal, progressInc);
+
     var targetGraphBar = targetGraph.querySelector('.graph-bar');
     var targetGraphPercent = targetGraph.querySelector('.graph-percent');
-    var oldPercent = parseFloat(targetGraphPercent.innerText.replace('%', ''));
-    var contentString = description + ' ' + progress + ' ' + 'minutes.';
-    var percentage = percentage + percentageOf(goal, oldPercent);
+    var activityFeedContent = description + ' for ' + progressInc + ' minutes';
+    var percentageInc = percentageOf(goal, progressInc);
+
 
     var requestBody = JSON.stringify({
       description: description,
       goal: goal,
-      progress: progress,
+      progress: newProgress,
       percentage: percentage,
       activity: {
-        content: contentString,
-        percent: percentage
+        content: activityFeedContent,
+        percent: percentageInc
       }
     });
 
     request.addEventListener('load', function(event) {
       if (event.target.status === 200) {
-         var targetGraph = document.getElementsByClassName('graph')[index];
-         var targetGraphBar = targetGraph.querySelector('.graph-bar');
-         var targetGraphPercent = targetGraph.querySelector('.graph-percent');
-         targetGraphBar.style.width = percentage2 + '%';
-         targetGraphPercent.innerText = percentage2 + '%';
-      //  document.location.reload();
+        // update target graph's bar width, color, and percentage
+        targetGraphBar.style.width = percentage + '%';
+
+        // if the user has met his/her goal
+        if (percentage >= 100) {
+          // color the bar green
+          targetGraphBar.style.backgroundColor = 'green';
+          // replace percentage with a checkmark
+          var checkMark = document.createElement('i');
+          checkMark.classList.add('fas', 'fa-check');
+
+          targetGraphPercent.innerText = '';
+          targetGraphPercent.appendChild(checkMark);
+        } else {
+          targetGraphPercent.innerText = percentage + '%';
+        }
+        // update target graph's progress inside
+        targetGraphBar.querySelector('.graph-progress').innerText =
+          newProgress + ' minutes';
       } else {
         alert('Error logging activity: ' + event.target.response);
       }
@@ -457,7 +455,7 @@ function changeUser(userName) {
 }
 
 window.addEventListener('DOMContentLoaded', function () {
-  checkGraphAreaDone();
+  // checkGraphAreaDone();
   var button = document.getElementById('change-planner-button');
   if(button){
     button.addEventListener('click', showCalendarModal);
@@ -503,11 +501,6 @@ window.addEventListener('DOMContentLoaded', function () {
   var modalAcceptButton2 = document.querySelector('#goal-modal .modal-accept-button');
   if (modalAcceptButton2) {
     modalAcceptButton2.addEventListener('click', acceptModal2);
-  }
-
-  var modalLogActivitySelect = document.getElementById('log-activity-select');
-  if (modalLogActivitySelect) {
-    modalLogActivitySelect.addEventListener('change', updateActivityGoal);
   }
 
   var modalCloseButton3 = document.querySelector('#user-modal .modal-close-button');
