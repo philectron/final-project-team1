@@ -111,8 +111,7 @@ app.post('/goal/add', function(req, res, next) {
 });
 
 app.post('/goal/remove', function(req, res, next) {
-  if (req.body && !isNaN(req.body.index) && req.body.description !== '') {
-    // TODO: applying $arrayElementAt with $pull
+  if (req.body && req.body.description !== '') {
     mongoDB.collection('users').updateOne(
       { name: currentUser.name },
       { $pull: {

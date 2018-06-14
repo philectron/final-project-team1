@@ -162,13 +162,18 @@ function appendGoalSidebar(goalDescription) {
   document.querySelector('.goal-list').appendChild(newGoalItem);
 }
 
-function appendGoalHomeModal(goalDescription) {
+function appendGoalLogActivityTab(goalDescription) {
   var newGoalOption = document.createElement('option');
-  newGoalOption.value = goalDescription;
-  newGoalOption.innerText = goalDescription;
+  newGoalOption.text = goalDescription;
 
-  document.getElementById('select-log-activity').appendChild(newGoalOption);
-  document.getElementById('select-remove-goal').appendChild(newGoalOption);
+  document.getElementById('select-log-activity').add(newGoalOption);
+}
+
+function appendGoalRemoveGoalTab(goalDescription) {
+  var newGoalOption = document.createElement('option');
+  newGoalOption.text = goalDescription;
+
+  document.getElementById('select-remove-goal').add(newGoalOption);
 }
 
 function removeIthGoalGraph(i) {
@@ -180,8 +185,8 @@ function removeIthGoalSidebar(i) {
 }
 
 function removeIthGoalHomeModal(i) {
-  document.getElementById('select-log-activity')[i].remove();
-  document.getElementById('select-remove-goal')[i].remove();
+  document.getElementById('select-log-activity').remove(i);
+  document.getElementById('select-remove-goal').remove(i);
 }
 
 function acceptModal2(){
@@ -199,6 +204,7 @@ function acceptModal2(){
       document.getElementById('log-activity-goal-input').value
     );
     var percentage = percentageOf(goal, progress);
+    var index = selectDropDown.selectedIndex;
 
     /* validate inputs */
     if (progress === '' || goal === '' || isNaN(progress) || isNaN(goal)) {
@@ -221,9 +227,7 @@ function acceptModal2(){
 
     request.addEventListener('load', function(event) {
       if (event.target.status === 200) {
-        var targetGraph = document.getElementsByClassName('graph')[
-          selectDropDown.selectedIndex
-        ];
+        var targetGraph = document.getElementsByClassName('graph')[index];
         var targetGraphBar = targetGraph.querySelector('.graph-bar');
         var targetGraphPercent = targetGraph.querySelector('.graph-percent');
         targetGraphBar.style.width = percentage + '%';
@@ -265,7 +269,8 @@ function acceptModal2(){
       if(event.target.status === 200){
         appendGoalGraphContainer(description, goal, 0);
         appendGoalSidebar(description);
-        appendGoalHomeModal(description);
+        appendGoalLogActivityTab(description);
+        appendGoalRemoveGoalTab(description);
       }else{
         alert('Error adding goal: ' + event.target.response);
       }
@@ -282,10 +287,7 @@ function acceptModal2(){
     var description = selectDropDown.value;
     var index = selectDropDown.selectedIndex;
 
-    var requestBody = JSON.stringify({
-      index: index,
-      description: description
-    });
+    var requestBody = JSON.stringify({ description: description });
 
     request.addEventListener('load', function (event) {
       if (event.target.status === 200){
