@@ -246,6 +246,10 @@ function acceptModal2(){
          var targetGraphPercent = targetGraph.querySelector('.graph-percent');
          targetGraphBar.style.width = percentage2 + '%';
          targetGraphPercent.innerText = percentage2 + '%';
+         var activityContainer = document.getElementsByClassName('activity-feed')[0];
+         console.log(activityContainer);
+         var activityInstance = Handlebars.templates.activity({content: contentString, percent: percentage});
+         activityContainer.insertAdjacentHTML('beforeend', activityInstance);
       //  document.location.reload();
       } else {
         alert('Error logging activity: ' + event.target.response);
