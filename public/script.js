@@ -108,7 +108,15 @@ function showHomeModal(){
           .selected = true;
 
   // default value for <textarea>: empty textbox
-  document.getElementById('log-activity-progress-input').value = '';
+  var homeModalInputs = homeModal.getElementsByTagName('input');
+  for (var i = 0; i < homeModalInputs.length; i++) {
+    homeModalInputs[i].value = '';
+  }
+  var homeModalTextAreas = homeModal.getElementsByTagName('textarea');
+  for (var i = 0; i < homeModalTextAreas.length; i++) {
+    homeModalTextAreas[i].value = '';
+  }
+
   var firstGraphGoal = document.querySelector('.graph-goal')
                                .innerText
                                .split(' ')[0];
@@ -147,6 +155,34 @@ function selectGraphByDescription(graphDescription) {
   return graphs[0];
 }
 
+function appendGoalGraphContainer(description, goal, progress) {
+  var goalTemplateHTML = Handlebars.templates.goal({
+    description: description,
+    goal: goal,
+    progress: progress,
+    percentage: percentageOf(goal, progress)
+  });
+  var graphContainer = document.querySelector('.graph-container');
+  graphContainer.insertAdjacentHTML('beforeend', goalTemplateHTML);
+}
+
+function appendGoalSidebar(goalDescription) {
+  var newGoalItem = document.createElement('li');
+  newGoalItem.classList.add('goal-item');
+  newGoalItem.innerText = goalDescription;
+
+  document.querySelector('.goal-list').appendChild(newGoalItem);
+}
+
+function appendGoalModalDropdown(goalDescription) {
+  var newGoalOption = document.createElement('option');
+  newGoalOption.value = goalDescription;
+  newGoalOption.innerText = goalDescription;
+
+  document.getElementById('select-log-activity').appendChild(newGoalOption);
+  document.getElementById('select-remove-goal').appendChild(newGoalOption);
+}
+
 function acceptModal2(){
   var request = new XMLHttpRequest();
   if (numberModalTab == 0) {
@@ -163,7 +199,7 @@ function acceptModal2(){
     var percentage = percentageOf(goal, progress);
 
     /* validate inputs */
-    if (progress === '' || goal === '') {
+    if (progress === '' || goal === '' || isNaN(progress) || isNaN(goal)) {
       alert('Required fields are missing');
       return;
     } else if (progress < 0 || goal < 0) {
@@ -189,7 +225,7 @@ function acceptModal2(){
         targetGraphBar.style.width = percentage + '%';
         targetGraphPercent.innerText = percentage + '%';
       } else {
-        alert('Error loggin activity: ' + event.target.response);
+        alert('Error logging activity: ' + event.target.response);
       }
     });
 
@@ -197,26 +233,40 @@ function acceptModal2(){
     request.send(requestBody);
   }
   else if(numberModalTab == 1){
-    var requestURL = '/goals/add';
+    var requestURL = '/goal/add';
     request.open('POST', requestURL);
 
-    var goal = document.getElementById('text-input-create-goal');
-    var text = goal.value;
+    var description = document.getElementById('text-input-create-goal').value;
+    var goal = parseFloat(
+      document.getElementById('create-goal-goal-input').value
+    );
+
+    /* validate inputs */
+    if (description === '' || goal === '' || isNaN(goal)) {
+      alert('Required fields are missing');
+      return;
+    } else if (goal < 0) {
+      alert('Goal must be positive');
+      return;
+    }
 
     var requestBody = JSON.stringify({
-      description: text,
-      goal: "100 minutes",
-      progress: "0 minutes",
+      description: description,
+      goal: goal,
+      progress: 0,
       percentage: 0
     });
 
     request.addEventListener('load', function (event) {
-      if(event.target.status == 200){
-        console.log("Successfully added.");
+      if(event.target.status === 200){
+        appendGoalGraphContainer(description, goal, 0);
+        appendGoalSidebar(description);
+        appendGoalModalDropdown(description);
       }else{
-        alert("Error adding goal.");
+        alert('Error adding goal: ' + event.target.response);
       }
     });
+
     request.setRequestHeader('Content-Type', 'application/json');
     request.send(requestBody);
 

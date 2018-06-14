@@ -89,6 +89,27 @@ app.post('/activity/log', function(req, res, next) {
   }
 });
 
+app.post('/goal/add', function(req, res, next) {
+  if (req.body && req.body.description && req.body.goal
+     && req.body.progress !== undefined && req.body.percentage !== undefined) {
+    mongoDB.collection('users').updateOne(
+      { name: currentUser.name },
+      { $addToSet: {
+        'goals': {
+          'description': req.body.description,
+          'goal': req.body.goal,
+          'progress': req.body.progress,
+          'percentage': req.body.percentage
+        }
+      }}
+    );
+    res.status(200).send('New goal created');
+    updateUsers();
+  } else {
+    res.status(400).send('Bad request');
+  }
+});
+
 app.post('/calendar/update', function(req, res, next) {
   if (req.body && req.body.weekday && req.body.content) {
     mongoDB.collection('users').updateOne(
@@ -114,22 +135,6 @@ app.post('/goals/remove', function(req, res, next) {
     res.status(400).send('Bad request');
   }
 });
-
-app.post('/goals/add', function(req, res, next) {
-  if(req.body && req.body.goal) {
-    console.log(req.body);
-    mongoDB.collection('users').updateOne(
-      { name: currentUser.name },
-      { $addToSet: {"goals" : req.body}}
-    );
-    res.status(200).send('Added goal.');
-    updateUsers();
-  } else {
-    res.status(400).send('Bad request');
-  }
-
-});
-
 
 app.post('/newUser', function(req, res, next){
   if(req.body && req.body.name && req.body.profilePicUrl){
