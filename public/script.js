@@ -162,13 +162,26 @@ function appendGoalSidebar(goalDescription) {
   document.querySelector('.goal-list').appendChild(newGoalItem);
 }
 
-function appendGoalModalDropdown(goalDescription) {
+function appendGoalHomeModal(goalDescription) {
   var newGoalOption = document.createElement('option');
   newGoalOption.value = goalDescription;
   newGoalOption.innerText = goalDescription;
 
   document.getElementById('select-log-activity').appendChild(newGoalOption);
   document.getElementById('select-remove-goal').appendChild(newGoalOption);
+}
+
+function removeIthGoalGraph(i) {
+  document.getElementsByClassName('graph')[i].remove();
+}
+
+function removeIthGoalSidebar(i) {
+  document.getElementsByClassName('goal-item')[i].remove();
+}
+
+function removeIthGoalHomeModal(i) {
+  document.getElementById('select-log-activity')[i].remove();
+  document.getElementById('select-remove-goal')[i].remove();
 }
 
 function acceptModal2(){
@@ -252,7 +265,7 @@ function acceptModal2(){
       if(event.target.status === 200){
         appendGoalGraphContainer(description, goal, 0);
         appendGoalSidebar(description);
-        appendGoalModalDropdown(description);
+        appendGoalHomeModal(description);
       }else{
         alert('Error adding goal: ' + event.target.response);
       }
@@ -262,21 +275,25 @@ function acceptModal2(){
     request.send(requestBody);
 
   }else if(numberModalTab == 2){
-    var requestURL = '/goals/remove';
+    var requestURL = '/goal/remove';
     request.open('POST', requestURL);
 
-    var goal = document.getElementById('select-remove-goal');
-    var text = goal.options[goal.selectedIndex].text;
+    var selectDropDown = document.getElementById('select-remove-goal');
+    var description = selectDropDown.value;
+    var index = selectDropDown.selectedIndex;
 
     var requestBody = JSON.stringify({
-      goal: text
+      index: index,
+      description: description
     });
 
     request.addEventListener('load', function (event) {
-      if(event.target.status == 200){
-        console.log("Successfully removed.");
-      }else{
-        alert("Error removing goal.");
+      if (event.target.status === 200){
+        removeIthGoalGraph(index);
+        removeIthGoalSidebar(index);
+        removeIthGoalHomeModal(index);
+      } else{
+        alert('Error removing goal: ' + event.target.response);
       }
     });
 
@@ -285,7 +302,6 @@ function acceptModal2(){
   }
 
   hideModal2();
-
 }
 
 function changeModalBody(modalTabs, i) {

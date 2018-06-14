@@ -110,6 +110,22 @@ app.post('/goal/add', function(req, res, next) {
   }
 });
 
+app.post('/goal/remove', function(req, res, next) {
+  if (req.body && !isNaN(req.body.index) && req.body.description !== '') {
+    // TODO: applying $arrayElementAt with $pull
+    mongoDB.collection('users').updateOne(
+      { name: currentUser.name },
+      { $pull: {
+        goals: { 'description': req.body.description }
+      }}
+    );
+    res.status(200).send('Goal removed');
+    updateUsers();
+  } else {
+    res.status(400).send('Bad request');
+  }
+});
+
 app.post('/calendar/update', function(req, res, next) {
   if (req.body && req.body.weekday && req.body.content) {
     mongoDB.collection('users').updateOne(
@@ -117,19 +133,6 @@ app.post('/calendar/update', function(req, res, next) {
       { $set: { "days.$.content" : req.body.content }}
     );
     res.status(200).send('New plan created');
-    updateUsers();
-  } else {
-    res.status(400).send('Bad request');
-  }
-});
-
-app.post('/goals/remove', function(req, res, next) {
-  if (req.body && req.body.goal) {
-    mongoDB.collection('users').updateOne(
-      { name: currentUser.name, "goals.description": req.body.goal },
-      { $pull: {"goals" : {"description":req.body.goal}}}
-    );
-    res.status(200).send('Removed goal');
     updateUsers();
   } else {
     res.status(400).send('Bad request');
