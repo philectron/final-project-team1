@@ -18,7 +18,7 @@ var allUsers = null;
 var currentUser = null;
 
 var app = express();
-var port = process.env.PORT || 54545;
+var port = process.env.PORT || 22222;
 
 app.engine('handlebars', hbs.engine);
 app.set('view engine', 'handlebars');
@@ -89,7 +89,6 @@ app.post('/newUser', function(req, res, next){
     mongoDB.collection('users').insertOne(req.body);
     updateUsers();
     //changeUser(req.body.name);
-    console.log("response");
     res.status(200).send('New user added');
   }
   else{
@@ -161,7 +160,6 @@ MongoClient.connect(mongoURL, function(err, client) {
     if (err) {
       throw err;
     }
-    console.log(userTable);
     allUsers = userTable;
     currentUser = allUsers[0];
     // console.log(currentUser);
