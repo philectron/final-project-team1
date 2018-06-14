@@ -380,8 +380,11 @@ function hideModal3(){
 function addNewUser() {
   var modalBackdrop = document.querySelector('.modal-backdrop');
   var userModal = document.getElementById('user-modal');
+  document.getElementById('username-text-input').value = '';
+  document.getElementById('profimage-text-input').value= '';
   modalBackdrop.classList.remove('hidden');
   userModal.classList.remove('hidden');
+
 }
 
 function createNewUser(){

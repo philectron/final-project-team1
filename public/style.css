@@ -16,8 +16,6 @@ html {
   color: rgb(240, 240, 240);
 }
 
-body {}
-
 /*
  * Links
  */
@@ -79,23 +77,6 @@ p {
   margin-bottom: 1rem;
   margin-top: 0;
 }
-
-/*
- * Lists
- */
-
-ol,
-ul {}
-
-li {}
-
-/*
- * Images and videos
- */
-
-img {}
-
-video {}
 
 /*
  * input fields
@@ -334,7 +315,6 @@ main {
   background-color:  rgb(204, 89, 28);
   width: 95%;
   margin: 10px;
-  display: inline;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
@@ -408,6 +388,7 @@ main {
 #create-goal-button:hover {
   background-color: rgb(204, 89, 28);
   cursor: pointer;
+  transition: .25s;
 }
 
 #create-goal-button:active {
