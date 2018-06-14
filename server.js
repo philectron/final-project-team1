@@ -16,9 +16,11 @@ const mongoURL = 'mongodb://' + mongoUser + ':' + mongoPassword + '@' +
 var mongoDB = null;
 var allUsers = null;
 var currentUser = null;
+var count = 0;
+
 
 var app = express();
-const port = process.env.PORT;
+const port = process.env.PORT || 22222;
 
 app.engine('handlebars', hbs.engine);
 app.set('view engine', 'handlebars');
@@ -76,12 +78,15 @@ app.post('/activity/log', function(req, res, next) {
       && req.body.progress && req.body.percentage) {
     mongoDB.collection('users').updateOne(
       { name: currentUser.name, 'goals.description': req.body.description },
-      { $set: {
-        'goals.$.goal': req.body.goal,
+      { $inc: {
         'goals.$.progress': req.body.progress,
         'goals.$.percentage': req.body.percentage
       }}
     );
+    console.log(req.body.activity.percent);
+    mongoDB.collection('users').updateOne(
+      {name: currentUser.name},
+      {$addToSet: {"activities": {content: req.body.activity.content,percent: req.body.activity.percent}}});
     res.status(200).send('Activity logged');
     updateUsers();
   } else {
@@ -176,7 +181,7 @@ function updateUsers() {
     }
     //console.log(userTable);
     allUsers = userTable;
-    currentUser = allUsers[0];
+    currentUser = allUsers[count];
   });
 }
 
@@ -188,7 +193,7 @@ function changeUser(userName){
     }
     //console.log(userTable);
     allUsers = userTable;
-    var count = 0;
+    count = 0;
     while(allUsers[count]){
       if(allUsers[count].name == userName){
         currentUser = allUsers[count];
