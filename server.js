@@ -4,11 +4,11 @@ var hbs = require('./helpers/handlebars')(exphbs);
 var bodyParser = require('body-parser');
 var MongoClient = require('mongodb').MongoClient;
 
-const mongoHost = process.env.MONGO_HOST;
-const mongoPort = process.env.MONGO_PORT || 27017;
-const mongoUser = process.env.MONGO_USER;
-const mongoPassword = process.env.MONGO_PASSWORD;
-const mongoDBName = process.env.MONGO_DB_NAME;
+const mongoHost = 'classmongo.engr.oregonstate.edu';
+const mongoPort = 27017;
+const mongoUser = 'cs290_luuph';
+const mongoPassword = '9';
+const mongoDBName = 'cs290_luuph';
 const mongoURL = 'mongodb://' + mongoUser + ':' + mongoPassword + '@' +
                   mongoHost + ':' + mongoPort + '/' + mongoDBName;
 
@@ -17,7 +17,7 @@ var allUsers = null;
 var currentUser = null;
 
 var app = express();
-var port = process.env.PORT || 3000;
+var port = process.env.PORT || 3012;
 
 app.engine('handlebars', hbs.engine);
 app.set('view engine', 'handlebars');
@@ -81,6 +81,34 @@ app.post('/calendar/update', function(req, res, next) {
   } else {
     res.status(400).send('Bad request');
   }
+});
+
+app.post('/goals/remove', function(req, res, next) {
+  if (req.body && req.body.goal) {
+    mongoDB.collection('users').updateOne(
+      { name: currentUser.name, "goals.description": req.body.goal },
+      { $pull: {"goals" : {"description":req.body.goal}}}
+    );
+    res.status(200).send('Removed goal');
+    updateUsers();
+  } else {
+    res.status(400).send('Bad request');
+  }
+});
+
+app.post('/goals/add', function(req, res, next) {
+  if(req.body && req.body.goal) {
+    console.log(req.body);
+    mongoDB.collection('users').updateOne(
+      { name: currentUser.name },
+      { $addToSet: {"goals" : req.body}}
+    );
+    res.status(200).send('Added goal.');
+    updateUsers();
+  } else {
+    res.status(400).send('Bad request');
+  }
+
 });
 
 app.get('*', function(req, res) {
