@@ -3,15 +3,21 @@ var exphbs = require('express-handlebars');
 var hbs = require('./helpers/handlebars')(exphbs);
 var bodyParser = require('body-parser');
 var MongoClient = require('mongodb').MongoClient;
-var ObjectId = require('mongodb').ObjectId;
 
 const mongoHost = process.env.MONGO_HOST;
 const mongoPort = process.env.MONGO_PORT || 27017;
 const mongoUser = process.env.MONGO_USER;
 const mongoPassword = process.env.MONGO_PASSWORD;
 const mongoDBName = process.env.MONGO_DB_NAME;
-const mongoURL = 'mongodb://' + mongoUser + ':' + mongoPassword + '@'
-                 + mongoHost + ':' + mongoPort + '/' + mongoDBName;
+var mongoURL;
+
+// fall back to localhost if no username or password. Otherwise, use env var
+if (mongoUser === undefined || mongoPassword === undefined) {
+  mongoURL = 'mongodb://127.0.0.1' + ':' + mongoPort + '/' + mongoDBName;
+} else {
+  mongoURL = 'mongodb://' + mongoUser + ':' + mongoPassword + '@'
+             + mongoHost + ':' + mongoPort + '/' + mongoDBName;
+}
 
 var mongoDB = null;
 var allUsers = null;
@@ -23,7 +29,8 @@ const port = process.env.PORT || 3000;
 
 app.engine('handlebars', hbs.engine);
 app.set('view engine', 'handlebars');
-app.use(bodyParser.json()); app.use(express.static('public'));
+app.use(bodyParser.json());
+app.use(express.static('public'));
 
 /*******************************************************************************
  * GET requests
