@@ -166,23 +166,6 @@ function removeIthGoalHomeModal(i) {
   document.getElementById('remove-goal-select').remove(i);
 }
 
-function checkGraphAreaDone() {
-  var graphAreas = document.getElementsByClassName('graph-area');
-  var checkMark = document.createElement('i');
-  checkMark.classList.add('fas', 'fa-check');
-
-  for (var i = 0; i < graphAreas.length; i++) {
-    var graphBar = graphAreas[i].children[0];
-    var graphPercent = graphAreas[i].children[1];
-    if (parseInt(graphBar.style.width.replace('%', '')) >= 100) {
-      graphBar.style.width = '100%';
-      graphBar.style.backgroundColor = 'green';
-      graphPercent.innerText = '';
-      graphPercent.appendChild(checkMark);
-    }
-  }
-}
-
 function acceptModal2(){
   var request = new XMLHttpRequest();
   if (numberModalTab == 0) {
@@ -247,7 +230,7 @@ function acceptModal2(){
         // if the user has met his/her goal
         if (percentage >= 100) {
           // color the bar green
-          targetGraphBar.style.backgroundColor = 'green';
+          targetGraphBar.style.backgroundColor = '#1ccc5a';
           // replace percentage with a checkmark
           var checkMark = document.createElement('i');
           checkMark.classList.add('fas', 'fa-check');
@@ -468,7 +451,6 @@ function changeUser(userName) {
 }
 
 window.addEventListener('DOMContentLoaded', function () {
-  // checkGraphAreaDone();
   var button = document.getElementById('change-planner-button');
   if(button){
     button.addEventListener('click', showCalendarModal);
@@ -548,6 +530,4 @@ window.addEventListener('DOMContentLoaded', function () {
       }
     });
   }
-
-  checkGraphAreaDone();
 });

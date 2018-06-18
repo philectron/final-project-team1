@@ -2,16 +2,15 @@
 module.exports = function hbsHelpers(hbs) {
   return hbs.create({
     defaultLayout: 'default',
-
     helpers: {
-      sum: function(numbers){
-        if(numbers.length > 0){
+      sum: function(numbers) {
+        if (numbers.length > 0) {
           var total = 0;
           var total2 = 0;
-          for(var i = 0; i < numbers.length; i++){
+          for (var i = 0; i < numbers.length; i++) {
             var num1Float = parseFloat(numbers[i].goal);
             var num2Float = parseFloat(numbers[i].progress);
-            if(!isNaN(num1Float) && !isNaN(num2Float)){
+            if (!isNaN(num1Float) && !isNaN(num2Float)) {
               total += num1Float;
               total2 += num2Float;
             }
@@ -22,10 +21,12 @@ module.exports = function hbsHelpers(hbs) {
             percentage = Math.floor(total * 100.0 / total2);
           }
           return percentage;
-        }
-        else{
+        } else {
           return 0;
         }
+      },
+      isGreaterThanOrEqualTo: function(x, y) {
+        return parseFloat(x) >= parseFloat(y);
       }
       // additional helpers go here
     }
