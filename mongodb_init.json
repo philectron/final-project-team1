@@ -1,80 +1,41 @@
 [{
-    "name": "Gym Rat",
-    "profilePicUrl": "https://i.imgur.com/mPStaKV.png",
-    "totalProgress": [{
-      "description": "Total Progress",
-      "goal": "290 minutes",
-      "progress": "56 minutes",
-      "percentage": 19
-    }],
-    "goals": [
-      {
-        "description": "Running",
-        "goal": "15 minutes",
-        "progress": "3 minutes",
-        "percentage": 20
-      },
-      {
-        "description": "Moderate Cardio",
-        "goal": "150 minutes",
-        "progress": "20 minutes",
-        "percentage": 13
-      },
-      {
-        "description": "Vigorous Cardio",
-        "goal": "75 minutes",
-        "progress": "30 minutes",
-        "percentage": 40
-      },
-      {
-        "description": "Lifting",
-        "goal": "50 minutes",
-        "progress": "3 minutes",
-        "percentage": 6
-      }
-    ],
-    "days": [
-      {
-        "weekday": "Sunday",
-        "content": "Run 10 mins"
-      },
-      {
-        "weekday": "Monday",
-        "content": "Run 15 mins"
-      },
-      {
-        "weekday": "Tuesday",
-        "content": "Run 20 mins"
-      },
-      {
-        "weekday": "Wednesday",
-        "content": "Run 25 mins"
-      },
-      {
-        "weekday": "Thursday",
-        "content": "Run 30 mins"
-      },
-      {
-        "weekday": "Friday",
-        "content": "Run 35 mins"
-      },
-      {
-        "weekday": "Saturday",
-        "content": "Run 40 mins"
-      }
-    ],
-    "activities": [
-      {
-        "content": "Ran 15 minutes",
-        "percent": "15"
-      },
-      {
-        "content": "Lifted 15 minutes",
-        "percent": "15"
-      },
-      {
-        "content": "Swam 15 minutes",
-        "percent": "15"
-      }
-    ]
+  "name": "Gym Dog",
+  "profilePicUrl": "https://i.imgur.com/mPStaKV.png",
+  "totalProgress": [{
+    "description": "Total Progress",
+    "goal": "0 minutes",
+    "progress": "0 minutes",
+    "percentage": 0
+  }],
+  "goals": [],
+  "days": [{
+      "weekday": "Sunday",
+      "content": ""
+    },
+    {
+      "weekday": "Monday",
+      "content": ""
+    },
+    {
+      "weekday": "Tuesday",
+      "content": ""
+    },
+    {
+      "weekday": "Wednesday",
+      "content": ""
+    },
+    {
+      "weekday": "Thursday",
+      "content": ""
+    },
+    {
+      "weekday": "Friday",
+      "content": ""
+    },
+    {
+      "weekday": "Saturday",
+      "content": ""
+    }
+  ],
+  "activities": []
 }]

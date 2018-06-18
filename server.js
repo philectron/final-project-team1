@@ -5,13 +5,13 @@ var bodyParser = require('body-parser');
 var MongoClient = require('mongodb').MongoClient;
 var ObjectId = require('mongodb').ObjectId;
 
-const mongoHost = process.env.MONGO_HOST || 'classmongo.engr.oregonstate.edu';
+const mongoHost = process.env.MONGO_HOST;
 const mongoPort = process.env.MONGO_PORT || 27017;
-const mongoUser = process.env.MONGO_USER || 'cs290_luuph';
-const mongoPassword = process.env.MONGO_PASSWORD || '9';
-const mongoDBName = process.env.MONGO_DB_NAME || 'cs290_luuph';
-const mongoURL = 'mongodb://' + mongoUser + ':' + mongoPassword + '@' +
-                  mongoHost + ':' + mongoPort + '/' + mongoDBName;
+const mongoUser = process.env.MONGO_USER;
+const mongoPassword = process.env.MONGO_PASSWORD;
+const mongoDBName = process.env.MONGO_DB_NAME;
+const mongoURL = 'mongodb://' + mongoUser + ':' + mongoPassword + '@'
+                 + mongoHost + ':' + mongoPort + '/' + mongoDBName;
 
 var mongoDB = null;
 var allUsers = null;
@@ -19,12 +19,11 @@ var currentUser = null;
 var count = 0;
 
 var app = express();
-const port = process.env.PORT || 22222;
+const port = process.env.PORT || 3000;
 
 app.engine('handlebars', hbs.engine);
 app.set('view engine', 'handlebars');
-app.use(bodyParser.json());
-app.use(express.static('public'));
+app.use(bodyParser.json()); app.use(express.static('public'));
 
 /*******************************************************************************
  * GET requests
@@ -247,7 +246,7 @@ MongoClient.connect(mongoURL, function(err, client) {
   }
   mongoDB = client.db(mongoDBName);
 
-  var userCollection = mongoDB.collection('users');
+  var userCollection = mongoDB.collection('gymrats');
   userCollection.find().toArray(function (err, userTable) {
     if (err) {
       throw err;
@@ -255,11 +254,10 @@ MongoClient.connect(mongoURL, function(err, client) {
     allUsers = userTable;
     currentUser = allUsers[0];
 
-    // a JSON print on terminal to visualize the database
-    for (var i = 0; i < allUsers.length; i++) {
-      console.log(allUsers[i]);
-      console.log('========================================');
-    }
+    console.log('========================================');
+    console.log('  gymrats collection:');
+    console.log('========================================');
+    console.log(JSON.stringify(userTable, null, 2));
   });
 
   app.listen(port, function() {
