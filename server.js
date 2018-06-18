@@ -38,7 +38,7 @@ app.use(express.static('public'));
 
 // "Home" page is the default page every user ends up on. It should display only
 // the goal for the day and the user's progress on that day.
-app.get('/', function(req, res, next) {
+app.get('/', function(req, res) {
   res.status(200).render('home', {
     userList: allUsers,
     user: currentUser,
@@ -50,7 +50,7 @@ app.get('/', function(req, res, next) {
 
 // "About" page talks about us and the project itself. It's a tutorial for new
 // users how to use the web app.
-app.get('/about', function(req, res, next) {
+app.get('/about', function(req, res) {
   res.status(200).render('about', {
     user: currentUser
   });
@@ -58,7 +58,7 @@ app.get('/about', function(req, res, next) {
 
 // "Calendar" page will show a calendar where the user's workout plans are
 // displayed.
-app.get('/calendar', function(req, res, next) {
+app.get('/calendar', function(req, res) {
   res.status(200).render('calendar', {
     user: currentUser,
     days: currentUser.days
@@ -67,7 +67,7 @@ app.get('/calendar', function(req, res, next) {
 
 // "Leaderboard" page to integrate the database and multi-account into the web
 // app.
-app.get('/leaderboard', function(req, res, next) {
+app.get('/leaderboard', function(req, res) {
   res.status(200).render('leaderboard', {
     userList: allUsers,
     user: currentUser
@@ -81,7 +81,7 @@ app.get('/leaderboard', function(req, res, next) {
 /*
  * Incrementally log activity to DB.
  */
-app.post('/activity/log', function(req, res, next) {
+app.post('/activity/log', function(req, res) {
   if (req.body && req.body.description && req.body.progress
       && !isNaN(req.body.progress) && !isNaN(req.body.percentage)
       && req.body.activity.content && !isNaN(req.body.activity.percent)) {
@@ -111,7 +111,7 @@ app.post('/activity/log', function(req, res, next) {
 /*
  * Add a new goal to DB.
  */
-app.post('/goal/add', function(req, res, next) {
+app.post('/goal/add', function(req, res) {
   if (req.body && req.body.description && req.body.goal
      && req.body.progress !== undefined && req.body.percentage !== undefined) {
     mongoDB.collection('users').updateOne(
@@ -135,7 +135,7 @@ app.post('/goal/add', function(req, res, next) {
 /*
  * Remove an exisiting goal from DB.
  */
-app.post('/goal/remove', function(req, res, next) {
+app.post('/goal/remove', function(req, res) {
   if (req.body && req.body.description !== '') {
     mongoDB.collection('users').updateOne(
       { name: currentUser.name },
@@ -153,7 +153,7 @@ app.post('/goal/remove', function(req, res, next) {
 /*
  * Update the weekly plan.
  */
-app.post('/calendar/update', function(req, res, next) {
+app.post('/calendar/update', function(req, res) {
   if (req.body && req.body.weekday && req.body.content) {
     mongoDB.collection('users').updateOne(
       { name: currentUser.name, "days.weekday": req.body.weekday },
@@ -169,7 +169,7 @@ app.post('/calendar/update', function(req, res, next) {
 /*
  * Add a new user to DB.
  */
-app.post('/user/add', function(req, res, next){
+app.post('/user/add', function(req, res){
   if(req.body && req.body.name && req.body.profilePicUrl){
     mongoDB.collection('users').insertOne(req.body);
     updateUsers();
@@ -184,7 +184,7 @@ app.post('/user/add', function(req, res, next){
 /*
  * Change user session.
  */
-app.post('/user/change', function(req, res, next){
+app.post('/user/change', function(req, res){
   if(req.body && req.body.name){
     //updateUsers();
     changeUser(req.body.name);
@@ -204,6 +204,11 @@ app.get('*', function(req, res) {
     user: currentUser
   });
 });
+
+
+/*******************************************************************************
+ * Helper functions
+ ******************************************************************************/
 
 /*
  * Update current user's data to make things more continuous.
