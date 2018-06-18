@@ -246,7 +246,7 @@ MongoClient.connect(mongoURL, function(err, client) {
   }
   mongoDB = client.db(mongoDBName);
 
-  var userCollection = mongoDB.collection('gymrats');
+  var userCollection = mongoDB.collection('users');
   userCollection.find().toArray(function (err, userTable) {
     if (err) {
       throw err;
