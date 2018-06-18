@@ -1,13 +1,14 @@
 [{
     "name": "Gym Rat",
     "profilePicUrl": "https://i.imgur.com/mPStaKV.png",
-    "totalProgress":[{
+    "totalProgress": [{
       "description": "Total Progress",
       "goal": "290 minutes",
       "progress": "56 minutes",
       "percentage": 19
     }],
-    "goals": [{
+    "goals": [
+      {
         "description": "Running",
         "goal": "15 minutes",
         "progress": "3 minutes",
@@ -32,7 +33,8 @@
         "percentage": 6
       }
     ],
-    "days": [{
+    "days": [
+      {
         "weekday": "Sunday",
         "content": "Run 10 mins"
       },
@@ -61,7 +63,8 @@
         "content": "Run 40 mins"
       }
     ],
-    "activities": [{
+    "activities": [
+      {
         "content": "Ran 15 minutes",
         "percent": "15"
       },
@@ -74,5 +77,4 @@
         "percent": "15"
       }
     ]
-  }
-}
+}]

@@ -11,5 +11,5 @@ Lastly, additional users can be added, and their progress can be kept track of o
 Team1 consists of 3 members:
 
 - Phi Luu ([philectron](https://github.com/philectron))
-- Mitchell Schenk ([mitchell-schenk](https://github.com/mitchell-schenk))
 - Calvin Gagliano ([calgag](https://github.com/calgag))
+- Mitchell Schenk ([mitchell-schenk](https://github.com/mitchell-schenk))
