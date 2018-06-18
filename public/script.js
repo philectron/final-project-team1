@@ -24,7 +24,7 @@ function percentageOf(num1, num2) {
   }
 }
 
-function showCalendarModal(){
+function showCalendarModal() {
   var modalBackdrop = document.querySelector('.modal-backdrop');
   var modal = document.getElementById('calendar-modal');
   var drop = document.getElementById('calendar-day-select');
@@ -38,11 +38,11 @@ function showCalendarModal(){
 
   // default value for <option>: first element selected
   document.getElementById('calendar-day-select')
-          .getElementsByTagName('option')[0]
-          .selected = true;
+    .getElementsByTagName('option')[0]
+    .selected = true;
 }
 
-function updateTextArea(){
+function updateCalendarTextInput() {
   var drop = document.getElementById('calendar-day-select');
   var text = document.getElementById('calendar-goal-input');
   var cal = document.getElementById('week-calendar');
@@ -50,7 +50,7 @@ function updateTextArea(){
   text.value = cal.getElementsByTagName('p')[drop.value].innerText;
 }
 
-function hideModal(){
+function hideCalendarModal() {
   var modalBackdrop = document.querySelector('.modal-backdrop');
   var modal = document.getElementById('calendar-modal');
 
@@ -58,7 +58,7 @@ function hideModal(){
   modal.classList.add('hidden');
 }
 
-function acceptModal(){
+function handleCalendarModalAccept() {
   var request = new XMLHttpRequest();
   var requestURL = '/calendar/update';
   request.open('POST', requestURL);
@@ -72,7 +72,7 @@ function acceptModal(){
     content: text.value
   });
 
-  request.addEventListener('load', function (event) {
+  request.addEventListener('load', function(event) {
     if (event.target.status === 200) {
       cal.getElementsByTagName('p')[drop.value].innerText = text.value;
     } else {
@@ -83,10 +83,10 @@ function acceptModal(){
   request.setRequestHeader('Content-Type', 'application/json');
   request.send(requestBody);
 
-  hideModal();
+  hideCalendarModal();
 }
 
-function showHomeModal(){
+function showGoalModal() {
   var modalBackdrop = document.querySelector('.modal-backdrop');
   var goalModal = document.getElementById('goal-modal');
 
@@ -95,11 +95,11 @@ function showHomeModal(){
 
   // default value for <option>: first option selected
   document.getElementById('log-activity-select')
-          .getElementsByTagName('option')[0]
-          .selected = true;
+    .getElementsByTagName('option')[0]
+    .selected = true;
   document.getElementById('remove-goal-select')
-          .getElementsByTagName('option')[0]
-          .selected = true;
+    .getElementsByTagName('option')[0]
+    .selected = true;
 
   // default value for <textarea>: empty textbox
   var goalModalInputs = goalModal.getElementsByTagName('input');
@@ -112,7 +112,7 @@ function showHomeModal(){
   }
 }
 
-function hideModal2(){
+function hideGoalModal() {
   var modalBackdrop = document.querySelector('.modal-backdrop');
   var modal = document.getElementById('goal-modal');
 
@@ -166,7 +166,7 @@ function removeIthGoalHomeModal(i) {
   document.getElementById('remove-goal-select').remove(i);
 }
 
-function acceptModal2(){
+function handleGoalModalAccept() {
   var request = new XMLHttpRequest();
   if (numberModalTab == 0) {
     var requestURL = '/activity/log';
@@ -182,14 +182,14 @@ function acceptModal2(){
     // the graph's current goal can be found inside the '.graph' DOM
     var goal = parseFloat(targetGraph.querySelector('.graph-goal').innerText);
     // the graph's current progress can be found inside the '.graph' DOM
-    var oldProgress = parseFloat(targetGraph.querySelector('.graph-progress').innerText);
+    var oldProgress = parseFloat(
+      targetGraph.querySelector('.graph-progress').innerText);
 
     // the graph description is the selected value of the menu
     var description = selectDropDown.value;
     // the graph progress to add into the existing one is the value of <input>
     var progressInc = parseFloat(
-      document.getElementById('log-activity-progress-input').value
-    );
+      document.getElementById('log-activity-progress-input').value);
 
     /* validate inputs */
     if (progressInc === '' || isNaN(progressInc)) {
@@ -259,15 +259,13 @@ function acceptModal2(){
 
     request.setRequestHeader('Content-Type', 'application/json');
     request.send(requestBody);
-  }
-  else if(numberModalTab == 1){
+  } else if (numberModalTab == 1) {
     var requestURL = '/goal/add';
     request.open('POST', requestURL);
 
     var description = document.getElementById('create-goal-text-input').value;
     var goal = parseFloat(
-      document.getElementById('create-goal-goal-input').value
-    );
+      document.getElementById('create-goal-goal-input').value);
 
     /* validate inputs */
     if (description === '' || goal === '' || isNaN(goal)) {
@@ -285,13 +283,13 @@ function acceptModal2(){
       percentage: 0
     });
 
-    request.addEventListener('load', function (event) {
-      if(event.target.status === 200){
+    request.addEventListener('load', function(event) {
+      if (event.target.status === 200) {
         appendGoalGraphContainer(description, goal, 0);
         appendGoalSidebar(description);
         appendGoalLogActivityTab(description);
         appendGoalRemoveGoalTab(description);
-      }else{
+      } else {
         alert('Error adding goal: ' + event.target.response);
       }
     });
@@ -299,7 +297,7 @@ function acceptModal2(){
     request.setRequestHeader('Content-Type', 'application/json');
     request.send(requestBody);
 
-  }else if(numberModalTab == 2){
+  } else if (numberModalTab == 2) {
     var requestURL = '/goal/remove';
     request.open('POST', requestURL);
 
@@ -309,12 +307,12 @@ function acceptModal2(){
 
     var requestBody = JSON.stringify({ description: description });
 
-    request.addEventListener('load', function (event) {
-      if (event.target.status === 200){
+    request.addEventListener('load', function(event) {
+      if (event.target.status === 200) {
         removeIthGoalGraph(index);
         removeIthGoalSidebar(index);
         removeIthGoalHomeModal(index);
-      } else{
+      } else {
         alert('Error removing goal: ' + event.target.response);
       }
     });
@@ -323,10 +321,10 @@ function acceptModal2(){
     request.send(requestBody);
   }
 
-  hideModal2();
+  hideGoalModal();
 }
 
-function changeModalBody(modalTabs, i) {
+function updateGoalModalBody(modalTabs, i) {
   return function() {
     // visually deselect the current selected modal tab
     var selectedModalTab = document.querySelector('.modal-tab-selected');
@@ -340,7 +338,7 @@ function changeModalBody(modalTabs, i) {
     var modalBodies = document.getElementsByClassName('modal-body-section');
     if (modalBodies) {
       // hide the previously selected modal body
-      for (var j = 0; j < modalBodies.length ; j++) {
+      for (var j = 0; j < modalBodies.length; j++) {
         if (!modalBodies[j].classList.contains('hidden')) {
           modalBodies[j].classList.add('hidden');
           break;
@@ -352,7 +350,7 @@ function changeModalBody(modalTabs, i) {
   };
 }
 
-function hideModal3(){
+function hideUserModal() {
   var modalBackdrop = document.querySelector('.modal-backdrop');
   var modal = document.getElementById('user-modal');
 
@@ -360,17 +358,17 @@ function hideModal3(){
   modal.classList.add('hidden');
 }
 
-function addNewUser() {
+function showUserModal() {
   var modalBackdrop = document.querySelector('.modal-backdrop');
   var userModal = document.getElementById('user-modal');
   document.getElementById('username-text-input').value = '';
-  document.getElementById('profimage-text-input').value= '';
+  document.getElementById('profimage-text-input').value = '';
   modalBackdrop.classList.remove('hidden');
   userModal.classList.remove('hidden');
 
 }
 
-function createNewUser(){
+function handleUserModalAccept() {
   var name = document.getElementById('username-text-input').value;
   var pic = document.getElementById('profimage-text-input').value;
 
@@ -381,15 +379,14 @@ function createNewUser(){
   var requestBody = JSON.stringify({
     "name": name,
     "profilePicUrl": pic,
-    "totalProgress":[{
+    "totalProgress": [{
       "description": "Total Progress",
       "goal": "0 minutes",
       "progress": "0 minutes",
       "percentage": 0
     }],
     "goals": [],
-    "days": [
-      {
+    "days": [{
         "weekday": "Sunday",
         "content": ""
       },
@@ -421,25 +418,25 @@ function createNewUser(){
     "activities": []
   });
 
-  request.addEventListener('load', function (event) {
+  request.addEventListener('load', function(event) {
     if (event.target.status === 200) {
-      changeUser(name);
+      handleUserChange(name);
     } else {
       alert("Error adding new plan: " + event.target.response);
     }
   });
   request.setRequestHeader('Content-Type', 'application/json');
   request.send(requestBody);
-  hideModal3();
+  hideUserModal();
 }
 
-function changeUser(userName) {
+function handleUserChange(userName) {
   var request = new XMLHttpRequest();
   var requestURL = '/user/change';
   request.open('POST', requestURL);
 
-  var requestBody = JSON.stringify({name: userName});
-  request.addEventListener('load', function (event) {
+  var requestBody = JSON.stringify({ name: userName });
+  request.addEventListener('load', function(event) {
     if (event.target.status === 200) {
       document.location.reload();
     } else {
@@ -450,83 +447,90 @@ function changeUser(userName) {
   request.send(requestBody);
 }
 
-window.addEventListener('DOMContentLoaded', function () {
+window.addEventListener('DOMContentLoaded', function() {
   var button = document.getElementById('change-planner-button');
-  if(button){
+  if (button) {
     button.addEventListener('click', showCalendarModal);
   }
 
   var homeButton = document.getElementById('create-goal-button');
-  if(homeButton){
-    homeButton.addEventListener('click', showHomeModal);
+  if (homeButton) {
+    homeButton.addEventListener('click', showGoalModal);
   }
 
   var modalTabs = document.getElementsByClassName('modal-tab');
   if (modalTabs) {
     for (var i = 0; i < modalTabs.length; i++) {
-      modalTabs[i].addEventListener('click', changeModalBody(modalTabs, i));
+      modalTabs[i].addEventListener('click', updateGoalModalBody(modalTabs, i));
     }
   }
 
-  var modalCloseButton = document.querySelector('#calendar-modal .modal-close-button');
+  var modalCloseButton = document.querySelector(
+    '#calendar-modal .modal-close-button');
   if (modalCloseButton) {
-    modalCloseButton.addEventListener('click', hideModal);
+    modalCloseButton.addEventListener('click', hideCalendarModal);
   }
 
-  var modalCancelButton = document.querySelector('#calendar-modal .modal-cancel-button');
+  var modalCancelButton = document.querySelector(
+    '#calendar-modal .modal-cancel-button');
   if (modalCancelButton) {
-    modalCancelButton.addEventListener('click', hideModal);
+    modalCancelButton.addEventListener('click', hideCalendarModal);
   }
 
-  var modalAcceptButton = document.querySelector('#calendar-modal .modal-accept-button');
+  var modalAcceptButton = document.querySelector(
+    '#calendar-modal .modal-accept-button');
   if (modalAcceptButton) {
-    modalAcceptButton.addEventListener('click', acceptModal);
+    modalAcceptButton.addEventListener('click', handleCalendarModalAccept);
   }
 
-  var modalCloseButton2 = document.querySelector('#goal-modal .modal-close-button');
+  var modalCloseButton2 = document.querySelector(
+    '#goal-modal .modal-close-button');
   if (modalCloseButton2) {
-    modalCloseButton2.addEventListener('click', hideModal2);
+    modalCloseButton2.addEventListener('click', hideGoalModal);
   }
 
-  var modalCancelButton2 = document.querySelector('#goal-modal .modal-cancel-button');
+  var modalCancelButton2 = document.querySelector(
+    '#goal-modal .modal-cancel-button');
   if (modalCancelButton2) {
-    modalCancelButton2.addEventListener('click', hideModal2);
+    modalCancelButton2.addEventListener('click', hideGoalModal);
   }
 
-  var modalAcceptButton2 = document.querySelector('#goal-modal .modal-accept-button');
+  var modalAcceptButton2 = document.querySelector(
+    '#goal-modal .modal-accept-button');
   if (modalAcceptButton2) {
-    modalAcceptButton2.addEventListener('click', acceptModal2);
+    modalAcceptButton2.addEventListener('click', handleGoalModalAccept);
   }
 
-  var modalCloseButton3 = document.querySelector('#user-modal .modal-close-button');
+  var modalCloseButton3 = document.querySelector(
+    '#user-modal .modal-close-button');
   if (modalCloseButton3) {
-    modalCloseButton3.addEventListener('click', hideModal3);
+    modalCloseButton3.addEventListener('click', hideUserModal);
   }
 
-  var modalCancelButton3 = document.querySelector('#user-modal .modal-cancel-button');
+  var modalCancelButton3 = document.querySelector(
+    '#user-modal .modal-cancel-button');
   if (modalCancelButton3) {
-    modalCancelButton3.addEventListener('click', hideModal3);
+    modalCancelButton3.addEventListener('click', hideUserModal);
   }
 
-  var modalAcceptButton3 = document.querySelector('#user-modal .modal-accept-button');
+  var modalAcceptButton3 = document.querySelector(
+    '#user-modal .modal-accept-button');
   if (modalAcceptButton3) {
-    modalAcceptButton3.addEventListener('click', createNewUser);
+    modalAcceptButton3.addEventListener('click', handleUserModalAccept);
   }
 
   var modalSelect = document.getElementById('calendar-day-select')
-  if(modalSelect){
-    modalSelect.addEventListener('change', updateTextArea);
+  if (modalSelect) {
+    modalSelect.addEventListener('change', updateCalendarTextInput);
   }
-
 
   var changeUserText = document.getElementById('user-list');
   if (changeUserText) {
     changeUserText.addEventListener('click', function(event) {
       if (event.target.innerText == 'Add a new user...') {
-        addNewUser();
-      }
-      else {
-        changeUser(event.target.innerText);
+        showUserModal();
+      } else {
+        handleUserChange(event.target.innerText);
       }
     });
   }
