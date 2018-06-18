@@ -10,10 +10,10 @@ html {
 
 html {
   background-color: #a0a0a0;
+  color: #f0f0f0;
   font-family: "PT Serif", Helvetica, sans-serif, Arial, monospace;
   font-size: 16px;
   line-height: 1.5;
-  color: #f0f0f0;
 }
 
 /*
@@ -24,9 +24,11 @@ a {
   text-decoration: none;
 }
 
-a, a:link, a:visited {
-  text-decoration: none;
+a,
+a:link,
+a:visited {
   color: #f0f0f0;
+  text-decoration: none;
 }
 
 a:hover {
@@ -85,7 +87,7 @@ p {
 /* For Firefox */
 
 input[type='number'] {
-  -moz-appearance:textfield;
+  -moz-appearance: textfield;
 }
 
 /* Webkit browsers like Safari and Chrome */
@@ -124,19 +126,17 @@ input[type=number]::-webkit-outer-spin-button {
 header {
   align-items: center;
   background-color: #cc591c;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, .2), 0 6px 20px 0 rgba(0, 0, 0, .19);
+  color: #f0f0f0;
   display: flex;
   height: 3rem;
   padding: 0 2rem;
   position: relative;
   z-index: 2;
-  color: #f0f0f0;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, .2), 0 6px 20px 0 rgba(0, 0, 0, .19);
-
 }
 
 .header-item {
   flex: 1;
-
 }
 
 /*
@@ -145,9 +145,9 @@ header {
 
 .navlink {
   display: inline-block;
+  font-weight: bold;
   margin: 0 .5rem;
   padding: 0 .5rem;
-  font-weight: bold;
 }
 
 .navlink:hover {
@@ -190,6 +190,7 @@ header {
 .sidebar {
   background-color: #3c3c3c;
   bottom: 0;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, .2), 0 6px 20px 0 rgba(0, 0, 0, .19);
   left: 0;
   overflow-y: auto;
   padding-top: 3rem;
@@ -197,7 +198,6 @@ header {
   top: 0;
   width: 18rem;
   z-index: 1;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, .2), 0 6px 20px 0 rgba(0, 0, 0, .19);
 }
 
 .sidebar .user-profile-pic {
@@ -225,8 +225,8 @@ header {
 
 .goal-item:hover {
   background-color: #a0a0a0;
-  transition: .25s;
   cursor: pointer;
+  transition: .25s;
 }
 
 /*******************************************************************************
@@ -253,13 +253,13 @@ main {
 
 .graph-container {
   background-color: #3c3c3c;
+  border-radius: .5rem;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, .2), 0 6px 20px 0 rgba(0, 0, 0, .19);
+  color: #fff;
   display: flex;
   flex-direction: column;
   margin: 1rem 3rem;
-  color: #fff;
   padding: 5px;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, .2), 0 6px 20px 0 rgba(0, 0, 0, .19);
-  border-radius: .5rem;
 }
 
 .graph-label {
@@ -300,27 +300,27 @@ main {
  */
 
 .activity-feed {
-  border-radius: .5rem;
+  align-items: center;
   background-color: #3c3c3c;
+  border-radius: .5rem;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, .2), 0 6px 20px 0 rgba(0, 0, 0, .19);
   display: flex;
   flex-direction: column-reverse;
-  align-items: center;
   margin: 1rem 3rem;
   overflow-y: auto;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, .2), 0 6px 20px 0 rgba(0, 0, 0, .19);
 }
 
 .activity {
+  background-color: #cc591c;
   border-radius: .5rem;
-  background-color:  #cc591c;
-  width: 95%;
-  margin: 10px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, .2), 0 6px 20px 0 rgba(0, 0, 0, .19);
+  margin: 10px;
+  width: 95%;
 }
 
-.activity p{
-  margin-top: 10px;
+.activity p {
   margin-left: 10px;
+  margin-top: 10px;
 }
 
 #calendar-header,
@@ -329,8 +329,8 @@ main {
   text-align: center;
 }
 
-.rank-name{
-    color: #3c3c3c;
+.rank-name {
+  color: #3c3c3c;
 }
 
 /* Calendar */
@@ -338,18 +338,18 @@ main {
 .week {
   background-color: #cc591c;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, .2), 0 6px 20px 0 rgba(0, 0, 0, .19);
-  padding: 10px;
   display: flex;
-  overflow-x: scroll;
-  overflow-y: hidden;
-  white-space: nowrap;
   margin-left: 3rem;
   margin-right: 3rem;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  padding: 10px;
+  white-space: nowrap;
 }
 
 .day {
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, .2), 0 6px 20px 0 rgba(0, 0, 0, .19);
   background-color: #3c3c3c;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, .2), 0 6px 20px 0 rgba(0, 0, 0, .19);
   display: block;
   flex: 3;
   margin: 10px;
@@ -364,9 +364,9 @@ main {
 
 .day p {
   display: block;
+  min-height: 300px;
   text-align: left;
   width: 100%;
-  min-height: 300px;
 }
 
 /*
@@ -402,7 +402,6 @@ main {
   width: 1.5rem;
 }
 
-
 #change-planner-button {
   background-color: #3c3c3c;
   border-radius: 50%;
@@ -437,83 +436,86 @@ main {
 
 footer {
   background-color: #a0a0a0;
-  display: block;
-  color: #000;
-  position: fixed;
   bottom: 0;
+  color: #000;
+  display: block;
   left: 0;
-  width: 100%;
+  position: fixed;
   text-align: center;
+  width: 100%;
   z-index: -1;
 }
 
-footer a, footer a:link, footer a:hover, footer a:visited {
+footer a,
+footer a:link,
+footer a:hover,
+footer a:visited {
   color: #000;
 }
 
 /* modal */
 
 .modal-backdrop {
-  position: fixed;
-  top: 0;
+  background-color: rgba(0, 0, 0, .85);
   bottom: 0;
   left: 0;
+  position: fixed;
   right: 0;
+  top: 0;
   z-index: 1000;
-  background-color: rgba(0, 0, 0, .85);
 }
 
 #calendar-modal {
-  position: fixed;
-  top: 0;
   bottom: 0;
   left: 0;
-  right: 0;
-  z-index: 1010;
   overflow: auto;
+  position: fixed;
+  right: 0;
+  top: 0;
+  z-index: 1010;
 }
 
 #goal-modal {
-  position: fixed;
-  top: 0;
   bottom: 0;
   left: 0;
-  right: 0;
-  z-index: 1010;
   overflow: auto;
+  position: fixed;
+  right: 0;
+  top: 0;
+  z-index: 1010;
 }
 
 #user-modal {
-  position: fixed;
-  top: 0;
   bottom: 0;
   left: 0;
-  right: 0;
-  z-index: 1010;
   overflow: auto;
+  position: fixed;
+  right: 0;
+  top: 0;
+  z-index: 1010;
 }
 
 .select-menu {
+  background-color: #f1f1f1;
   display: block;
   margin: 0 auto 1rem;
   width: 90%;
-  background-color: #f1f1f1;
 }
 
 .modal-dialog {
-  width: auto;
-  max-width: 600px;
-  min-width: 350px;
-  min-height: 300px;
-  margin: 40px auto;
   background-color: #fff;
   border-radius: 15px;
   color: #000;
+  margin: 40px auto;
+  max-width: 600px;
+  min-height: 300px;
+  min-width: 350px;
+  width: auto;
 }
 
 .modal-header {
-  position: relative;
   padding: 10px 20px;
+  position: relative;
 }
 
 .modal-tab-bar {
@@ -532,20 +534,20 @@ footer a, footer a:link, footer a:hover, footer a:visited {
 }
 
 .modal-tab:hover {
-  cursor: pointer;
   background-color: #eee;
+  cursor: pointer;
   transition: .25s;
 }
 
 .modal-close-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
+  padding: 0;
   position: absolute;
   right: 10px;
   top: 10px;
-  font-size: 24px;
-  border: none;
-  background: none;
-  padding: 0;
-  cursor: pointer;
 }
 
 .modal-body {
@@ -563,13 +565,13 @@ footer a, footer a:link, footer a:hover, footer a:visited {
 }
 
 .content-input-element textarea {
+  border: 1px solid #aaa;
   display: block;
-  padding: 8px;
+  font-size: 18px;
   margin-left: auto;
   margin-right: auto;
-  font-size: 18px;
-  border: 1px solid #aaa;
   min-height: 64px;
+  padding: 8px;
   width: 75%;
 }
 
@@ -605,63 +607,65 @@ footer a, footer a:link, footer a:hover, footer a:visited {
 }
 
 .modal-footer button {
-  font-size: 20px;
-  background-color:  #fff;
-  color: #333;
-  border: 1px solid #333;
+  background-color: #fff;
   border-radius: 5px;
-  padding: 10px;
-  margin-right: 20px;
+  border: 1px solid #333;
+  color: #333;
   cursor: pointer;
+  font-size: 20px;
+  margin-right: 20px;
+  padding: 10px;
 }
 
 .modal-footer .modal-cancel-button:hover {
-  background-color:  #eee;
+  background-color: #eee;
 }
 
 .modal-footer .modal-accept-button {
-  background-color:  #cc591c;
+  background-color: #cc591c;
   color: #fff;
 }
 
 .modal-footer .modal-accept-button:hover {
-  background-color:  #e06428;
+  background-color: #e06428;
 }
 
 #user-drop {
-  position: fixed;
   bottom: 0;
   left: 2rem;
+  position: fixed;
 }
 
 #user-list {
-  position: fixed;
-  overflow-y: auto;
-  left: 2rem;
-  display: none;
-  bottom: 3rem;
-  max-height: 500px;
-  width: 10%;
   background-color: #808080;
+  border-radius: .5rem;
+  bottom: 3rem;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, .2), 0 6px 20px 0 rgba(0, 0, 0, .19);
+  display: none;
+  left: 2rem;
   list-style-type: none;
   margin: 0;
-  padding: 1rem;
+  max-height: 500px;
   max-height: 7rem;
-  border-radius: .5rem;
+  overflow-y: auto;
+  padding: 1rem;
+  position: fixed;
+  width: 10%;
 }
 
-#user-drop:hover #user-list { display: block };
+#user-drop:hover #user-list {
+  display: block
+};
 
 .user-option {
-  width: 10%;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, .2), 0 6px 20px 0 rgba(0, 0, 0, .19);
+  width: 10%;
 }
 
-.user-option:hover{
+.user-option:hover {
   background-color: #cc591c;
-  cursor: pointer;
   border-radius: .5rem;
+  cursor: pointer;
   transition: .25s;
 }
 
@@ -684,6 +688,7 @@ footer a, footer a:link, footer a:hover, footer a:visited {
 /*
  * For text on bright backgrounds
  */
+
 .text-bright-background {
   color: #000 !important;
 }
