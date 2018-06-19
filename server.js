@@ -68,9 +68,38 @@ app.get('/calendar', function(req, res) {
 // "Leaderboard" page to integrate the database and multi-account into the web
 // app.
 app.get('/leaderboard', function(req, res) {
-  res.status(200).render('leaderboard', {
-    userList: allUsers,
-    user: currentUser
+  // get the current user's total goal and total progress
+  mongoDB.collection('users').aggregate(
+    { $match: { name: currentUser.name }},
+    { $unwind: '$goals' },
+    { $group: {
+      _id: null,
+      goal: { $sum: '$goals.goal' },
+      progress: { $sum: '$goals.progress' }
+    }},
+    { $project: { _id: 0 }}
+  ).toArray(function(err, result) {
+    if (err) {
+      throw err;
+    }
+
+    var total = result[0];
+
+    // update the "totalProgress" field of current user
+    mongoDB.collection('users').updateOne(
+      { name: currentUser.name,
+        'totalProgress.description': 'Total Progress'
+      },
+      { $set: {
+        'totalProgress.$.goal': total.goal,
+        'totalProgress.$.progress': total.progress,
+        'totalProgress.$.percentage': percentageOf(total.goal, total.progress)
+      }}
+    );
+
+    // update users and render the Leaderboard page
+    updateUsers();
+    res.status(200).render('leaderboard', { userList: allUsers });
   });
 });
 
@@ -246,6 +275,23 @@ function changeUser(userName){
     }
   });
 
+}
+
+/*
+ * Get percentage of two numbers
+ */
+function percentageOf(num1, num2) {
+  if (!isNaN(num1) && !isNaN(num2)) {
+    // if num2 > num1, return 100. Otherwise, return floor(num2 * 100.0 / num1)
+    if (num2 >= num1) {
+      return 100;
+    } else {
+      return Math.floor(num2 * 100.0 / num1);
+    }
+  } else {
+    // if either num1 or num2 is not a number, return 0
+    return 0;
+  }
 }
 
 /*******************************************************************************

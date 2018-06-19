@@ -1,10 +1,4 @@
 <div class="rank-container">
   <h1 class="rank-name">{{name}}</h1>
-  <div class="graph-container">
-    <h2 class="graph-label">{{name}}'s weekly stats</h2>
-    {{> totalProgress goals}}
-    {{#each goals}}
-      {{>goal}}
-    {{/each}}
-  </div>
+  {{> graph showTotalProgress=true}}
 </div>
