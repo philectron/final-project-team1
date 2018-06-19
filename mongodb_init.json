@@ -1,12 +1,11 @@
 [{
   "name": "Gym Dog",
   "profilePicUrl": "https://i.imgur.com/mPStaKV.png",
-  "totalProgress": [{
-    "description": "Total Progress",
-    "goal": "0 minutes",
-    "progress": "0 minutes",
+  "totalProgress": {
+    "goal": 0,
+    "progress": 0,
     "percentage": 0
-  }],
+  },
   "goals": [],
   "days": [{
       "weekday": "Sunday",
@@ -35,7 +34,7 @@
     {
       "weekday": "Saturday",
       "content": ""
-    }
-  ],
+
+      }],
   "activities": []
 }]
