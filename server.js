@@ -77,10 +77,11 @@ app.get('/leaderboard', function(req, res) {
       goal: { $sum: '$goals.goal' },
       progress: { $sum: '$goals.progress' }
     }},
-    { $project: { _id: 0 }}
-  ).toArray(function(err, result) {
+    { $project: { _id: 0 }})
+  .toArray(function(err, result) {
     if (err) {
-      throw err;
+      res.status(500).send('500: Error calculating total progress');
+      return;
     }
 
     var total = result[0];
@@ -94,12 +95,18 @@ app.get('/leaderboard', function(req, res) {
         'totalProgress.$.goal': total.goal,
         'totalProgress.$.progress': total.progress,
         'totalProgress.$.percentage': percentageOf(total.goal, total.progress)
-      }}
-    );
+      }},
+      function(err) {
+        if (err) {
+          res.status(500).send('500: Error updating total progress');
+          return;
+        }
 
-    // update users and render the Leaderboard page
-    updateUsers();
-    res.status(200).render('leaderboard', { userList: allUsers });
+        // update users and render the Leaderboard page
+        updateUsers();
+        res.status(200).render('leaderboard', { userList: allUsers });
+      }
+    );
   });
 });
 
@@ -114,26 +121,43 @@ app.post('/activity/log', function(req, res) {
   if (req.body && req.body.description && req.body.progress
       && !isNaN(req.body.progress) && !isNaN(req.body.percentage)
       && req.body.activity.content && !isNaN(req.body.activity.percent)) {
+    // update goal progress and percentage
     mongoDB.collection('users').updateOne(
       { name: currentUser.name, 'goals.description': req.body.description },
       { $set: {
         'goals.$.progress': req.body.progress,
         'goals.$.percentage': req.body.percentage
-      }}
-    );
-    mongoDB.collection('users').updateOne(
-      { name: currentUser.name },
-      { $addToSet: {
-        "activities": {
-          content: req.body.activity.content,
-          percent: req.body.activity.percent
+      }},
+      function(err, result) {
+        if (err) {
+          res.status(500).send('500: Error updating goal');
+          return;
         }
-      }}
+
+        // update the activity feed
+        mongoDB.collection('users').updateOne(
+          { name: currentUser.name },
+          { $addToSet: {
+            "activities": {
+              content: req.body.activity.content,
+              percent: req.body.activity.percent
+            }
+          }},
+          function(err, result) {
+            if (err) {
+              res.status(500).send('500: Error updating activity feed');
+              return;
+            }
+
+            // update the current user's data and send response
+            updateUsers();
+            res.status(200).send('Activity logged successfully');
+          }
+        );
+      }
     );
-    res.status(200).send('Activity logged');
-    updateUsers();
   } else {
-    res.status(400).send('Bad request');
+    res.status(400).send('400: Bad activity log request');
   }
 });
 
@@ -143,6 +167,7 @@ app.post('/activity/log', function(req, res) {
 app.post('/goal/add', function(req, res) {
   if (req.body && req.body.description && req.body.goal
      && req.body.progress !== undefined && req.body.percentage !== undefined) {
+    // add a new goal to the set
     mongoDB.collection('users').updateOne(
       { name: currentUser.name },
       { $addToSet: {
@@ -152,12 +177,20 @@ app.post('/goal/add', function(req, res) {
           'progress': req.body.progress,
           'percentage': req.body.percentage
         }
-      }}
+      }},
+      function(err) {
+        if (err) {
+          res.status(500).send('500: Error adding new goal');
+          return;
+        }
+
+        // update the current user's data and send response
+        updateUsers();
+        res.status(200).send('New goal added successfully');
+      }
     );
-    res.status(200).send('New goal created');
-    updateUsers();
   } else {
-    res.status(400).send('Bad request');
+    res.status(400).send('400: Bad goal addition request');
   }
 });
 
@@ -166,16 +199,25 @@ app.post('/goal/add', function(req, res) {
  */
 app.post('/goal/remove', function(req, res) {
   if (req.body && req.body.description !== '') {
+    // remove the goal from the set
     mongoDB.collection('users').updateOne(
       { name: currentUser.name },
       { $pull: {
         goals: { 'description': req.body.description }
-      }}
+      }},
+      function(err) {
+        if (err) {
+          res.status(500).send('500: Error removing the selected goal');
+          return;
+        }
+
+        // update the current user's data and send response
+        updateUsers();
+        res.status(200).send('Selected goal removed successfully');
+      }
     );
-    res.status(200).send('Goal removed');
-    updateUsers();
   } else {
-    res.status(400).send('Bad request');
+    res.status(400).send('400: Bad goal removal request');
   }
 });
 
@@ -184,14 +226,23 @@ app.post('/goal/remove', function(req, res) {
  */
 app.post('/calendar/update', function(req, res) {
   if (req.body && req.body.weekday && req.body.content) {
+    // update the day's plan
     mongoDB.collection('users').updateOne(
       { name: currentUser.name, "days.weekday": req.body.weekday },
-      { $set: { "days.$.content" : req.body.content }}
+      { $set: { "days.$.content" : req.body.content }},
+      function(err) {
+        if (err) {
+          res.status(500).send('500: Error updating calendar');
+          return;
+        }
+
+        // update the current user's data and send response
+        updateUsers();
+        res.status(200).send('Calendar updated successfully');
+      }
     );
-    res.status(200).send('New plan created');
-    updateUsers();
   } else {
-    res.status(400).send('Bad request');
+    res.status(400).send('400: Bad calendar update request');
   }
 });
 
@@ -200,13 +251,21 @@ app.post('/calendar/update', function(req, res) {
  */
 app.post('/user/add', function(req, res){
   if(req.body && req.body.name && req.body.profilePicUrl){
-    mongoDB.collection('users').insertOne(req.body);
-    updateUsers();
-    //changeUser(req.body.name);
-    res.status(200).send('New user added');
+    // add a new user to the DB
+    mongoDB.collection('users').insertOne(req.body, function(err) {
+      if (err) {
+        res.status(500).send('500: Error adding new user');
+        return;
+      }
+
+      // update user, send response, and go to the new user's page
+      changeUser(req.body.name);
+      res.status(200).send('New user added successfully');
+      next();
+    });
   }
   else{
-    res.status(400).send('Bad request');
+    res.status(400).send('400: Bad user addition request');
   }
 });
 
@@ -215,12 +274,11 @@ app.post('/user/add', function(req, res){
  */
 app.post('/user/change', function(req, res){
   if(req.body && req.body.name){
-    //updateUsers();
     changeUser(req.body.name);
-    res.status(200).send('user changed');
+    res.status(200).send('User changed successfully');
   }
   else{
-    res.status(400).send('Bad request');
+    res.status(400).send('400: Bad user change request');
   }
 });
 
