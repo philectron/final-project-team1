@@ -8,30 +8,37 @@
   },
   "goals": [],
   "days": [{
+      "_id": "sunday",
       "weekday": "Sunday",
       "content": ""
     },
     {
+      "_id": "monday",
       "weekday": "Monday",
       "content": ""
     },
     {
+      "_id": "tuesday",
       "weekday": "Tuesday",
       "content": ""
     },
     {
+      "_id": "wednesday",
       "weekday": "Wednesday",
       "content": ""
     },
     {
+      "_id": "thursday",
       "weekday": "Thursday",
       "content": ""
     },
     {
+      "_id": "friday",
       "weekday": "Friday",
       "content": ""
     },
     {
+      "_id": "saturday",
       "weekday": "Saturday",
       "content": ""
 
