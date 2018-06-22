@@ -118,9 +118,10 @@ app.get('/leaderboard', function(req, res) {
  * Incrementally log activity to DB.
  */
 app.post('/activity/log', function(req, res) {
-  if (req.body && req.body.description && req.body.progress
-      && !isNaN(req.body.progress) && !isNaN(req.body.percentage)
-      && req.body.activity.content && !isNaN(req.body.activity.percent)) {
+  if (req.body && req.body.description && isNonNegativeNum(req.body.index)
+      && isPositiveNum(req.body.progress) && isPositiveNum(req.body.progressInc)
+      && isPositiveNum(req.body.percentage) && req.body.activity.content
+      && isPositiveNum(req.body.activity.percent)) {
     // update goal progress and percentage
     mongoDB.collection('users').updateOne(
       { name: currentUser.name, 'goals.description': req.body.description },
@@ -165,19 +166,22 @@ app.post('/activity/log', function(req, res) {
  * Add a new goal to DB.
  */
 app.post('/goal/add', function(req, res) {
-  if (req.body && req.body.description && req.body.goal
-     && req.body.progress !== undefined && req.body.percentage !== undefined) {
-    // add a new goal to the set
+  if (req.body && req.body.description && isPositiveNum(req.body.goal)) {
     mongoDB.collection('users').updateOne(
       { name: currentUser.name },
-      { $addToSet: {
-        'goals': {
-          'description': req.body.description,
-          'goal': req.body.goal,
-          'progress': req.body.progress,
-          'percentage': req.body.percentage
-        }
-      }},
+      {
+        // push this new goal to the end of the goals array
+        $addToSet: {
+          'goals': {
+            'description': req.body.description,
+            'goal': req.body.goal,
+            'progress': 0,
+            'percentage': 0
+          }
+        },
+        // increase the total goal in totalProgress
+        $inc: { 'totalProgress.goal': req.body.goal }
+      },
       function(err) {
         if (err) {
           res.status(500).send('500: Error adding new goal');
@@ -198,24 +202,51 @@ app.post('/goal/add', function(req, res) {
  * Remove an exisiting goal from DB.
  */
 app.post('/goal/remove', function(req, res) {
-  if (req.body && req.body.description !== '') {
-    // remove the goal from the set
-    mongoDB.collection('users').updateOne(
-      { name: currentUser.name },
-      { $pull: {
-        goals: { 'description': req.body.description }
+  if (req.body && req.body.description && isNonNegativeNum(req.body.index)) {
+    // select the goal with the corresponding index in the goals array
+    mongoDB.collection('users').aggregate([
+      { $match: { name: currentUser.name }},
+      { $project: {
+        _id: 0,
+        ithGoal: { $arrayElemAt: [ '$goals', req.body.index ]}
       }},
-      function(err) {
-        if (err) {
-          res.status(500).send('500: Error removing the selected goal');
-          return;
-        }
-
-        // update the current user's data and send response
-        updateUsers();
-        res.status(200).send('Selected goal removed successfully');
+    ]).toArray(function(errFind, result) {
+      if (errFind) {
+        res.status(500).send('500: Error finding the selected goal');
+        return;
       }
-    );
+
+      var goal = result[0].ithGoal.goal;
+      var progress = result[0].ithGoal.progress;
+      var description = result[0].ithGoal.description;
+
+      mongoDB.collection('users').updateOne(
+        { name: currentUser.name },
+        {
+          // decrease total goal and total progress from totalProgress
+          $inc: {
+            'totalProgress.goal': -goal,
+            'totalProgress.progress': -progress
+          },
+          // update total percentage
+          $set: {
+            'totalProgress.percentage': percentageOf(goal, progress)
+          },
+          // remove the selected goal from the goals array
+          $pull: { goals: { description: description }}
+        },
+        function(errRemove) {
+          if (errRemove) {
+            res.status(500).send('500: Error removing selected goal');
+            return;
+          }
+
+          // update the current user's data and send response
+          updateUsers();
+          res.status(200).send('Selected goal removed successfully');
+        }
+      );
+    });
   } else {
     res.status(400).send('400: Bad goal removal request');
   }
@@ -298,6 +329,22 @@ app.get('*', function(req, res) {
  ******************************************************************************/
 
 /*
+ * Return true if x is a non-negative number. Return false otherwise.
+ */
+function isNonNegativeNum(x) {
+  var xFloat = parseFloat(x);
+  return !isNaN(xFloat) && xFloat >= 0;
+}
+
+/*
+ * Return true if x is a positive number. Return false otherwise.
+ */
+function isPositiveNum(x) {
+  var xFloat = parseFloat(x);
+  return !isNaN(xFloat) && xFloat > 0;
+}
+
+/*
  * Update current user's data to make things more continuous.
  */
 function updateUsers() {
@@ -338,16 +385,16 @@ function changeUser(userName){
 /*
  * Get percentage of two numbers
  */
-function percentageOf(num1, num2) {
-  if (!isNaN(num1) && !isNaN(num2)) {
-    // if num2 > num1, return 100. Otherwise, return floor(num2 * 100.0 / num1)
-    if (num2 >= num1) {
+function percentageOf(big, small) {
+  if (!isNaN(big) && !isNaN(small)) {
+    // if small > big, return 100. Otherwise, return floor(small * 100.0 / big)
+    if (small >= big) {
       return 100;
     } else {
-      return Math.floor(num2 * 100.0 / num1);
+      return Math.floor(small * 100.0 / big);
     }
   } else {
-    // if either num1 or num2 is not a number, return 0
+    // if either big or small is not a number, return 0
     return 0;
   }
 }
@@ -370,10 +417,10 @@ MongoClient.connect(mongoURL, function(err, client) {
     allUsers = userTable;
     currentUser = allUsers[0];
 
-    console.log('========================================');
-    console.log('  gymrats collection:');
-    console.log('========================================');
-    console.log(JSON.stringify(userTable, null, 2));
+    // console.log('========================================');
+    // console.log('  gymrats collection:');
+    // console.log('========================================');
+    // console.log(JSON.stringify(userTable, null, 2));
   });
 
   app.listen(port, function() {

@@ -10,16 +10,10 @@ const DAY_OF_WEEK = [
 
 var numberModalTab = 0;
 
-function percentageOf(num1, num2) {
-  if (!isNaN(num1) && !isNaN(num2)) {
-    // if num2 > num1, return 100. Otherwise, return floor(num2 * 100.0 / num1)
-    if (num2 >= num1) {
-      return 100;
-    } else {
-      return Math.floor(num2 * 100.0 / num1);
-    }
+function percentageOf(big, small) {
+  if (!isNaN(big) && !isNaN(small)) {
+    return Math.floor(small * 100.0 / big);
   } else {
-    // if either num1 or num2 is not a number, return 0
     return 0;
   }
 }
@@ -37,9 +31,9 @@ function showCalendarModal() {
   modal.classList.remove('hidden');
 
   // default value for <option>: first element selected
-  document.getElementById('calendar-day-select')
-    .getElementsByTagName('option')[0]
-    .selected = true;
+  var calendarDayOptions = document.getElementById('calendar-day-select')
+                                   .getElementsByTagName('option');
+  if (calendarDayOptions.length > 0) calendarDayOptions[0].selected = true;
 }
 
 function updateCalendarTextInput() {
@@ -94,12 +88,13 @@ function showGoalModal() {
   goalModal.classList.remove('hidden');
 
   // default value for <option>: first option selected
-  document.getElementById('log-activity-select')
-    .getElementsByTagName('option')[0]
-    .selected = true;
-  document.getElementById('remove-goal-select')
-    .getElementsByTagName('option')[0]
-    .selected = true;
+  var logActivityOptions = document.getElementById('log-activity-select')
+                                   .getElementsByTagName('option');
+  if (logActivityOptions.length > 0) logActivityOptions[0].selected = true;
+
+  var removeGoalOptions = document.getElementById('remove-goal-select')
+                                  .getElementsByTagName('option');
+  if (removeGoalOptions.length > 0) removeGoalOptions[0].selected = true;
 
   // default value for <textarea>: empty textbox
   var goalModalInputs = goalModal.getElementsByTagName('input');
@@ -175,6 +170,13 @@ function handleGoalModalAccept() {
     // get index based on the option selected in the menu
     var selectDropDown = document.getElementById('log-activity-select');
     var index = selectDropDown.selectedIndex;
+    var numGoals = document.getElementsByClassName('graph').length;
+
+    // ensure selected index is non-negative (for empty-list case)
+    if (index < 0 || index >= numGoals) {
+      alert('You must select a goal in the list. If there is no goal, you must create one');
+      return;
+    }
 
     // get the target '.graph' article in the graph container section
     var targetGraph = document.getElementsByClassName('graph')[index];
@@ -192,8 +194,8 @@ function handleGoalModalAccept() {
       document.getElementById('log-activity-progress-input').value);
 
     /* validate inputs */
-    if (progressInc === '' || isNaN(progressInc)) {
-      alert('Required fields are missing');
+    if (isNaN(progressInc)) {
+      alert('The progress you made must be a number');
       return;
     } else if (progressInc < 0) {
       alert('The progress you made must be positive');
@@ -207,40 +209,30 @@ function handleGoalModalAccept() {
     var targetGraphBar = targetGraph.querySelector('.graph-bar');
     var targetGraphPercent = targetGraph.querySelector('.graph-percent');
     var activityFeedContent = description + ' for ' + progressInc + ' minutes';
-    var percentageInc = percentageOf(goal, progressInc);
     var isActivityDone = false;
-
-    var requestBody = JSON.stringify({
-      description: description,
-      progress: newProgress,
-      percentage: percentage,
-      activity: {
-        content: activityFeedContent,
-        percent: percentageInc
-      }
-    });
 
     request.addEventListener('load', function(event) {
       if (event.target.status === 200) {
-        // update target graph's bar width, color, and percentage
-        targetGraphBar.style.width = percentage + '%';
-        // update the graph's bar's progress
+        // update the graph bar's progress
         targetGraph.querySelector('.graph-progress').innerText = newProgress;
 
         // if the user has met his/her goal
         if (percentage >= 100) {
+          // keep the width at 100%
+          targetGraphBar.style.width = '100%';
           // color the bar green
           targetGraphBar.style.backgroundColor = '#1ccc5a';
           // replace percentage with a checkmark
           var checkMark = document.createElement('i');
           checkMark.classList.add('fas', 'fa-check');
-
           targetGraphPercent.innerText = '';
           targetGraphPercent.appendChild(checkMark);
           // mark activity as done
           isActivityDone = true;
         } else {
-          targetGraphPercent.innerText = percentage + '%';
+          // otherwise, display normal graph bar with percentage
+          targetGraphBar.style.width = percentage.toString() + '%';
+          targetGraphPercent.innerText = percentage.toString() + '%';
           isActivityDone = false;
         }
 
@@ -258,7 +250,17 @@ function handleGoalModalAccept() {
     });
 
     request.setRequestHeader('Content-Type', 'application/json');
-    request.send(requestBody);
+    request.send(JSON.stringify({
+      description: description,
+      index: index,
+      progress: newProgress,
+      progressInc: progressInc,
+      percentage: percentage,
+      activity: {
+        content: activityFeedContent,
+        percent: percentageInc
+      }
+    }));
   } else if (numberModalTab == 1) {
     var requestURL = '/goal/add';
     request.open('POST', requestURL);
@@ -268,20 +270,13 @@ function handleGoalModalAccept() {
       document.getElementById('create-goal-goal-input').value);
 
     /* validate inputs */
-    if (description === '' || goal === '' || isNaN(goal)) {
+    if (description === undefined || description === '' || isNaN(goal)) {
       alert('Required fields are missing');
       return;
     } else if (goal < 0) {
       alert('Goal must be positive');
       return;
     }
-
-    var requestBody = JSON.stringify({
-      description: description,
-      goal: goal,
-      progress: 0,
-      percentage: 0
-    });
 
     request.addEventListener('load', function(event) {
       if (event.target.status === 200) {
@@ -290,13 +285,15 @@ function handleGoalModalAccept() {
         appendGoalLogActivityTab(description);
         appendGoalRemoveGoalTab(description);
       } else {
-        alert('Error adding goal: ' + event.target.response);
+        alert('Error adding new goal: ' + event.target.response);
       }
     });
 
     request.setRequestHeader('Content-Type', 'application/json');
-    request.send(requestBody);
-
+    request.send(JSON.stringify({
+      description: description,
+      goal: goal,
+    }));
   } else if (numberModalTab == 2) {
     var requestURL = '/goal/remove';
     request.open('POST', requestURL);
@@ -305,7 +302,11 @@ function handleGoalModalAccept() {
     var description = selectDropDown.value;
     var index = selectDropDown.selectedIndex;
 
-    var requestBody = JSON.stringify({ description: description });
+    // ensure selected index is non-negative (for empty-list case)
+    if (index < 0) {
+      alert('The list must not be empty and must select inside the list');
+      return;
+    }
 
     request.addEventListener('load', function(event) {
       if (event.target.status === 200) {
@@ -313,12 +314,16 @@ function handleGoalModalAccept() {
         removeIthGoalSidebar(index);
         removeIthGoalHomeModal(index);
       } else {
-        alert('Error removing goal: ' + event.target.response);
+        alert('Error removing selected goal: ' + event.target.response);
       }
     });
 
     request.setRequestHeader('Content-Type', 'application/json');
-    request.send(requestBody);
+    // request.send(JSON.stringify({ description: selectDropDown.value }));
+    request.send(JSON.stringify({
+      description: description,
+      index: index
+    }));
   }
 
   hideGoalModal();
