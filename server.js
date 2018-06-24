@@ -207,7 +207,7 @@ app.post('/goal/remove', function(req, res) {
       var progressChange = result[0].ithGoal.progress;
       var description = result[0].ithGoal.description;
       var newTotalPercentage = percentageOf(
-        result[0].totalProgress.goal,
+        result[0].totalProgress.goal - goalChange,
         result[0].totalProgress.progress - progressChange
       );
 
@@ -358,18 +358,12 @@ function changeUser(userName){
 }
 
 /*
- * Get percentage of two numbers
+ * Returns what the percentage  small  is of  big
  */
 function percentageOf(big, small) {
-  if (!isNaN(big) && !isNaN(small)) {
-    // if small > big, return 100. Otherwise, return floor(small * 100.0 / big)
-    if (small >= big) {
-      return 100;
-    } else {
-      return Math.round(small * 100.0 / big);
-    }
+  if (!isNaN(big) && !isNaN(small) && big !== 0) {
+    return Math.round(small * 100.0 / big);
   } else {
-    // if either big or small is not a number, return 0
     return 0;
   }
 }
