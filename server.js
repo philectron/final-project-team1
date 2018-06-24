@@ -68,46 +68,7 @@ app.get('/calendar', function(req, res) {
 // "Leaderboard" page to integrate the database and multi-account into the web
 // app.
 app.get('/leaderboard', function(req, res) {
-  // get the current user's total goal and total progress
-  mongoDB.collection('users').aggregate(
-    { $match: { name: currentUser.name }},
-    { $unwind: '$goals' },
-    { $group: {
-      _id: null,
-      goal: { $sum: '$goals.goal' },
-      progress: { $sum: '$goals.progress' }
-    }},
-    { $project: { _id: 0 }})
-  .toArray(function(err, result) {
-    if (err) {
-      res.status(500).send('500: Error calculating total progress');
-      return;
-    }
-
-    var total = result[0];
-
-    // update the "totalProgress" field of current user
-    mongoDB.collection('users').updateOne(
-      { name: currentUser.name,
-        'totalProgress.description': 'Total Progress'
-      },
-      { $set: {
-        'totalProgress.$.goal': total.goal,
-        'totalProgress.$.progress': total.progress,
-        'totalProgress.$.percentage': percentageOf(total.goal, total.progress)
-      }},
-      function(err) {
-        if (err) {
-          res.status(500).send('500: Error updating total progress');
-          return;
-        }
-
-        // update users and render the Leaderboard page
-        updateUsers();
-        res.status(200).render('leaderboard', { userList: allUsers });
-      }
-    );
-  });
+  res.status(200).render('leaderboard', { userList: allUsers });
 });
 
 /*******************************************************************************
@@ -118,45 +79,69 @@ app.get('/leaderboard', function(req, res) {
  * Incrementally log activity to DB.
  */
 app.post('/activity/log', function(req, res) {
-  if (req.body && req.body.description && isNonNegativeNum(req.body.index)
-      && isPositiveNum(req.body.progress) && isPositiveNum(req.body.progressInc)
-      && isPositiveNum(req.body.percentage) && req.body.activity.content
-      && isPositiveNum(req.body.activity.percent)) {
-    // update goal progress and percentage
-    mongoDB.collection('users').updateOne(
-      { name: currentUser.name, 'goals.description': req.body.description },
-      { $set: {
-        'goals.$.progress': req.body.progress,
-        'goals.$.percentage': req.body.percentage
-      }},
-      function(err, result) {
-        if (err) {
-          res.status(500).send('500: Error updating goal');
-          return;
-        }
+  if (req.body && req.body.description && notNegative(req.body.index)
+      && isPositive(req.body.progressInc) && req.body.activity.content
+      && isPositive(req.body.activity.percent)) {
+    // find the selected goal
+    mongoDB.collection('users').aggregate([
+      { $match: { name: currentUser.name }},
+      { $project: {
+        _id: 0,
+        ithGoal: { $arrayElemAt: [ '$goals', req.body.index ]},
+        totalProgress: '$totalProgress'
+      }}
+    ]).toArray(function(errFind, result) {
+      if (errFind) {
+        res.status(500).send('500: Error finding the selected goal');
+        return;
+      }
 
-        // update the activity feed
-        mongoDB.collection('users').updateOne(
-          { name: currentUser.name },
-          { $addToSet: {
-            "activities": {
+      var newGoalPercentage = percentageOf(
+        result[0].ithGoal.goal,
+        result[0].ithGoal.progress + req.body.progressInc
+      );
+
+      var newTotalPercentage = percentageOf(
+        result[0].totalProgress.goal,
+        result[0].totalProgress.progress + req.body.progressInc
+      );
+
+      // update goal progress and percentage
+      mongoDB.collection('users').updateOne(
+        { name: currentUser.name,
+          'goals._id': req.body.description.toLowerCase()
+        },
+        {
+          // increase goal progress and total progress
+          $inc: {
+            'goals.$.progress': req.body.progressInc,
+            'totalProgress.progress': req.body.progressInc,
+          },
+          // set goal percentage and total percentage
+          $set: {
+            'goals.$.percentage': newGoalPercentage,
+            'totalProgress.percentage': newTotalPercentage
+          },
+          // push the goal progress content to the end of the activity feed
+          $addToSet: {
+            'activities': {
               content: req.body.activity.content,
               percent: req.body.activity.percent
             }
-          }},
-          function(err, result) {
-            if (err) {
-              res.status(500).send('500: Error updating activity feed');
-              return;
-            }
-
-            // update the current user's data and send response
-            updateUsers();
-            res.status(200).send('Activity logged successfully');
           }
-        );
-      }
-    );
+        },
+        function(errUpdate) {
+          if (errUpdate) {
+            res.status(500).send('500: Error updating goal');
+            return;
+          }
+
+          // update user data and send response
+          updateUsers();
+          res.status(200).send('Activity logged successfully');
+        }
+      )
+    });
   } else {
     res.status(400).send('400: Bad activity log request');
   }
@@ -166,13 +151,14 @@ app.post('/activity/log', function(req, res) {
  * Add a new goal to DB.
  */
 app.post('/goal/add', function(req, res) {
-  if (req.body && req.body.description && isPositiveNum(req.body.goal)) {
+  if (req.body && req.body.description && isPositive(req.body.goal)) {
     mongoDB.collection('users').updateOne(
       { name: currentUser.name },
       {
         // push this new goal to the end of the goals array
         $addToSet: {
           'goals': {
+            '_id': req.body.description.toLowerCase(),
             'description': req.body.description,
             'goal': req.body.goal,
             'progress': 0,
@@ -188,7 +174,7 @@ app.post('/goal/add', function(req, res) {
           return;
         }
 
-        // update the current user's data and send response
+        // update user data and send response
         updateUsers();
         res.status(200).send('New goal added successfully');
       }
@@ -202,13 +188,14 @@ app.post('/goal/add', function(req, res) {
  * Remove an exisiting goal from DB.
  */
 app.post('/goal/remove', function(req, res) {
-  if (req.body && req.body.description && isNonNegativeNum(req.body.index)) {
+  if (req.body && notNegative(req.body.index)) {
     // select the goal with the corresponding index in the goals array
     mongoDB.collection('users').aggregate([
       { $match: { name: currentUser.name }},
       { $project: {
         _id: 0,
-        ithGoal: { $arrayElemAt: [ '$goals', req.body.index ]}
+        ithGoal: { $arrayElemAt: [ '$goals', req.body.index ]},
+        totalProgress: '$totalProgress'
       }},
     ]).toArray(function(errFind, result) {
       if (errFind) {
@@ -216,24 +203,28 @@ app.post('/goal/remove', function(req, res) {
         return;
       }
 
-      var goal = result[0].ithGoal.goal;
-      var progress = result[0].ithGoal.progress;
+      var goalChange = result[0].ithGoal.goal;
+      var progressChange = result[0].ithGoal.progress;
       var description = result[0].ithGoal.description;
+      var newTotalPercentage = percentageOf(
+        result[0].totalProgress.goal,
+        result[0].totalProgress.progress - progressChange
+      );
 
       mongoDB.collection('users').updateOne(
         { name: currentUser.name },
         {
           // decrease total goal and total progress from totalProgress
           $inc: {
-            'totalProgress.goal': -goal,
-            'totalProgress.progress': -progress
+            'totalProgress.goal': -goalChange,
+            'totalProgress.progress': -progressChange
           },
-          // update total percentage
+          // set the new total percentage
           $set: {
-            'totalProgress.percentage': percentageOf(goal, progress)
+            'totalProgress.percentage': newTotalPercentage
           },
           // remove the selected goal from the goals array
-          $pull: { goals: { description: description }}
+          $pull: { goals: { _id: description.toLowerCase() }}
         },
         function(errRemove) {
           if (errRemove) {
@@ -241,7 +232,7 @@ app.post('/goal/remove', function(req, res) {
             return;
           }
 
-          // update the current user's data and send response
+          // update user data and send response
           updateUsers();
           res.status(200).send('Selected goal removed successfully');
         }
@@ -267,7 +258,7 @@ app.post('/calendar/update', function(req, res) {
           return;
         }
 
-        // update the current user's data and send response
+        // update user data and send response
         updateUsers();
         res.status(200).send('Calendar updated successfully');
       }
@@ -329,22 +320,6 @@ app.get('*', function(req, res) {
  ******************************************************************************/
 
 /*
- * Return true if x is a non-negative number. Return false otherwise.
- */
-function isNonNegativeNum(x) {
-  var xFloat = parseFloat(x);
-  return !isNaN(xFloat) && xFloat >= 0;
-}
-
-/*
- * Return true if x is a positive number. Return false otherwise.
- */
-function isPositiveNum(x) {
-  var xFloat = parseFloat(x);
-  return !isNaN(xFloat) && xFloat > 0;
-}
-
-/*
  * Update current user's data to make things more continuous.
  */
 function updateUsers() {
@@ -391,12 +366,28 @@ function percentageOf(big, small) {
     if (small >= big) {
       return 100;
     } else {
-      return Math.floor(small * 100.0 / big);
+      return Math.round(small * 100.0 / big);
     }
   } else {
     // if either big or small is not a number, return 0
     return 0;
   }
+}
+
+/*
+ * Return true if x is a non-negative number. Return false otherwise.
+ */
+function notNegative(x) {
+  var xFloat = parseFloat(x);
+  return !isNaN(xFloat) && xFloat >= 0;
+}
+
+/*
+ * Return true if x is a positive number. Return false otherwise.
+ */
+function isPositive(x) {
+  var xFloat = parseFloat(x);
+  return !isNaN(xFloat) && xFloat > 0;
 }
 
 /*******************************************************************************

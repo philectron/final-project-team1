@@ -12,7 +12,7 @@ var numberModalTab = 0;
 
 function percentageOf(big, small) {
   if (!isNaN(big) && !isNaN(small)) {
-    return Math.floor(small * 100.0 / big);
+    return Math.round(small * 100.0 / big);
   } else {
     return 0;
   }
@@ -253,9 +253,7 @@ function handleGoalModalAccept() {
     request.send(JSON.stringify({
       description: description,
       index: index,
-      progress: newProgress,
       progressInc: progressInc,
-      percentage: percentage,
       activity: {
         content: activityFeedContent,
         percent: percentageInc
@@ -270,10 +268,10 @@ function handleGoalModalAccept() {
       document.getElementById('create-goal-goal-input').value);
 
     /* validate inputs */
-    if (description === undefined || description === '' || isNaN(goal)) {
+    if (!description || isNaN(goal)) {
       alert('Required fields are missing');
       return;
-    } else if (goal < 0) {
+    } else if (goal <= 0) {
       alert('Goal must be positive');
       return;
     }
@@ -304,7 +302,8 @@ function handleGoalModalAccept() {
 
     // ensure selected index is non-negative (for empty-list case)
     if (index < 0) {
-      alert('The list must not be empty and must select inside the list');
+      alert('Activity list must not be empty '
+            + '& Must select an activity from the list');
       return;
     }
 
@@ -320,10 +319,7 @@ function handleGoalModalAccept() {
 
     request.setRequestHeader('Content-Type', 'application/json');
     // request.send(JSON.stringify({ description: selectDropDown.value }));
-    request.send(JSON.stringify({
-      description: description,
-      index: index
-    }));
+    request.send(JSON.stringify({ index: index }));
   }
 
   hideGoalModal();
