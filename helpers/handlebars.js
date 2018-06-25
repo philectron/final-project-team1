@@ -3,8 +3,12 @@ module.exports = function hbsHelpers(hbs) {
   return hbs.create({
     defaultLayout: 'default',
     helpers: {
-      isGreaterThanOrEqualTo: function(lhs, rhs) {
-        return parseFloat(lhs) >= parseFloat(rhs);
+      if_gte: function(lhs, rhs, options) {
+        if (parseFloat(lhs) >= parseFloat(rhs)) {
+          return options.fn(this);
+        } else {
+          return options.inverse(this);
+        }
       }
       // additional helpers go here
     }

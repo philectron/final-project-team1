@@ -11,7 +11,7 @@ const DAY_OF_WEEK = [
 var numberModalTab = 0;
 
 function percentageOf(big, small) {
-  if (!isNaN(big) && !isNaN(small)) {
+  if (!isNaN(big) && !isNaN(small) && big !== 0) {
     return Math.round(small * 100.0 / big);
   } else {
     return 0;
@@ -116,11 +116,13 @@ function hideGoalModal() {
 }
 
 function appendGoalGraphContainer(description, goal, progress) {
+  var isGoalComplete = percentageOf(goal, progress) >= 100;
   var goalTemplateHTML = Handlebars.templates.goal({
     description: description,
     goal: goal,
     progress: progress,
-    percentage: percentageOf(goal, progress)
+    percentage: percentageOf(goal, progress),
+    isGoalComplete: isGoalComplete
   });
   var graphContainer = document.querySelector('.graph-container');
   graphContainer.insertAdjacentHTML('beforeend', goalTemplateHTML);
@@ -159,6 +161,12 @@ function removeIthGoalSidebar(i) {
 function removeIthGoalHomeModal(i) {
   document.getElementById('log-activity-select').remove(i);
   document.getElementById('remove-goal-select').remove(i);
+}
+
+function faCheckmark() {
+  var checkmark = document.createElement('i');
+  checkmark.classList.add('fas', 'fa-check');
+  return checkmark;
 }
 
 function handleGoalModalAccept() {
@@ -223,10 +231,8 @@ function handleGoalModalAccept() {
           // color the bar green
           targetGraphBar.style.backgroundColor = '#1ccc5a';
           // replace percentage with a checkmark
-          var checkMark = document.createElement('i');
-          checkMark.classList.add('fas', 'fa-check');
           targetGraphPercent.innerText = '';
-          targetGraphPercent.appendChild(checkMark);
+          targetGraphPercent.appendChild(faCheckmark());
           // mark activity as done
           isActivityDone = true;
         } else {
@@ -366,7 +372,6 @@ function showUserModal() {
   document.getElementById('profimage-text-input').value = '';
   modalBackdrop.classList.remove('hidden');
   userModal.classList.remove('hidden');
-
 }
 
 function handleUserModalAccept() {
