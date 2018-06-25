@@ -5,8 +5,8 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "buildGoalTemplate": "handlebars views/partials/goal.handlebars -f public/goalTemplate.js",
-    "buildActivity": "handlebars views/partials/activity.handlebars -f public/activityTemplate.js",
+    "buildGoalTemplate": "handlebars views/partials/goal.handlebars -f public/goalTemplate.js -m -k if_gte",
+    "buildActivity": "handlebars views/partials/activity.handlebars -f public/activityTemplate.js -m -k if_gte",
     "build": "npm run buildGoalTemplate && npm run buildActivity",
     "prestart": "npm run build",
     "start": "node server.js",
@@ -14,9 +14,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/OSU-CS290-Sp18/final-project-team1.git"
+    "url": "https://github.com/OSU-CS290-Sp18/final-project-team1.git"
   },
-  "author": "Calvin Gagliano, Phi Luu, Mitchell Schenk",
+  "author": "Phi Luu, Calvin Gagliano, Mitchell Schenk",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/OSU-CS290-Sp18/final-project-team1/issues"
