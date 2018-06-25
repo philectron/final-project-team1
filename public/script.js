@@ -217,7 +217,6 @@ function handleGoalModalAccept() {
     var targetGraphBar = targetGraph.querySelector('.graph-bar');
     var targetGraphPercent = targetGraph.querySelector('.graph-percent');
     var activityFeedContent = description + ' for ' + progressInc + ' minutes';
-    var isActivityDone = false;
 
     request.addEventListener('load', function(event) {
       if (event.target.status === 200) {
@@ -233,21 +232,17 @@ function handleGoalModalAccept() {
           // replace percentage with a checkmark
           targetGraphPercent.innerText = '';
           targetGraphPercent.appendChild(faCheckmark());
-          // mark activity as done
-          isActivityDone = true;
         } else {
           // otherwise, display normal graph bar with percentage
           targetGraphBar.style.width = percentage.toString() + '%';
           targetGraphPercent.innerText = percentage.toString() + '%';
-          isActivityDone = false;
         }
 
         // update activity feed
         var activityFeed = document.querySelector('.activity-feed');
         var activityHTML = Handlebars.templates.activity({
           content: activityFeedContent,
-          percent: percentageInc,
-          done: isActivityDone
+          percent: percentageInc
         });
         activityFeed.insertAdjacentHTML('beforeend', activityHTML);
       } else {
