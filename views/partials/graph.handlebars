@@ -1,11 +1,11 @@
 <div class="graph-container">
   <h2 class="graph-label">Your progress to becoming gym rat</h2>
   {{#if showTotalProgress}}
-    {{#each totalProgress}}
+    {{#each user.totalProgress}}
       {{> goal}}
     {{/each}}
   {{/if}}
-  {{#each goals}}
+  {{#each user.goals}}
     {{> goal}}
   {{/each}}
 </div>

@@ -43,8 +43,6 @@ app.get('/', function(req, res) {
     userList: allUsers,
     user: currentUser,
     hasSidebar: true,
-    activities: currentUser.activities,
-    goals: currentUser.goals
   });
 });
 

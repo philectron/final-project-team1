@@ -14,7 +14,9 @@
     <div class="modal-body">
       <div class="modal-body-section">
         <select class="select-menu" id="log-activity-select" size="5">
-          {{#each this}} {{> option}} {{/each}}
+          {{#each user.goals}}
+            {{> option}}
+          {{/each}}
         </select>
         <div class="content-input-element">
           <p>Add </p>
@@ -38,7 +40,9 @@
 
       <div class="modal-body-section hidden">
         <select class="select-menu" id="remove-goal-select" size="5">
-          {{#each this}} {{> option}} {{/each}}
+          {{#each user.goals}}
+            {{> option}}
+          {{/each}}
         </select>
       </div>
     </div>
