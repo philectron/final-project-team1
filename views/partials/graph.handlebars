@@ -1,9 +1,7 @@
 <div class="graph-container">
   <h2 class="graph-label">Your progress to becoming gym rat</h2>
   {{#if showTotalProgress}}
-    {{#each user.totalProgress}}
-      {{> goal}}
-    {{/each}}
+    {{> goal description='Total Progress' goal=totalProgress.goal progress=totalProgress.progress percentage=totalProgress.percentage}}
   {{/if}}
   {{#each user.goals}}
     {{> goal}}
