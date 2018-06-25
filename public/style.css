@@ -688,6 +688,6 @@ footer a:visited {
  * For text on bright backgrounds
  */
 
-.text-bright-background {
+.dark-text {
   color: #000 !important;
 }
