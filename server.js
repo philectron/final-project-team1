@@ -271,10 +271,62 @@ app.post('/calendar/update', function(req, res) {
 
 // Adds a new user to DB.
 app.post('/user/add', function(req, res) {
-  if (req.body && req.body.name && req.body.profilePicUrl) {
+  if (req.body && req.body.name) {
+    // set empty field for profilePicUrl if not provided
+    if (!req.body.profilePicUrl) req.body.profilePicUrl = '';
+
     // add a new user to the DB
-    mongoDB.collection(MONGO_COLLECTION_NAME)
-      .insertOne(req.body, function(err) {
+    mongoDB.collection(MONGO_COLLECTION_NAME).insertOne(
+      {
+        '_id': req.body.name,
+        'name': req.body.name,
+        'profilePicUrl': req.body.profilePicUrl,
+        'totalProgress': {
+          'goal': 0,
+          'progress': 0,
+          'percentage': 0
+        },
+        'goals': [],
+        'days': [
+          {
+            '_id': 'sunday',
+            'weekday': 'Sunday',
+            'content': ''
+          },
+          {
+            '_id': 'monday',
+            'weekday': 'Monday',
+            'content': ''
+          },
+          {
+            '_id': 'tuesday',
+            'weekday': 'Tuesday',
+            'content': ''
+          },
+          {
+            '_id': 'wednesday',
+            'weekday': 'Wednesday',
+            'content': ''
+          },
+          {
+            '_id': 'thursday',
+            'weekday': 'Thursday',
+            'content': ''
+          },
+          {
+            '_id': 'friday',
+            'weekday': 'Friday',
+            'content': ''
+          },
+          {
+            '_id': 'saturday',
+            'weekday': 'Saturday',
+            'content': ''
+          }
+        ],
+        'activities': []
+      },
+      function(err) {
         if (err) {
           res.status(500).send('500: Error adding new user');
           return;
@@ -319,9 +371,8 @@ app.get('*', function(req, res) {
 function updateUsers() {
   mongoDB.collection(MONGO_COLLECTION_NAME).find()
     .toArray(function(err, userTable) {
-      if (err) {
-        throw err;
-      }
+      if (err) return;
+
       allUsers = userTable;
       currentUser = allUsers[count];
   });
@@ -331,21 +382,19 @@ function updateUsers() {
 function changeUser(userName) {
   mongoDB.collection(MONGO_COLLECTION_NAME).find()
     .toArray(function(err, userTable) {
-      if (err) {
-        throw err;
-      }
+      if (err) return;
+
       allUsers = userTable;
       count = 0;
       while (allUsers[count]) {
         if (allUsers[count].name === userName) {
           currentUser = allUsers[count];
-          break;
+          return;
         } else {
-          count += 1;
+          count++;
         }
       }
   });
-
 }
 
 // Returns what the percentage  small  is of  big .

@@ -373,61 +373,29 @@ function handleUserModalAccept() {
   var name = document.getElementById('username-text-input').value;
   var pic = document.getElementById('profimage-text-input').value;
 
+  // validate input
+  if (!name) {
+    alert('Name must not be empty');
+    return;
+  }
+
   var request = new XMLHttpRequest();
   var requestURL = '/user/add';
   request.open('POST', requestURL);
-
-  var requestBody = JSON.stringify({
-    "name": name,
-    "profilePicUrl": pic,
-    "totalProgress": [{
-      "description": "Total Progress",
-      "goal": "0 minutes",
-      "progress": "0 minutes",
-      "percentage": 0
-    }],
-    "goals": [],
-    "days": [{
-        "weekday": "Sunday",
-        "content": ""
-      },
-      {
-        "weekday": "Monday",
-        "content": ""
-      },
-      {
-        "weekday": "Tuesday",
-        "content": ""
-      },
-      {
-        "weekday": "Wednesday",
-        "content": ""
-      },
-      {
-        "weekday": "Thursday",
-        "content": ""
-      },
-      {
-        "weekday": "Friday",
-        "content": ""
-      },
-      {
-        "weekday": "Saturday",
-        "content": ""
-      }
-    ],
-    "activities": []
-  });
 
   request.addEventListener('load', function(event) {
     if (event.target.status === 200) {
       handleUserChange(name);
     } else {
-      alert("Error adding new plan: " + event.target.response);
+      alert('Error adding new user: ' + event.target.response);
     }
   });
+
   request.setRequestHeader('Content-Type', 'application/json');
-  request.send(requestBody);
+  request.send(JSON.stringify({
+    name: name,
+    profilePicUrl: pic
+  }));
   hideUserModal();
 }
 
@@ -436,16 +404,15 @@ function handleUserChange(userName) {
   var requestURL = '/user/change';
   request.open('POST', requestURL);
 
-  var requestBody = JSON.stringify({ name: userName });
   request.addEventListener('load', function(event) {
     if (event.target.status === 200) {
       document.location.reload();
     } else {
-      alert("Error adding new plan: " + event.target.response);
+      alert("Error changing user: " + event.target.response);
     }
   });
   request.setRequestHeader('Content-Type', 'application/json');
-  request.send(requestBody);
+  request.send(JSON.stringify({ name: userName }));
 }
 
 window.addEventListener('DOMContentLoaded', function() {
