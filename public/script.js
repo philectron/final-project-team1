@@ -171,7 +171,7 @@ function faCheckmark() {
 
 function handleGoalModalAccept() {
   var request = new XMLHttpRequest();
-  if (numberModalTab == 0) {
+  if (numberModalTab === 0) {
     var requestURL = '/activity/log';
     request.open('POST', requestURL);
 
@@ -260,7 +260,7 @@ function handleGoalModalAccept() {
         percent: percentageInc
       }
     }));
-  } else if (numberModalTab == 1) {
+  } else if (numberModalTab === 1) {
     var requestURL = '/goal/add';
     request.open('POST', requestURL);
 
@@ -293,7 +293,7 @@ function handleGoalModalAccept() {
       description: description,
       goal: goal,
     }));
-  } else if (numberModalTab == 2) {
+  } else if (numberModalTab === 2) {
     var requestURL = '/goal/remove';
     request.open('POST', requestURL);
 
@@ -528,7 +528,7 @@ window.addEventListener('DOMContentLoaded', function() {
   var changeUserText = document.getElementById('user-list');
   if (changeUserText) {
     changeUserText.addEventListener('click', function(event) {
-      if (event.target.innerText == 'Add a new user...') {
+      if (event.target.innerText === 'Add a new user...') {
         showUserModal();
       } else {
         handleUserChange(event.target.innerText);

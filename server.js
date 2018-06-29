@@ -337,7 +337,7 @@ function changeUser(userName) {
       allUsers = userTable;
       count = 0;
       while (allUsers[count]) {
-        if (allUsers[count].name == userName) {
+        if (allUsers[count].name === userName) {
           currentUser = allUsers[count];
           break;
         } else {
