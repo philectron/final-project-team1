@@ -82,12 +82,14 @@ app.post('/activity/log', function(req, res) {
       && isPositive(req.body.activity.percent)) {
     // find the selected goal
     mongoDB.collection(MONGO_COLLECTION_NAME).aggregate([
-      { $match: { name: currentUser.name }},
-      { $project: {
-        _id: 0,
-        ithGoal: { $arrayElemAt: [ '$goals', req.body.index ]},
-        totalProgress: '$totalProgress'
-      }}
+      { $match: { name: currentUser.name } },
+      {
+        $project: {
+          _id: 0,
+          ithGoal: { $arrayElemAt: ['$goals', req.body.index] },
+          totalProgress: '$totalProgress'
+        }
+      }
     ]).toArray(function(errFind, result) {
       if (errFind) {
         res.status(500).send('500: Error finding the selected goal');
@@ -106,7 +108,8 @@ app.post('/activity/log', function(req, res) {
 
       // update goal progress and percentage
       mongoDB.collection(MONGO_COLLECTION_NAME).updateOne(
-        { name: currentUser.name,
+        {
+          name: currentUser.name,
           'goals._id': req.body.description.toLowerCase()
         },
         {
@@ -186,12 +189,14 @@ app.post('/goal/remove', function(req, res) {
   if (req.body && notNegative(req.body.index)) {
     // select the goal with the corresponding index in the goals array
     mongoDB.collection(MONGO_COLLECTION_NAME).aggregate([
-      { $match: { name: currentUser.name }},
-      { $project: {
-        _id: 0,
-        ithGoal: { $arrayElemAt: [ '$goals', req.body.index ]},
-        totalProgress: '$totalProgress'
-      }},
+      { $match: { name: currentUser.name } },
+      {
+        $project: {
+          _id: 0,
+          ithGoal: { $arrayElemAt: ['$goals', req.body.index] },
+          totalProgress: '$totalProgress'
+        }
+      },
     ]).toArray(function(errFind, result) {
       if (errFind) {
         res.status(500).send('500: Error finding the selected goal');
@@ -215,11 +220,9 @@ app.post('/goal/remove', function(req, res) {
             'totalProgress.progress': -progressChange
           },
           // set the new total percentage
-          $set: {
-            'totalProgress.percentage': newTotalPercentage
-          },
+          $set: { 'totalProgress.percentage': newTotalPercentage },
           // remove the selected goal from the goals array
-          $pull: { goals: { _id: description.toLowerCase() }}
+          $pull: { goals: { _id: description.toLowerCase() } }
         },
         function(errRemove) {
           if (errRemove) {
@@ -243,8 +246,13 @@ app.post('/calendar/update', function(req, res) {
   if (req.body && req.body.weekday && req.body.content) {
     // update the day's plan
     mongoDB.collection(MONGO_COLLECTION_NAME).updateOne(
-      { name: currentUser.name, "days.weekday": req.body.weekday },
-      { $set: { "days.$.content" : req.body.content }},
+      {
+        name: currentUser.name,
+        "days.weekday": req.body.weekday
+      },
+      {
+        $set: { "days.$.content": req.body.content }
+      },
       function(err) {
         if (err) {
           res.status(500).send('500: Error updating calendar');
@@ -262,33 +270,32 @@ app.post('/calendar/update', function(req, res) {
 });
 
 // Adds a new user to DB.
-app.post('/user/add', function(req, res){
-  if(req.body && req.body.name && req.body.profilePicUrl){
+app.post('/user/add', function(req, res) {
+  if (req.body && req.body.name && req.body.profilePicUrl) {
     // add a new user to the DB
-    mongoDB.collection(MONGO_COLLECTION_NAME).insertOne(req.body, function(err) {
-      if (err) {
-        res.status(500).send('500: Error adding new user');
-        return;
-      }
+    mongoDB.collection(MONGO_COLLECTION_NAME)
+      .insertOne(req.body, function(err) {
+        if (err) {
+          res.status(500).send('500: Error adding new user');
+          return;
+        }
 
-      // update user, send response, and go to the new user's page
-      changeUser(req.body.name);
-      res.status(200).send('New user added successfully');
-      next();
+        // update user, send response, and go to the new user's page
+        changeUser(req.body.name);
+        res.status(200).send('New user added successfully');
+        next();
     });
-  }
-  else{
+  } else {
     res.status(400).send('400: Bad user addition request');
   }
 });
 
 // Changes user session.
-app.post('/user/change', function(req, res){
-  if(req.body && req.body.name){
+app.post('/user/change', function(req, res) {
+  if (req.body && req.body.name) {
     changeUser(req.body.name);
     res.status(200).send('User changed successfully');
-  }
-  else{
+  } else {
     res.status(400).send('400: Bad user change request');
   }
 });
@@ -310,32 +317,33 @@ app.get('*', function(req, res) {
 
 // Updates current user's data to make things more continuous.
 function updateUsers() {
-  mongoDB.collection(MONGO_COLLECTION_NAME).find().toArray(function (err, userTable) {
-    if (err) {
-      throw err;
-    }
-    allUsers = userTable;
-    currentUser = allUsers[count];
+  mongoDB.collection(MONGO_COLLECTION_NAME).find()
+    .toArray(function(err, userTable) {
+      if (err) {
+        throw err;
+      }
+      allUsers = userTable;
+      currentUser = allUsers[count];
   });
 }
 
 // Switches between user sessions.
-function changeUser(userName){
-  mongoDB.collection(MONGO_COLLECTION_NAME).find().toArray(function (err, userTable) {
-    if (err) {
-      throw err;
-    }
-    allUsers = userTable;
-    count = 0;
-    while(allUsers[count]){
-      if(allUsers[count].name == userName){
-        currentUser = allUsers[count];
-        break;
+function changeUser(userName) {
+  mongoDB.collection(MONGO_COLLECTION_NAME).find()
+    .toArray(function(err, userTable) {
+      if (err) {
+        throw err;
       }
-      else{
-        count += 1;
+      allUsers = userTable;
+      count = 0;
+      while (allUsers[count]) {
+        if (allUsers[count].name == userName) {
+          currentUser = allUsers[count];
+          break;
+        } else {
+          count += 1;
+        }
       }
-    }
   });
 
 }
@@ -371,17 +379,18 @@ MongoClient.connect(mongoURL, function(err, client) {
   }
   mongoDB = client.db(MONGO_DB_NAME);
 
-  mongoDB.collection(MONGO_COLLECTION_NAME).find().toArray(function (err, userTable) {
-    if (err) {
-      throw err;
-    }
-    allUsers = userTable;
-    currentUser = allUsers[0];
+  mongoDB.collection(MONGO_COLLECTION_NAME).find()
+    .toArray(function(err, userTable) {
+      if (err) {
+        throw err;
+      }
+      allUsers = userTable;
+      currentUser = allUsers[0];
 
-    // console.log('========================================');
-    // console.log('  gymrats collection:');
-    // console.log('========================================');
-    // console.log(JSON.stringify(userTable, null, 2));
+      // console.log('========================================');
+      // console.log('  gymrats collection:');
+      // console.log('========================================');
+      // console.log(JSON.stringify(userTable, null, 2));
   });
 
   app.listen(PORT, function() {
