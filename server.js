@@ -12,12 +12,12 @@ const MONGO_DB_NAME = process.env.MONGO_DB_NAME;
 const MONGO_COLLECTION_NAME = 'users';
 var mongoURL;
 
-// fall back to localhost if no username or password. Otherwise, use env var
-if (MONGO_USER === undefined || MONGO_PASSWORD === undefined) {
-  mongoURL = 'mongodb://127.0.0.1' + ':' + MONGO_PORT + '/' + MONGO_DB_NAME;
-} else {
+// Use environment variable or fallback to use localhost
+if (MONGO_USER || MONGO_PASSWORD) {
   mongoURL = 'mongodb://' + MONGO_USER + ':' + MONGO_PASSWORD + '@'
              + MONGO_HOST + ':' + MONGO_PORT + '/' + MONGO_DB_NAME;
+} else {
+  mongoURL = 'mongodb://127.0.0.1' + ':' + MONGO_PORT + '/' + MONGO_DB_NAME;
 }
 
 var mongoDB = null;
@@ -34,12 +34,13 @@ app.use(bodyParser.json());
 app.use(express.static('public'));
 
 /*******************************************************************************
- * GET requests
+ * GET request handlers
  ******************************************************************************/
 
 // "Home" page is the default page every user ends up on. It should display only
 // the goal for the day and the user's progress on that day.
 app.get('/', function(req, res) {
+  updateUsers();
   res.status(200).render('home', {
     userList: allUsers,
     user: currentUser,
@@ -50,33 +51,31 @@ app.get('/', function(req, res) {
 // "About" page talks about us and the project itself. It's a tutorial for new
 // users how to use the web app.
 app.get('/about', function(req, res) {
-  res.status(200).render('about', {
-    user: currentUser
-  });
+  updateUsers();
+  res.status(200).render('about', { user: currentUser });
 });
 
-// "Calendar" page will show a calendar where the user's workout plans are
+// "Calendar" page shows a calendar where the user's workout plans are
 // displayed.
 app.get('/calendar', function(req, res) {
+  updateUsers();
   res.status(200).render('calendar', {
     user: currentUser,
     days: currentUser.days
   });
 });
 
-// "Leaderboard" page to integrate the database and multi-account into the web
+// "Leaderboard" page integrates the database and multi-account into the web
 // app.
 app.get('/leaderboard', function(req, res) {
   res.status(200).render('leaderboard', { userList: allUsers });
 });
 
 /*******************************************************************************
- * POST requests
+ * POST request handlers
  ******************************************************************************/
 
-/*
- * Incrementally log activity to DB.
- */
+// Incrementally logs activity to DB.
 app.post('/activity/log', function(req, res) {
   if (req.body && req.body.description && notNegative(req.body.index)
       && isPositive(req.body.progressInc) && req.body.activity.content
@@ -146,9 +145,8 @@ app.post('/activity/log', function(req, res) {
   }
 });
 
-/*
- * Add a new goal to DB.
- */
+
+// Adds a new goal to DB.
 app.post('/goal/add', function(req, res) {
   if (req.body && req.body.description && isPositive(req.body.goal)) {
     mongoDB.collection(MONGO_COLLECTION_NAME).updateOne(
@@ -183,9 +181,7 @@ app.post('/goal/add', function(req, res) {
   }
 });
 
-/*
- * Remove an exisiting goal from DB.
- */
+// Removes an exisiting goal from DB.
 app.post('/goal/remove', function(req, res) {
   if (req.body && notNegative(req.body.index)) {
     // select the goal with the corresponding index in the goals array
@@ -242,9 +238,7 @@ app.post('/goal/remove', function(req, res) {
   }
 });
 
-/*
- * Update the weekly plan.
- */
+// Updates the weekly plan.
 app.post('/calendar/update', function(req, res) {
   if (req.body && req.body.weekday && req.body.content) {
     // update the day's plan
@@ -267,9 +261,7 @@ app.post('/calendar/update', function(req, res) {
   }
 });
 
-/*
- * Add a new user to DB.
- */
+// Adds a new user to DB.
 app.post('/user/add', function(req, res){
   if(req.body && req.body.name && req.body.profilePicUrl){
     // add a new user to the DB
@@ -290,9 +282,7 @@ app.post('/user/add', function(req, res){
   }
 });
 
-/*
- * Change user session.
- */
+// Changes user session.
 app.post('/user/change', function(req, res){
   if(req.body && req.body.name){
     changeUser(req.body.name);
@@ -304,7 +294,7 @@ app.post('/user/change', function(req, res){
 });
 
 /*******************************************************************************
- * 404 Handler
+ * 404 handler
  ******************************************************************************/
 
 app.get('*', function(req, res) {
@@ -318,9 +308,7 @@ app.get('*', function(req, res) {
  * Helper functions
  ******************************************************************************/
 
-/*
- * Update current user's data to make things more continuous.
- */
+// Updates current user's data to make things more continuous.
 function updateUsers() {
   mongoDB.collection(MONGO_COLLECTION_NAME).find().toArray(function (err, userTable) {
     if (err) {
@@ -331,9 +319,7 @@ function updateUsers() {
   });
 }
 
-/*
- * Switch between user sessions.
- */
+// Switches between user sessions.
 function changeUser(userName){
   mongoDB.collection(MONGO_COLLECTION_NAME).find().toArray(function (err, userTable) {
     if (err) {
@@ -354,9 +340,7 @@ function changeUser(userName){
 
 }
 
-/*
- * Returns what the percentage  small  is of  big
- */
+// Returns what the percentage  small  is of  big .
 function percentageOf(big, small) {
   if (!isNaN(big) && !isNaN(small) && big !== 0) {
     return Math.round(small * 100.0 / big);
@@ -365,24 +349,20 @@ function percentageOf(big, small) {
   }
 }
 
-/*
- * Return true if x is a non-negative number. Return false otherwise.
- */
+// Returns true if x is a non-negative number. Returns false otherwise.
 function notNegative(x) {
   var xFloat = parseFloat(x);
   return !isNaN(xFloat) && xFloat >= 0;
 }
 
-/*
- * Return true if x is a positive number. Return false otherwise.
- */
+// Returns true if x is a positive number. Returns false otherwise.
 function isPositive(x) {
   var xFloat = parseFloat(x);
   return !isNaN(xFloat) && xFloat > 0;
 }
 
 /*******************************************************************************
- * Connect to MongoDB and start server.
+ * Connect to MongoDB and start server
  ******************************************************************************/
 
 MongoClient.connect(mongoURL, function(err, client) {
