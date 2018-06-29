@@ -433,63 +433,64 @@ window.addEventListener('DOMContentLoaded', function() {
     }
   }
 
-  var modalCloseButton = document.querySelector(
+  var calendarModalCloseButton = document.querySelector(
     '#calendar-modal .modal-close-button');
-  if (modalCloseButton) {
-    modalCloseButton.addEventListener('click', hideCalendarModal);
+  if (calendarModalCloseButton) {
+    calendarModalCloseButton.addEventListener('click', hideCalendarModal);
   }
 
-  var modalCancelButton = document.querySelector(
+  var calendarModalCancelButton = document.querySelector(
     '#calendar-modal .modal-cancel-button');
-  if (modalCancelButton) {
-    modalCancelButton.addEventListener('click', hideCalendarModal);
+  if (calendarModalCancelButton) {
+    calendarModalCancelButton.addEventListener('click', hideCalendarModal);
   }
 
-  var modalAcceptButton = document.querySelector(
+  var calendarModalAcceptButton = document.querySelector(
     '#calendar-modal .modal-accept-button');
-  if (modalAcceptButton) {
-    modalAcceptButton.addEventListener('click', handleCalendarModalAccept);
+  if (calendarModalAcceptButton) {
+    calendarModalAcceptButton.addEventListener(
+      'click', handleCalendarModalAccept);
   }
 
-  var modalCloseButton2 = document.querySelector(
+  var goalModalCloseButton = document.querySelector(
     '#goal-modal .modal-close-button');
-  if (modalCloseButton2) {
-    modalCloseButton2.addEventListener('click', hideGoalModal);
+  if (goalModalCloseButton) {
+    goalModalCloseButton.addEventListener('click', hideGoalModal);
   }
 
-  var modalCancelButton2 = document.querySelector(
+  var goalModalCancelButton = document.querySelector(
     '#goal-modal .modal-cancel-button');
-  if (modalCancelButton2) {
-    modalCancelButton2.addEventListener('click', hideGoalModal);
+  if (goalModalCancelButton) {
+    goalModalCancelButton.addEventListener('click', hideGoalModal);
   }
 
-  var modalAcceptButton2 = document.querySelector(
+  var goalModalAcceptButton = document.querySelector(
     '#goal-modal .modal-accept-button');
-  if (modalAcceptButton2) {
-    modalAcceptButton2.addEventListener('click', handleGoalModalAccept);
+  if (goalModalAcceptButton) {
+    goalModalAcceptButton.addEventListener('click', handleGoalModalAccept);
   }
 
-  var modalCloseButton3 = document.querySelector(
+  var userModalCloseButton = document.querySelector(
     '#user-modal .modal-close-button');
-  if (modalCloseButton3) {
-    modalCloseButton3.addEventListener('click', hideUserModal);
+  if (userModalCloseButton) {
+    userModalCloseButton.addEventListener('click', hideUserModal);
   }
 
-  var modalCancelButton3 = document.querySelector(
+  var userModalCancelButton = document.querySelector(
     '#user-modal .modal-cancel-button');
-  if (modalCancelButton3) {
-    modalCancelButton3.addEventListener('click', hideUserModal);
+  if (userModalCancelButton) {
+    userModalCancelButton.addEventListener('click', hideUserModal);
   }
 
-  var modalAcceptButton3 = document.querySelector(
+  var userModalAcceptButton = document.querySelector(
     '#user-modal .modal-accept-button');
-  if (modalAcceptButton3) {
-    modalAcceptButton3.addEventListener('click', handleUserModalAccept);
+  if (userModalAcceptButton) {
+    userModalAcceptButton.addEventListener('click', handleUserModalAccept);
   }
 
-  var modalSelect = document.getElementById('calendar-day-select')
-  if (modalSelect) {
-    modalSelect.addEventListener('change', updateCalendarTextInput);
+  var calendarModalSelection = document.getElementById('calendar-day-select')
+  if (calendarModalSelection) {
+    calendarModalSelection.addEventListener('change', updateCalendarTextInput);
   }
 
   var changeUserText = document.getElementById('user-list');
