@@ -59,10 +59,7 @@ app.get('/about', function(req, res) {
 // displayed.
 app.get('/calendar', function(req, res) {
   updateUsers();
-  res.status(200).render('calendar', {
-    user: currentUser,
-    days: currentUser.days
-  });
+  res.status(200).render('calendar', { user: currentUser });
 });
 
 // "Leaderboard" page integrates the database and multi-account into the web
