@@ -65,7 +65,10 @@ app.get('/calendar', function(req, res) {
 // "Leaderboard" page integrates the database and multi-account into the web
 // app.
 app.get('/leaderboard', function(req, res) {
-  res.status(200).render('leaderboard', { userList: allUsers });
+  res.status(200).render('leaderboard', {
+    userList: allUsers,
+    user: currentUser
+  });
 });
 
 /*******************************************************************************
