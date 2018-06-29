@@ -4,19 +4,20 @@ var hbs = require('./helpers/handlebars')(exphbs);
 var bodyParser = require('body-parser');
 var MongoClient = require('mongodb').MongoClient;
 
-const mongoHost = process.env.MONGO_HOST;
-const mongoPort = process.env.MONGO_PORT || 27017;
-const mongoUser = process.env.MONGO_USER;
-const mongoPassword = process.env.MONGO_PASSWORD;
-const mongoDBName = process.env.MONGO_DB_NAME;
+const MONGO_HOST = process.env.MONGO_HOST;
+const MONGO_PORT = process.env.MONGO_PORT || 27017;
+const MONGO_USER = process.env.MONGO_USER;
+const MONGO_PASSWORD = process.env.MONGO_PASSWORD;
+const MONGO_DB_NAME = process.env.MONGO_DB_NAME;
+const MONGO_COLLECTION_NAME = 'users';
 var mongoURL;
 
 // fall back to localhost if no username or password. Otherwise, use env var
-if (mongoUser === undefined || mongoPassword === undefined) {
-  mongoURL = 'mongodb://127.0.0.1' + ':' + mongoPort + '/' + mongoDBName;
+if (MONGO_USER === undefined || MONGO_PASSWORD === undefined) {
+  mongoURL = 'mongodb://127.0.0.1' + ':' + MONGO_PORT + '/' + MONGO_DB_NAME;
 } else {
-  mongoURL = 'mongodb://' + mongoUser + ':' + mongoPassword + '@'
-             + mongoHost + ':' + mongoPort + '/' + mongoDBName;
+  mongoURL = 'mongodb://' + MONGO_USER + ':' + MONGO_PASSWORD + '@'
+             + MONGO_HOST + ':' + MONGO_PORT + '/' + MONGO_DB_NAME;
 }
 
 var mongoDB = null;
@@ -25,7 +26,7 @@ var currentUser = null;
 var count = 0;
 
 var app = express();
-const port = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000;
 
 app.engine('handlebars', hbs.engine);
 app.set('view engine', 'handlebars');
@@ -81,7 +82,7 @@ app.post('/activity/log', function(req, res) {
       && isPositive(req.body.progressInc) && req.body.activity.content
       && isPositive(req.body.activity.percent)) {
     // find the selected goal
-    mongoDB.collection('users').aggregate([
+    mongoDB.collection(MONGO_COLLECTION_NAME).aggregate([
       { $match: { name: currentUser.name }},
       { $project: {
         _id: 0,
@@ -105,7 +106,7 @@ app.post('/activity/log', function(req, res) {
       );
 
       // update goal progress and percentage
-      mongoDB.collection('users').updateOne(
+      mongoDB.collection(MONGO_COLLECTION_NAME).updateOne(
         { name: currentUser.name,
           'goals._id': req.body.description.toLowerCase()
         },
@@ -150,7 +151,7 @@ app.post('/activity/log', function(req, res) {
  */
 app.post('/goal/add', function(req, res) {
   if (req.body && req.body.description && isPositive(req.body.goal)) {
-    mongoDB.collection('users').updateOne(
+    mongoDB.collection(MONGO_COLLECTION_NAME).updateOne(
       { name: currentUser.name },
       {
         // push this new goal to the end of the goals array
@@ -188,7 +189,7 @@ app.post('/goal/add', function(req, res) {
 app.post('/goal/remove', function(req, res) {
   if (req.body && notNegative(req.body.index)) {
     // select the goal with the corresponding index in the goals array
-    mongoDB.collection('users').aggregate([
+    mongoDB.collection(MONGO_COLLECTION_NAME).aggregate([
       { $match: { name: currentUser.name }},
       { $project: {
         _id: 0,
@@ -209,7 +210,7 @@ app.post('/goal/remove', function(req, res) {
         result[0].totalProgress.progress - progressChange
       );
 
-      mongoDB.collection('users').updateOne(
+      mongoDB.collection(MONGO_COLLECTION_NAME).updateOne(
         { name: currentUser.name },
         {
           // decrease total goal and total progress from totalProgress
@@ -247,7 +248,7 @@ app.post('/goal/remove', function(req, res) {
 app.post('/calendar/update', function(req, res) {
   if (req.body && req.body.weekday && req.body.content) {
     // update the day's plan
-    mongoDB.collection('users').updateOne(
+    mongoDB.collection(MONGO_COLLECTION_NAME).updateOne(
       { name: currentUser.name, "days.weekday": req.body.weekday },
       { $set: { "days.$.content" : req.body.content }},
       function(err) {
@@ -272,7 +273,7 @@ app.post('/calendar/update', function(req, res) {
 app.post('/user/add', function(req, res){
   if(req.body && req.body.name && req.body.profilePicUrl){
     // add a new user to the DB
-    mongoDB.collection('users').insertOne(req.body, function(err) {
+    mongoDB.collection(MONGO_COLLECTION_NAME).insertOne(req.body, function(err) {
       if (err) {
         res.status(500).send('500: Error adding new user');
         return;
@@ -321,8 +322,7 @@ app.get('*', function(req, res) {
  * Update current user's data to make things more continuous.
  */
 function updateUsers() {
-  var userCollection = mongoDB.collection('users');
-  userCollection.find().toArray(function (err, userTable) {
+  mongoDB.collection(MONGO_COLLECTION_NAME).find().toArray(function (err, userTable) {
     if (err) {
       throw err;
     }
@@ -335,8 +335,7 @@ function updateUsers() {
  * Switch between user sessions.
  */
 function changeUser(userName){
-  var userCollection = mongoDB.collection('users');
-  userCollection.find().toArray(function (err, userTable) {
+  mongoDB.collection(MONGO_COLLECTION_NAME).find().toArray(function (err, userTable) {
     if (err) {
       throw err;
     }
@@ -390,10 +389,9 @@ MongoClient.connect(mongoURL, function(err, client) {
   if (err) {
     throw err;
   }
-  mongoDB = client.db(mongoDBName);
+  mongoDB = client.db(MONGO_DB_NAME);
 
-  var userCollection = mongoDB.collection('users');
-  userCollection.find().toArray(function (err, userTable) {
+  mongoDB.collection(MONGO_COLLECTION_NAME).find().toArray(function (err, userTable) {
     if (err) {
       throw err;
     }
@@ -406,9 +404,9 @@ MongoClient.connect(mongoURL, function(err, client) {
     // console.log(JSON.stringify(userTable, null, 2));
   });
 
-  app.listen(port, function() {
+  app.listen(PORT, function() {
     console.log('========================================');
-    console.log('  Server is listening on port', port);
+    console.log('  Server is listening on port', PORT);
     console.log('========================================');
   });
 });
