@@ -4,7 +4,7 @@ module.exports = function hbsHelpers(hbs) {
     defaultLayout: 'default',
     helpers: {
       if_gte: function(lhs, rhs, options) {
-        if (parseFloat(lhs) >= parseFloat(rhs)) {
+        if (parseFloat(rhs) > 0 && parseFloat(lhs) >= parseFloat(rhs)) {
           return options.fn(this);
         } else {
           return options.inverse(this);
