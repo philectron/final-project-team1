@@ -335,7 +335,6 @@ app.post('/user/add', function(req, res) {
         // update user, send response, and go to the new user's page
         changeUser(req.body.name);
         res.status(200).send('New user added successfully');
-        next();
     });
   } else {
     res.status(400).send('400: Bad user addition request');
