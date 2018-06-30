@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "buildGoalTemplate": "handlebars views/partials/goal.handlebars -f public/goalTemplate.js -m -k if_gte",
+    "buildGoalTemplate": "handlebars views/partials/goalEmpty.handlebars -f public/goalTemplate.js -m -k if_gte",
     "buildActivity": "handlebars views/partials/activity.handlebars -f public/activityTemplate.js -m -k if_gte",
     "build": "npm run buildGoalTemplate && npm run buildActivity",
     "prestart": "npm run build",

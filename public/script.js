@@ -117,7 +117,7 @@ function hideGoalModal() {
 
 function appendGoalGraphContainer(description, goal, progress) {
   var isGoalComplete = percentageOf(goal, progress) >= 100;
-  var goalTemplateHTML = Handlebars.templates.goal({
+  var goalTemplateHTML = Handlebars.templates.goalEmpty({
     description: description,
     goal: goal,
     progress: progress,
