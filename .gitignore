@@ -1,6 +1,8 @@
 .vscode/
 node_modules/
 public/*Template.js
+.elasticbeanstalk/
+.ebextensions/
 
 # ==============================================================================
 # Linux
@@ -80,3 +82,8 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
