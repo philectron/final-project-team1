@@ -1,8 +1,13 @@
 .vscode/
 node_modules/
 public/*Template.js
-.elasticbeanstalk/
-.ebextensions/
+
+# ==============================================================================
+# Elastic Beanstalk
+# ==============================================================================
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
 
 # ==============================================================================
 # Linux
