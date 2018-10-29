@@ -399,6 +399,54 @@ function handleUserModalAccept() {
   hideUserModal();
 }
 
+function handleUserLogOut() {
+  var request = new XMLHttpRequest();
+  var requestURL = '/user/logout';
+  request.open('POST', requestURL);
+
+  request.addEventListener('load', function(event) {
+    if (event.target.status === 200) {
+
+    } else {
+      alert("Error loggin out: " + even.target.response);
+    }
+  });
+  request.setRequestHeader('Content-Type', 'application/json');
+  request.send(JSON.stringify({}));
+}
+
+function handleUserLogIn() {
+  var request = new XMLHttpRequest();
+  var requestURL = '/user/login';
+  request.open('POST', requestURL);
+
+  request.addEventListener('load', function(event) {
+    if (event.target.status === 200) {
+
+    } else {
+      alert("Error loggin in: " + even.target.response);
+    }
+  });
+  request.setRequestHeader('Content-Type', 'application/json');
+  request.send(JSON.stringify({}));
+}
+
+function handleUserRegister() {
+  var request = new XMLHttpRequest();
+  var requestURL = '/user/register';
+  request.open('POST', requestURL);
+
+  request.addEventListener('load', function(event) {
+    if (event.target.status === 200) {
+
+    } else {
+      alert("Error registering: " + even.target.response);
+    }
+  });
+  request.setRequestHeader('Content-Type', 'application/json');
+  request.send(JSON.stringify({}));
+}
+
 function handleUserChange(userName) {
   var request = new XMLHttpRequest();
   var requestURL = '/user/change';
@@ -416,21 +464,20 @@ function handleUserChange(userName) {
 }
 
 window.addEventListener('DOMContentLoaded', function() {
-  var button = document.getElementById('change-planner-button');
-  if (button) {
-    button.addEventListener('click', showCalendarModal);
-  }
-
-  var homeButton = document.getElementById('create-goal-button');
-  if (homeButton) {
-    homeButton.addEventListener('click', showGoalModal);
-  }
+  // tabs inside an open modal
 
   var modalTabs = document.getElementsByClassName('modal-tab');
   if (modalTabs) {
     for (var i = 0; i < modalTabs.length; i++) {
       modalTabs[i].addEventListener('click', updateGoalModalBody(modalTabs, i));
     }
+  }
+
+  // calendar modal buttons
+
+  var calendarModalOpenButton = document.getElementById('change-planner-button');
+  if (calendarModalOpenButton) {
+    calendarModalOpenButton.addEventListener('click', showCalendarModal);
   }
 
   var calendarModalCloseButton = document.querySelector(
@@ -452,6 +499,18 @@ window.addEventListener('DOMContentLoaded', function() {
       'click', handleCalendarModalAccept);
   }
 
+  var calendarModalSelection = document.getElementById('calendar-day-select')
+  if (calendarModalSelection) {
+    calendarModalSelection.addEventListener('change', updateCalendarTextInput);
+  }
+
+  // goal modal buttons
+
+  var goalModalOpenButton = document.getElementById('create-goal-button');
+  if (goalModalOpenButton) {
+    goalModalOpenButton.addEventListener('click', showGoalModal);
+  }
+
   var goalModalCloseButton = document.querySelector(
     '#goal-modal .modal-close-button');
   if (goalModalCloseButton) {
@@ -468,6 +527,23 @@ window.addEventListener('DOMContentLoaded', function() {
     '#goal-modal .modal-accept-button');
   if (goalModalAcceptButton) {
     goalModalAcceptButton.addEventListener('click', handleGoalModalAccept);
+  }
+
+  // user modal buttons
+
+  var userLogOutButton = document.getElementById('log-out-button');
+  if (userLogOutButton) {
+    userLogOutButton.addEventListener('click', handleUserLogOut);
+  }
+
+  var userLogInButton = document.getElementById('log-in-button');
+  if (userLogInButton) {
+    userLogInButton.addEventListener('click', handleUserLogIn);
+  }
+
+  var userRegisterButton = document.getElementById('register-button');
+  if (userRegisterButton) {
+    userRegisterButton.addEventListener('click', handleUserRegister);
   }
 
   var userModalCloseButton = document.querySelector(
@@ -488,10 +564,7 @@ window.addEventListener('DOMContentLoaded', function() {
     userModalAcceptButton.addEventListener('click', handleUserModalAccept);
   }
 
-  var calendarModalSelection = document.getElementById('calendar-day-select')
-  if (calendarModalSelection) {
-    calendarModalSelection.addEventListener('change', updateCalendarTextInput);
-  }
+  // switching users
 
   var changeUserText = document.getElementById('user-list');
   if (changeUserText) {

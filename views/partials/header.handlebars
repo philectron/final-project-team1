@@ -1,12 +1,22 @@
 <header>
-  <nav class="header-item">
-    <a class="navlink" href="/">Home</a>
-    <a class="navlink" href="/about">About</a>
-    <a class="navlink" href="/calendar">Calendar</a>
-    <a class="navlink" href="/leaderboard">Leaderboard</a>
-  </nav>
-  <h1 class="header-item site-title"><a href="/"><i class="fas fa-dumbbell"></i> GymRats <i class="fas fa-dumbbell"></i></a></h1>
-  <div class="header-item" id="account-menu">
-    <span class="account-menu-item"><strong>Hello, {{user.name}}</strong></span>
-  </div>
+  {{#if loggedIn}}
+    <nav class="header-item">
+      <a class="navlink" href="/">Home</a>
+      <a class="navlink" href="/about">About</a>
+      <a class="navlink" href="/calendar">Calendar</a>
+      <a class="navlink" href="/leaderboard">Leaderboard</a>
+    </nav>
+    <h1 class="header-item site-title"><a href="/"><i class="fas fa-dumbbell"></i> GymRats <i class="fas fa-dumbbell"></i></a></h1>
+    <div class="header-item" id="account-menu">
+      <span class="account-menu-item"><strong>Hello {{user.name}}</strong></span>
+      <span class="account-menu-item"><button type="button" id="log-out-button" class="invisible-button"><strong>Log out</strong></button></span>
+    </div>
+  {{else}}
+    <nav class="header-item"></nav>
+    <h1 class="header-item site-title"><a href="/"><i class="fas fa-dumbbell"></i> GymRats <i class="fas fa-dumbbell"></i></a></h1>
+    <div class="header-item" id="account-menu">
+      <span class="account-menu-item"><a class="navlink" href="/register">Register</a></span>
+      <span class="account-menu-item"><a class="navlink" href="/login">Log in</a></span>
+    </div>
+  {{/if}}
 </header>

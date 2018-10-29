@@ -24,6 +24,7 @@ var mongoDB = null;
 var allUsers = null;
 var currentUser = null;
 var count = 0;
+var loggedIn = false;
 
 var app = express();
 const PORT = process.env.PORT || 3000;
@@ -40,12 +41,16 @@ app.use(express.static('public'));
 // "Home" page is the default page every user ends up on. It should display only
 // the goal for the day and the user's progress on that day.
 app.get('/', function(req, res) {
-  updateUsers();
-  res.status(200).render('home', {
-    userList: allUsers,
-    user: currentUser,
-    hasSidebar: true,
-  });
+  if (!loggedIn) {
+    res.redirect('/login');
+  } else {
+    updateUsers();
+    res.status(200).render('home', {
+      userList: allUsers,
+      user: currentUser,
+      hasSidebar: true,
+    });
+  }
 });
 
 // "About" page talks about us and the project itself. It's a tutorial for new
@@ -68,6 +73,20 @@ app.get('/leaderboard', function(req, res) {
   res.status(200).render('leaderboard', {
     userList: allUsers,
     user: currentUser
+  });
+});
+
+app.get('/login', function(req, res) {
+  res.status(200).render('login', {
+    formURL: '/login',
+    submitButtonName: 'Log In'
+  });
+});
+
+app.get('/register', function(req, res) {
+  res.status(200).render('register', {
+    formURL: '/register',
+    submitButtonName: 'Register'
   });
 });
 
@@ -267,6 +286,18 @@ app.post('/calendar/update', function(req, res) {
   } else {
     res.status(400).send('400: Bad calendar update request');
   }
+});
+
+app.post('/user/logout', function(req, res) {
+
+});
+
+app.post('/user/login', function(req, res) {
+
+});
+
+app.post('/user/register', function(req, res) {
+
 });
 
 // Adds a new user to DB.
