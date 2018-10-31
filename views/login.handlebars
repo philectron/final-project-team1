@@ -2,13 +2,17 @@
   <div class="article">
     <div class="content">
       <form class="page-form" action="{{formURL}}" method="post">
-        <div class="form-group">
-          <input class="form-control" name="username" placeholder="Username" type="text" autocomplete="off" autofocus>
-        </div>
-        <div class="form-group">
-          <input class="form-control" name="password" placeholder="Password" type="password">
-        </div>
-        <button id="log-in-button" class="modal-accept-button" type="submit">{{submitButtonName}}</button>
+        <fieldset>
+          <div class="form-group">
+            <input class="form-control" name="username" placeholder="Username" type="text" autocomplete="off" autofocus>
+          </div>
+          <div class="form-group">
+            <input class="form-control" name="password" placeholder="Password" type="password">
+          </div>
+          <div class="form-group">
+            <button id="log-in-button" class="modal-accept-button" type="submit">{{submitButtonName}}</button>
+          </div>
+        </fieldset>
       </form>
     </div>
   </div>

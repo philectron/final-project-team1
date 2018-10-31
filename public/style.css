@@ -245,6 +245,10 @@ main {
   text-align: center;
 }
 
+.page-form > fieldset {
+  border: none;
+}
+
 .form-group {
   margin-bottom: 1rem;
 }
@@ -644,6 +648,14 @@ footer a:visited {
   padding: 10px;
 }
 
+.modal-accept-button {
+  cursor: pointer;
+}
+
+.modal-cancel-button {
+  cursor: pointer;
+}
+
 .modal-footer .modal-cancel-button:hover {
   background-color: #eee;
 }
@@ -718,4 +730,17 @@ footer a:visited {
 
 .dark-text {
   color: #000 !important;
+}
+
+/*
+ * For page with only big text and titles
+ */
+
+.title-page {
+  color: #000;
+  text-align: center;
+}
+
+.title-page a:hover {
+  text-decoration: underline;
 }

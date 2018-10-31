@@ -531,20 +531,20 @@ window.addEventListener('DOMContentLoaded', function() {
 
   // user modal buttons
 
-  var userLogOutButton = document.getElementById('log-out-button');
-  if (userLogOutButton) {
-    userLogOutButton.addEventListener('click', handleUserLogOut);
-  }
+  // var userLogOutButton = document.getElementById('log-out-button');
+  // if (userLogOutButton) {
+  //   userLogOutButton.addEventListener('click', handleUserLogOut);
+  // }
 
-  var userLogInButton = document.getElementById('log-in-button');
-  if (userLogInButton) {
-    userLogInButton.addEventListener('click', handleUserLogIn);
-  }
+  // var userLogInButton = document.getElementById('log-in-button');
+  // if (userLogInButton) {
+  //   userLogInButton.addEventListener('click', handleUserLogIn);
+  // }
 
-  var userRegisterButton = document.getElementById('register-button');
-  if (userRegisterButton) {
-    userRegisterButton.addEventListener('click', handleUserRegister);
-  }
+  // var userRegisterButton = document.getElementById('register-button');
+  // if (userRegisterButton) {
+  //   userRegisterButton.addEventListener('click', handleUserRegister);
+  // }
 
   var userModalCloseButton = document.querySelector(
     '#user-modal .modal-close-button');

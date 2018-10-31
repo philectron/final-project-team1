@@ -3,6 +3,9 @@ var exphbs = require('express-handlebars');
 var hbs = require('./helpers/handlebars')(exphbs);
 var bodyParser = require('body-parser');
 var MongoClient = require('mongodb').MongoClient;
+var crypto = require('crypto');
+
+const HASH_ALGO = 'sha256'
 
 const MONGO_HOST = process.env.MONGO_HOST;
 const MONGO_PORT = process.env.MONGO_PORT || 27017;
@@ -24,7 +27,7 @@ var mongoDB = null;
 var allUsers = null;
 var currentUser = null;
 var count = 0;
-var loggedIn = false;
+var session = {};  // keep track of who is currently logged in
 
 var app = express();
 const PORT = process.env.PORT || 3000;
@@ -32,6 +35,7 @@ const PORT = process.env.PORT || 3000;
 app.engine('handlebars', hbs.engine);
 app.set('view engine', 'handlebars');
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
 /*******************************************************************************
@@ -41,8 +45,8 @@ app.use(express.static('public'));
 // "Home" page is the default page every user ends up on. It should display only
 // the goal for the day and the user's progress on that day.
 app.get('/', function(req, res) {
-  if (!loggedIn) {
-    res.redirect('/login');
+  if (!Object.keys(session).length) {
+    res.status(300).redirect('/login');
   } else {
     updateUsers();
     res.status(200).render('home', {
@@ -78,14 +82,14 @@ app.get('/leaderboard', function(req, res) {
 
 app.get('/login', function(req, res) {
   res.status(200).render('login', {
-    formURL: '/login',
+    formURL: '/user/login',
     submitButtonName: 'Log In'
   });
 });
 
 app.get('/register', function(req, res) {
   res.status(200).render('register', {
-    formURL: '/register',
+    formURL: '/user/register',
     submitButtonName: 'Register'
   });
 });
@@ -293,7 +297,35 @@ app.post('/user/logout', function(req, res) {
 });
 
 app.post('/user/login', function(req, res) {
+  if (!req.body) {
+    res.status(400).render('400', { error400Message: 'Missing request body' });
+  } else if (!req.body.username) {
+    res.status(400).render('400', { error400Message: 'Missing username' });
+  } else if (!req.body.password) {
+    res.status(400).render('400', { error400Message: 'Missing password' });
+  } else {
+    // try to find the provided username in the database
+    queryUser = mongoDB.collection(MONGO_COLLECTION_NAME).find(
+      { '_id': req.body.username })
+      .toArray(function(err, result) {
+        if (err) {
+          res.status(500).send('500: Error finding user');
+          return;
+        }
 
+        // if the user does not exist and/or password is incorrect
+        if (!Array.isArray(result) || !result.length
+           || getHash(req.body.password) !== result[0].hash) {
+            res.status(400).render('400', {
+              error400Message: 'Invalid username and/or password'
+            });
+        } else {
+          session[req.body.username] = req.body.username;
+
+          console.log(result);
+        }
+    });
+  }
 });
 
 app.post('/user/register', function(req, res) {
@@ -382,6 +414,7 @@ app.post('/user/change', function(req, res) {
   }
 });
 
+
 /*******************************************************************************
  * 404 handler
  ******************************************************************************/
@@ -396,6 +429,12 @@ app.get('*', function(req, res) {
 /*******************************************************************************
  * Helper functions
  ******************************************************************************/
+
+// Returns the hash of a string in hex
+function getHash(input) {
+  return crypto.createHash(HASH_ALGO).update(input).digest('hex');
+}
+
 
 // Updates current user's data to make things more continuous.
 function updateUsers() {
