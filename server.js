@@ -152,6 +152,14 @@ app.get('/register', function(req, res) {
 });
 
 /*******************************************************************************
+ * 404 handler
+ ******************************************************************************/
+
+app.get('*', function(req, res) {
+  res.status(404).render('404');
+});
+
+/*******************************************************************************
  * POST request handlers
  ******************************************************************************/
 
@@ -357,7 +365,7 @@ app.post('/user/login', function(req, res) {
     mongoDB.collection(MONGO_COLLECTION_NAME).find({ '_id': req.body.username })
       .toArray(function(err, users) {
         if (err) {
-          res.status(500).send('500: Error fetching user from DB');
+          res.status(500).send('500: Error fetching users from DB');
           return;
         }
 
@@ -377,15 +385,106 @@ app.post('/user/login', function(req, res) {
 });
 
 app.post('/user/register', function(req, res) {
+  if (!req.body) {
+    res.status(400).render('400', { error400Message: 'Missing request body' });
+  } else if (!req.body.fullName) {
+    res.status(400).render('400', { error400Message: 'Missing full name' });
+  } else if (!req.body.username) {
+    res.status(400).render('400', { error400Message: 'Missing username' });
+  } else if (!req.body.password) {
+    res.status(400).render('400', { error400Message: 'Missing password' });
+  } else if (!req.body.confirmPassword) {
+    res.status(400).render('400', {
+      error400Message: 'Missing password confirmation'
+    });
+  } else if (req.body.confirmPassword !== req.body.password) {
+    res.status(400).render('400', {
+      error400Message: 'Passwords did not matched'
+    });
+  } else {
+    // forget the logged in user
+    session = null;
 
-});
+    // try to find the provided username in the database
+    mongoDB.collection(MONGO_COLLECTION_NAME).find({ '_id': req.body.username })
+      .toArray(function(errFind, users) {
+        if (errFind) {
+          res.status(500).send('500: Error fetching users from DB');
+          return;
+        }
 
-/*******************************************************************************
- * 404 handler
- ******************************************************************************/
-
-app.get('*', function(req, res) {
-  res.status(404).render('404');
+        // if the username already exists
+        if (Array.isArray(users) && users.length
+           && users[0]._id === req.body.username) {
+          res.status(400).render('400', {
+            error400Message: 'Username already exists'
+          });
+        } else {
+          // register this user
+          mongoDB.collection(MONGO_COLLECTION_NAME).insertOne(
+            {
+              '_id': req.body.username,
+              'hash': getHash(req.body.password),
+              'name': req.body.fullName,
+              'profilePicUrl': req.body.profilePicUrl,
+              'totalProgress': {
+                'goal': 0,
+                'progress': 0,
+                'percentage': 0
+              },
+              'goals': [],
+              'days': [
+                {
+                  '_id': 'sunday',
+                  'weekday': 'Sunday',
+                  'content': ''
+                },
+                {
+                  '_id': 'monday',
+                  'weekday': 'Monday',
+                  'content': ''
+                },
+                {
+                  '_id': 'tuesday',
+                  'weekday': 'Tuesday',
+                  'content': ''
+                },
+                {
+                  '_id': 'wednesday',
+                  'weekday': 'Wednesday',
+                  'content': ''
+                },
+                {
+                  '_id': 'thursday',
+                  'weekday': 'Thursday',
+                  'content': ''
+                },
+                {
+                  '_id': 'friday',
+                  'weekday': 'Friday',
+                  'content': ''
+                },
+                {
+                  '_id': 'saturday',
+                  'weekday': 'Saturday',
+                  'content': ''
+                }
+              ],
+              'activities': []
+            },
+            function(err) {
+              if (err) {
+                res.status(500).send('500: Error registering new user');
+                return;
+              } else {
+                // remember this user's session & redirect to index
+                session = req.body.username;
+                res.status(300).redirect('/');
+              }
+          });
+        }
+    });
+  }
 });
 
 /*******************************************************************************

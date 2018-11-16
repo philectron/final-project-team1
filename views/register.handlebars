@@ -3,7 +3,10 @@
     <div class="content">
       <form class="page-form" action="{{formURL}}" method="post">
         <div class="form-group">
-          <input class="form-control" name="fullname" placeholder="Full Name" type="text" autocomplete="off" autofocus>
+          <input class="form-control" name="fullName" placeholder="Full Name" type="text" autocomplete="off" autofocus>
+        </div>
+        <div class="form-group">
+          <input class="form-control" name="profilePicUrl" placeholder="Link to Profile Picture (Optional)" type="url" autocomplete="off">
         </div>
         <div class="form-group">
           <input class="form-control" name="username" placeholder="Username" type="text" autocomplete="off">
@@ -12,7 +15,7 @@
           <input class="form-control" name="password" placeholder="Password" type="password">
         </div>
         <div class="form-group">
-          <input class="form-control" name="confirmpassword" placeholder="Confirm Password" type="password">
+          <input class="form-control" name="confirmPassword" placeholder="Confirm Password" type="password">
         </div>
         <button id="register-button" class="modal-accept-button" type="submit">{{submitButtonName}}</button>
       </form>

@@ -368,38 +368,6 @@ function handleUserLogOut() {
   request.send(JSON.stringify({}));
 }
 
-function handleUserLogIn() {
-  var request = new XMLHttpRequest();
-  var requestURL = '/user/login';
-  request.open('POST', requestURL);
-
-  request.addEventListener('load', function(event) {
-    if (event.target.status === 200) {
-
-    } else {
-      alert("Error loggin in: " + even.target.response);
-    }
-  });
-  request.setRequestHeader('Content-Type', 'application/json');
-  request.send(JSON.stringify({}));
-}
-
-function handleUserRegister() {
-  var request = new XMLHttpRequest();
-  var requestURL = '/user/register';
-  request.open('POST', requestURL);
-
-  request.addEventListener('load', function(event) {
-    if (event.target.status === 200) {
-
-    } else {
-      alert("Error registering: " + even.target.response);
-    }
-  });
-  request.setRequestHeader('Content-Type', 'application/json');
-  request.send(JSON.stringify({}));
-}
-
 window.addEventListener('DOMContentLoaded', function() {
   // tabs inside an open modal
 
