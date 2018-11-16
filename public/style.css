@@ -451,16 +451,6 @@ main {
   width: 1.5rem;
 }
 
-/*
- * Invisible button
- */
-.invisible-button {
-  background-color: transparent;
-  border: none;
-  color: #fff;
-  cursor: pointer;
-}
-
 /*******************************************************************************
  * Site's footer
  ******************************************************************************/

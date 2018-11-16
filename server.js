@@ -43,7 +43,7 @@ app.use(express.static('public'));
 // the goal for the day and the user's progress on that day.
 app.get('/', function(req, res) {
   if (!session) {
-    res.status(300).redirect('/login');
+    res.redirect('/login');
   } else {
     mongoDB.collection(MONGO_COLLECTION_NAME).find({ '_id': session }).toArray(
       function(err, users) {
@@ -65,7 +65,7 @@ app.get('/', function(req, res) {
 // users how to use the web app.
 app.get('/about', function(req, res) {
   if (!session) {
-    res.status(300).redirect('/login');
+    res.redirect('/login');
   } else {
     mongoDB.collection(MONGO_COLLECTION_NAME).find({ '_id': session }).toArray(
       function(err, users) {
@@ -86,7 +86,7 @@ app.get('/about', function(req, res) {
 // displayed.
 app.get('/calendar', function(req, res) {
   if (!session) {
-    res.status(300).redirect('/login');
+    res.redirect('/login');
   } else {
     mongoDB.collection(MONGO_COLLECTION_NAME).find({ '_id': session }).toArray(
       function(err, users) {
@@ -107,7 +107,7 @@ app.get('/calendar', function(req, res) {
 // app.
 app.get('/leaderboard', function(req, res) {
   if (!session) {
-    res.status(300).redirect('/login');
+    res.redirect('/login');
   } else {
     mongoDB.collection(MONGO_COLLECTION_NAME).find().toArray(
       function(err, users) {
@@ -125,10 +125,18 @@ app.get('/leaderboard', function(req, res) {
   }
 });
 
+app.get('/logout', function(req, res) {
+  // forget the logged in user
+  session = null;
+
+  // redirect to the login page
+  res.redirect('/login');
+});
+
 app.get('/login', function(req, res) {
   // if already logged in, redirect to index
   if (session) {
-    res.status(300).redirect('/');
+    res.redirect('/');
     return;
   }
 
@@ -344,12 +352,6 @@ app.post('/calendar/update', function(req, res) {
   }
 });
 
-app.post('/user/logout', function(req, res) {
-  // forget the logged in user
-  session = null;
-
-});
-
 app.post('/user/login', function(req, res) {
   if (!req.body) {
     res.status(400).render('400', { error400Message: 'Missing request body' });
@@ -378,7 +380,7 @@ app.post('/user/login', function(req, res) {
         } else {
           // save the current session and redirect to index
           session = req.body.username;
-          res.status(300).redirect('/');
+          res.redirect('/');
         }
     });
   }
@@ -479,7 +481,7 @@ app.post('/user/register', function(req, res) {
               } else {
                 // remember this user's session & redirect to index
                 session = req.body.username;
-                res.status(300).redirect('/');
+                res.redirect('/');
               }
           });
         }

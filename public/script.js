@@ -319,7 +319,6 @@ function handleGoalModalAccept() {
     });
 
     request.setRequestHeader('Content-Type', 'application/json');
-    // request.send(JSON.stringify({ description: selectDropDown.value }));
     request.send(JSON.stringify({ index: index }));
   }
 
@@ -350,22 +349,6 @@ function updateGoalModalBody(modalTabs, i) {
       modalBodies[i].classList.remove('hidden');
     }
   };
-}
-
-function handleUserLogOut() {
-  var request = new XMLHttpRequest();
-  var requestURL = '/user/logout';
-  request.open('POST', requestURL);
-
-  request.addEventListener('load', function(event) {
-    if (event.target.status === 200) {
-
-    } else {
-      alert("Error loggin out: " + even.target.response);
-    }
-  });
-  request.setRequestHeader('Content-Type', 'application/json');
-  request.send(JSON.stringify({}));
 }
 
 window.addEventListener('DOMContentLoaded', function() {
