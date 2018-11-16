@@ -352,53 +352,6 @@ function updateGoalModalBody(modalTabs, i) {
   };
 }
 
-function hideUserModal() {
-  var modalBackdrop = document.querySelector('.modal-backdrop');
-  var modal = document.getElementById('user-modal');
-
-  modalBackdrop.classList.add('hidden');
-  modal.classList.add('hidden');
-}
-
-function showUserModal() {
-  var modalBackdrop = document.querySelector('.modal-backdrop');
-  var userModal = document.getElementById('user-modal');
-  document.getElementById('username-text-input').value = '';
-  document.getElementById('profimage-text-input').value = '';
-  modalBackdrop.classList.remove('hidden');
-  userModal.classList.remove('hidden');
-}
-
-function handleUserModalAccept() {
-  var name = document.getElementById('username-text-input').value;
-  var pic = document.getElementById('profimage-text-input').value;
-
-  // validate input
-  if (!name) {
-    alert('Name must not be empty');
-    return;
-  }
-
-  var request = new XMLHttpRequest();
-  var requestURL = '/user/add';
-  request.open('POST', requestURL);
-
-  request.addEventListener('load', function(event) {
-    if (event.target.status === 200) {
-      handleUserChange(name);
-    } else {
-      alert('Error adding new user: ' + event.target.response);
-    }
-  });
-
-  request.setRequestHeader('Content-Type', 'application/json');
-  request.send(JSON.stringify({
-    name: name,
-    profilePicUrl: pic
-  }));
-  hideUserModal();
-}
-
 function handleUserLogOut() {
   var request = new XMLHttpRequest();
   var requestURL = '/user/logout';
@@ -445,22 +398,6 @@ function handleUserRegister() {
   });
   request.setRequestHeader('Content-Type', 'application/json');
   request.send(JSON.stringify({}));
-}
-
-function handleUserChange(userName) {
-  var request = new XMLHttpRequest();
-  var requestURL = '/user/change';
-  request.open('POST', requestURL);
-
-  request.addEventListener('load', function(event) {
-    if (event.target.status === 200) {
-      document.location.reload();
-    } else {
-      alert("Error changing user: " + event.target.response);
-    }
-  });
-  request.setRequestHeader('Content-Type', 'application/json');
-  request.send(JSON.stringify({ name: userName }));
 }
 
 window.addEventListener('DOMContentLoaded', function() {
@@ -527,53 +464,5 @@ window.addEventListener('DOMContentLoaded', function() {
     '#goal-modal .modal-accept-button');
   if (goalModalAcceptButton) {
     goalModalAcceptButton.addEventListener('click', handleGoalModalAccept);
-  }
-
-  // user modal buttons
-
-  // var userLogOutButton = document.getElementById('log-out-button');
-  // if (userLogOutButton) {
-  //   userLogOutButton.addEventListener('click', handleUserLogOut);
-  // }
-
-  // var userLogInButton = document.getElementById('log-in-button');
-  // if (userLogInButton) {
-  //   userLogInButton.addEventListener('click', handleUserLogIn);
-  // }
-
-  // var userRegisterButton = document.getElementById('register-button');
-  // if (userRegisterButton) {
-  //   userRegisterButton.addEventListener('click', handleUserRegister);
-  // }
-
-  var userModalCloseButton = document.querySelector(
-    '#user-modal .modal-close-button');
-  if (userModalCloseButton) {
-    userModalCloseButton.addEventListener('click', hideUserModal);
-  }
-
-  var userModalCancelButton = document.querySelector(
-    '#user-modal .modal-cancel-button');
-  if (userModalCancelButton) {
-    userModalCancelButton.addEventListener('click', hideUserModal);
-  }
-
-  var userModalAcceptButton = document.querySelector(
-    '#user-modal .modal-accept-button');
-  if (userModalAcceptButton) {
-    userModalAcceptButton.addEventListener('click', handleUserModalAccept);
-  }
-
-  // switching users
-
-  var changeUserText = document.getElementById('user-list');
-  if (changeUserText) {
-    changeUserText.addEventListener('click', function(event) {
-      if (event.target.innerText === 'Add a new user...') {
-        showUserModal();
-      } else {
-        handleUserChange(event.target.innerText);
-      }
-    });
   }
 });
