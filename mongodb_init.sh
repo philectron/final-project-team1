@@ -3,6 +3,6 @@ sudo service mongod start
 
 # then log in to mongo shell and init DB
 mongo << EOF
-use osu_cs290_gymrats
+use gymrats
 db.createCollection('users')
 EOF

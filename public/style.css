@@ -254,6 +254,7 @@ main {
 }
 
 .form-control {
+  width: 16rem;
   height: 2rem;
   border-radius: .5rem;
   padding: .25rem .5rem;
@@ -685,3 +686,12 @@ footer a:visited {
 .title-page a:hover {
   text-decoration: underline;
 }
+
+/*
+ * Login button and register button
+ */
+#login-button,
+#register-button {
+  padding: .5rem;
+}
+

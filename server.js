@@ -7,11 +7,11 @@ var crypto = require('crypto');
 
 const HASH_ALGO = 'sha256';
 
-const MONGO_HOST = process.env.MONGO_HOST;
+const MONGO_HOST = process.env.MONGO_HOST || '127.0.0.1';
 const MONGO_PORT = process.env.MONGO_PORT || 27017;
 const MONGO_USER = process.env.MONGO_USER;
 const MONGO_PASSWORD = process.env.MONGO_PASSWORD;
-const MONGO_DB_NAME = process.env.MONGO_DB_NAME;
+const MONGO_DB_NAME = process.env.MONGO_DB_NAME || 'gymrats';
 const MONGO_COLLECTION_NAME = 'users';
 var mongoURL;
 
