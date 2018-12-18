@@ -4,6 +4,7 @@ var hbs = require('./helpers/handlebars')(exphbs);
 var bodyParser = require('body-parser');
 var MongoClient = require('mongodb').MongoClient;
 var crypto = require('crypto');
+var session = require('client-sessions');
 
 const HASH_ALGO = 'sha256';
 
@@ -13,7 +14,8 @@ const MONGO_USER = process.env.MONGO_USER;
 const MONGO_PASSWORD = process.env.MONGO_PASSWORD;
 const MONGO_DB_NAME = process.env.MONGO_DB_NAME || 'gymrats';
 const MONGO_COLLECTION_NAME = 'users';
-var mongoURL;
+var mongoURL = null;
+var mongoDB = null;
 
 // Use environment variable or fallback to use localhost
 if (MONGO_USER || MONGO_PASSWORD) {
@@ -22,9 +24,6 @@ if (MONGO_USER || MONGO_PASSWORD) {
 } else {
   mongoURL = 'mongodb://127.0.0.1' + ':' + MONGO_PORT + '/' + MONGO_DB_NAME;
 }
-
-var mongoDB = null;
-var session = null;  // keep track of who is currently logged in
 
 var app = express();
 const PORT = process.env.PORT || 3000;
@@ -36,113 +35,105 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
 /*******************************************************************************
+ * Credits to https://stormpath.com/blog/everything-you-ever-wanted-to-know-about-node-dot-js-sessions
+ ******************************************************************************/
+
+// Configures client-sessions.
+app.use(session({
+  cookieName: 'session',
+  secret: 'NirDvGimi9t7UHvdW8y0',  // random string
+  duration: 30 * 60 * 1000,  // (in microseconds) 30 minutes
+  activeDuration: 5 * 60 * 1000,  // (in microseconds) 5 minutes
+  httpOnly: true,
+  secure: true,
+  ephemeral: true
+}));
+
+// Global middleware function to check for session in several GET requests.
+app.use(function(req, res, next) {
+  if (req.session && req.session.user) {
+    mongoDB.collection(MONGO_COLLECTION_NAME)
+      .find({ '_id': req.session.user._id })
+      .toArray(function(err, users) {
+      if (!err && Array.isArray(users) && users.length === 1) {
+        req.user = users[0];
+        delete req.user.hash;  // delete password's hash from the session
+        req.session.user = users[0];  // refresh the session value
+        res.locals.user = users[0];
+      }
+      next();
+    });
+  } else {
+    next();
+  }
+});
+
+/*******************************************************************************
  * GET request handlers
  ******************************************************************************/
 
 // "Home" page is the default page every user ends up on. It should display only
 // the goal for the day and the user's progress on that day.
-app.get('/', function(req, res) {
-  if (!session) {
-    res.redirect('/login');
-  } else {
-    mongoDB.collection(MONGO_COLLECTION_NAME).find({ '_id': session }).toArray(
-      function(err, users) {
-        if (err || !Array.isArray(users) || users.length !== 1) {
-          res.status(500).send('500: Error fetching users from DB');
-          return;
-        }
-
-        res.status(200).render('home', {
-          hasSidebar: true,
-          loggedIn: true,
-          user: users[0]
-        });
-    });
-  }
+app.get('/', requireLogin, function(req, res) {
+  res.status(200).render('home', {
+    hasSidebar: true,
+    loggedIn: true,
+    user: req.user
+  });
 });
 
 // "About" page talks about us and the project itself. It's a tutorial for new
 // users how to use the web app.
-app.get('/about', function(req, res) {
-  if (!session) {
-    res.redirect('/login');
-  } else {
-    mongoDB.collection(MONGO_COLLECTION_NAME).find({ '_id': session }).toArray(
-      function(err, users) {
-        if (err || !Array.isArray(users) || users.length !== 1) {
-          res.status(500).send('500: Error fetching users from DB');
-          return;
-        }
-
-        res.status(200).render('about', {
-          loggedIn: true,
-          user: users[0]
-        });
-    });
-  }
+app.get('/about', requireLogin, function(req, res) {
+  res.status(200).render('about', {
+    loggedIn: true,
+    user: req.user
+  });
 });
 
 // "Calendar" page shows a calendar where the user's workout plans are
 // displayed.
-app.get('/calendar', function(req, res) {
-  if (!session) {
-    res.redirect('/login');
-  } else {
-    mongoDB.collection(MONGO_COLLECTION_NAME).find({ '_id': session }).toArray(
-      function(err, users) {
-        if (err || !Array.isArray(users) || users.length !== 1) {
-          res.status(500).send('500: Error fetching users from DB');
-          return;
-        }
-
-        res.status(200).render('calendar', {
-          loggedIn: true,
-          user: users[0]
-        });
-    });
-  }
+app.get('/calendar', requireLogin, function(req, res) {
+  res.status(200).render('calendar', {
+    loggedIn: true,
+    user: req.user
+  });
 });
 
 // "Leaderboard" page integrates the database and multi-account into the web
 // app.
-app.get('/leaderboard', function(req, res) {
-  if (!session) {
-    res.redirect('/login');
-  } else {
-    mongoDB.collection(MONGO_COLLECTION_NAME).find().toArray(
-      function(err, users) {
-        if (err || !Array.isArray(users) || !users.length) {
-          res.status(500).send('500: Error fetching users from DB');
-          return;
-        }
+app.get('/leaderboard', requireLogin, function(req, res) {
+  mongoDB.collection(MONGO_COLLECTION_NAME).find().toArray(
+    function(err, users) {
+      if (err || !Array.isArray(users) || !users.length) {
+        res.status(500).send('500: Error fetching users from database');
+        return;
+      }
 
-        res.status(200).render('leaderboard', {
-          loggedIn: true,
-          user: users.find(function(user) { user._id === session; }),
-          userList: users
-        });
-    });
-  }
+      res.status(200).render('leaderboard', {
+        loggedIn: true,
+        user: req.user,
+        userList: users
+      });
+  });
 });
 
 app.get('/logout', function(req, res) {
-  // forget the logged in user
-  session = null;
-
-  // redirect to the login page
-  res.redirect('/login');
+  req.session.reset();
+  res.redirect('/');
 });
 
 app.get('/login', function(req, res) {
   // if already logged in, redirect to index
-  if (session) {
+  if (req.user) {
     res.redirect('/');
     return;
   }
 
   // forget the logged in user
-  session = null;
+  req.session.reset();
 
+  // go to the login front-end
   res.status(200).render('login', {
     formURL: '/user/login',
     submitButtonName: 'Log In'
@@ -150,9 +141,6 @@ app.get('/login', function(req, res) {
 });
 
 app.get('/register', function(req, res) {
-  // forget the logged in user
-  session = null;
-
   res.status(200).render('register', {
     formURL: '/user/register',
     submitButtonName: 'Register'
@@ -172,13 +160,13 @@ app.get('*', function(req, res) {
  ******************************************************************************/
 
 // Incrementally logs activity to DB.
-app.post('/activity/log', function(req, res) {
+app.post('/activity/log', requireLogin, function(req, res) {
   if (req.body && req.body.description && notNegative(req.body.index)
       && isPositive(req.body.progressInc) && req.body.activity.content
       && isPositive(req.body.activity.percent)) {
     // find the selected goal
     mongoDB.collection(MONGO_COLLECTION_NAME).aggregate([
-      { $match: { _id: session } },
+      { $match: { _id: req.user._id } },
       {
         $project: {
           _id: 0,
@@ -205,7 +193,7 @@ app.post('/activity/log', function(req, res) {
       // update goal progress and percentage
       mongoDB.collection(MONGO_COLLECTION_NAME).updateOne(
         {
-          _id: session,
+          _id: req.user._id,
           'goals._id': req.body.description.toLowerCase()
         },
         {
@@ -242,10 +230,10 @@ app.post('/activity/log', function(req, res) {
 });
 
 // Adds a new goal to DB.
-app.post('/goal/add', function(req, res) {
+app.post('/goal/add', requireLogin, function(req, res) {
   if (req.body && req.body.description && isPositive(req.body.goal)) {
     mongoDB.collection(MONGO_COLLECTION_NAME).updateOne(
-      { _id: session },
+      { _id: req.user._id },
       {
         // push this new goal to the end of the goals array
         $addToSet: {
@@ -273,12 +261,12 @@ app.post('/goal/add', function(req, res) {
   }
 });
 
-// Removes an exisiting goal from DB.
-app.post('/goal/remove', function(req, res) {
+// Removes an exisiting goal from database.
+app.post('/goal/remove', requireLogin, function(req, res) {
   if (req.body && notNegative(req.body.index)) {
     // select the goal with the corresponding index in the goals array
     mongoDB.collection(MONGO_COLLECTION_NAME).aggregate([
-      { $match: { _id: session } },
+      { $match: { _id: req.user._id } },
       {
         $project: {
           _id: 0,
@@ -301,7 +289,7 @@ app.post('/goal/remove', function(req, res) {
       );
 
       mongoDB.collection(MONGO_COLLECTION_NAME).updateOne(
-        { _id: session },
+        { _id: req.user._id },
         {
           // decrease total goal and total progress from totalProgress
           $inc: {
@@ -328,12 +316,12 @@ app.post('/goal/remove', function(req, res) {
 });
 
 // Updates the weekly plan.
-app.post('/calendar/update', function(req, res) {
+app.post('/calendar/update', requireLogin, function(req, res) {
   if (req.body && req.body.weekday && req.body.content) {
     // update the day's plan
     mongoDB.collection(MONGO_COLLECTION_NAME).updateOne(
       {
-        _id: session,
+        _id: req.user._id,
         "days.weekday": req.body.weekday
       },
       {
@@ -360,26 +348,24 @@ app.post('/user/login', function(req, res) {
   } else if (!req.body.password) {
     res.status(400).render('400', { error400Message: 'Missing password' });
   } else {
-    // forget the logged in user
-    session = null;
-
     // try to find the provided username in the database
     mongoDB.collection(MONGO_COLLECTION_NAME).find({ '_id': req.body.username })
       .toArray(function(err, users) {
         if (err) {
-          res.status(500).send('500: Error fetching users from DB');
+          res.status(500).send('500: Error fetching users from database');
           return;
         }
 
         // if the user does not exist and/or password is incorrect
         if (!Array.isArray(users) || users.length !== 1
-           || getHash(req.body.password) !== users[0].hash) {
+            || getHash(req.body.password) !== users[0].hash) {
             res.status(400).render('400', {
               error400Message: 'Invalid username and/or password'
             });
         } else {
-          // save the current session and redirect to index
-          session = req.body.username;
+          // sets a cookie with the user's info
+          req.session.user = users[0];
+          // redirect to index
           res.redirect('/');
         }
     });
@@ -401,23 +387,27 @@ app.post('/user/register', function(req, res) {
     });
   } else if (req.body.confirmPassword !== req.body.password) {
     res.status(400).render('400', {
-      error400Message: 'Passwords did not matched'
+      error400Message: 'Passwords must match'
+    });
+  } else if (!isAlphaNumeric(req.body.fullName)) {
+    res.status(400).render('400', {
+      error400Message: 'Full name must be alphanumeric'
     });
   } else {
     // forget the logged in user
-    session = null;
+    req.session.reset();
 
     // try to find the provided username in the database
     mongoDB.collection(MONGO_COLLECTION_NAME).find({ '_id': req.body.username })
       .toArray(function(errFind, users) {
         if (errFind) {
-          res.status(500).send('500: Error fetching users from DB');
+          res.status(500).send('500: Error fetching users from database');
           return;
         }
 
         // if the username already exists
         if (Array.isArray(users) && users.length
-           && users[0]._id === req.body.username) {
+            && users[0]._id === req.body.username) {
           res.status(400).render('400', {
             error400Message: 'Username already exists'
           });
@@ -479,8 +469,9 @@ app.post('/user/register', function(req, res) {
                 res.status(500).send('500: Error registering new user');
                 return;
               } else {
-                // remember this user's session & redirect to index
-                session = req.body.username;
+                // remember this user's session
+                req.session.user = req.body;
+                // redirect to index
                 res.redirect('/');
               }
           });
@@ -493,9 +484,19 @@ app.post('/user/register', function(req, res) {
  * Helper functions
  ******************************************************************************/
 
-// Returns the hash of a string in hex
+// Returns the hash of a string in hex.
 function getHash(input) {
   return crypto.createHash(HASH_ALGO).update(input).digest('hex');
+}
+
+// Combines with the global middleware of client-sessions to make GET request
+// handlers shorter.
+function requireLogin(req, res, next) {
+  if (!req.user) {
+    res.redirect('/login');
+  } else {
+    next();
+  }
 }
 
 // Returns what the percentage  small  is of  big .
@@ -507,17 +508,30 @@ function percentageOf(big, small) {
   }
 }
 
-// Returns true if x is a non-negative number. Returns false otherwise.
+// Returns true if  x  is a non-negative number. Returns false otherwise.
 function notNegative(x) {
   var xFloat = parseFloat(x);
   return !isNaN(xFloat) && xFloat >= 0;
 }
 
-// Returns true if x is a positive number. Returns false otherwise.
+// Returns true if  x  is a positive number. Returns false otherwise.
 function isPositive(x) {
   var xFloat = parseFloat(x);
   return !isNaN(xFloat) && xFloat > 0;
 }
+
+// Returns true if  str  is alphanumeric. Returns false otherwise.
+function isAlphaNumeric(str) {
+  for (var i = 0, len = str.length; i < len; i++) {
+    var code = str.charCodeAt(i);
+    if (!(code > 47 && code < 58) &&   // numeric (0-9)
+        !(code > 64 && code < 91) &&   // upper alpha (A-Z)
+        !(code > 96 && code < 123)) {  // lower alpha (a-z)
+      return false;
+    }
+  }
+  return true;
+};
 
 /*******************************************************************************
  * Connect to MongoDB and start server
