@@ -2,7 +2,7 @@
   <div class="content">
     <h1 id="leaderboard-header">This week's Leaderboard</h1>
     {{#each userList}}
-      {{> userRank}}
+      {{> userRank user=this}}
     {{/each}}
   </div>
 </main>

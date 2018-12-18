@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Generalaaa
+ * General
  ******************************************************************************/
 
 body,
@@ -473,6 +473,10 @@ footer a:link,
 footer a:hover,
 footer a:visited {
   color: #000;
+}
+
+footer a:hover {
+  text-decoration: underline;
 }
 
 /* modal */
