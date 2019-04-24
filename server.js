@@ -12,17 +12,17 @@ const MONGO_HOST = process.env.MONGO_HOST || '127.0.0.1';
 const MONGO_PORT = process.env.MONGO_PORT || 27017;
 const MONGO_USER = process.env.MONGO_USER;
 const MONGO_PASSWORD = process.env.MONGO_PASSWORD;
-const MONGO_DB_NAME = process.env.MONGO_DB_NAME || 'gymrats';
-const MONGO_COLLECTION_NAME = 'users';
+const MONGO_DB = process.env.MONGO_DB || 'gymrats';
+const MONGO_COLLECTION = 'users';
 var mongoURL = null;
 var mongoDB = null;
 
 // Use environment variable or fallback to use localhost
 if (MONGO_USER || MONGO_PASSWORD) {
   mongoURL = 'mongodb://' + MONGO_USER + ':' + MONGO_PASSWORD + '@'
-             + MONGO_HOST + ':' + MONGO_PORT + '/' + MONGO_DB_NAME;
+             + MONGO_HOST + ':' + MONGO_PORT + '/' + MONGO_DB;
 } else {
-  mongoURL = 'mongodb://127.0.0.1' + ':' + MONGO_PORT + '/' + MONGO_DB_NAME;
+  mongoURL = 'mongodb://127.0.0.1' + ':' + MONGO_PORT + '/' + MONGO_DB;
 }
 
 var app = express();
@@ -52,7 +52,7 @@ app.use(session({
 // Global middleware function to check for session in several GET requests.
 app.use(function(req, res, next) {
   if (req.session && req.session.user) {
-    mongoDB.collection(MONGO_COLLECTION_NAME)
+    mongoDB.collection(MONGO_COLLECTION)
       .find({ '_id': req.session.user._id })
       .toArray(function(err, users) {
       if (!err && Array.isArray(users) && users.length === 1) {
@@ -103,7 +103,7 @@ app.get('/calendar', requireLogin, function(req, res) {
 // "Leaderboard" page integrates the database and multi-account into the web
 // app.
 app.get('/leaderboard', requireLogin, function(req, res) {
-  mongoDB.collection(MONGO_COLLECTION_NAME).find().toArray(
+  mongoDB.collection(MONGO_COLLECTION).find().toArray(
     function(err, users) {
       if (err || !Array.isArray(users) || !users.length) {
         res.status(500).send('500: Error fetching users from database');
@@ -165,7 +165,7 @@ app.post('/activity/log', requireLogin, function(req, res) {
       && isPositive(req.body.progressInc) && req.body.activity.content
       && isPositive(req.body.activity.percent)) {
     // find the selected goal
-    mongoDB.collection(MONGO_COLLECTION_NAME).aggregate([
+    mongoDB.collection(MONGO_COLLECTION).aggregate([
       { $match: { _id: req.user._id } },
       {
         $project: {
@@ -191,7 +191,7 @@ app.post('/activity/log', requireLogin, function(req, res) {
       );
 
       // update goal progress and percentage
-      mongoDB.collection(MONGO_COLLECTION_NAME).updateOne(
+      mongoDB.collection(MONGO_COLLECTION).updateOne(
         {
           _id: req.user._id,
           'goals._id': req.body.description.toLowerCase()
@@ -232,7 +232,7 @@ app.post('/activity/log', requireLogin, function(req, res) {
 // Adds a new goal to DB.
 app.post('/goal/add', requireLogin, function(req, res) {
   if (req.body && req.body.description && isPositive(req.body.goal)) {
-    mongoDB.collection(MONGO_COLLECTION_NAME).updateOne(
+    mongoDB.collection(MONGO_COLLECTION).updateOne(
       { _id: req.user._id },
       {
         // push this new goal to the end of the goals array
@@ -265,7 +265,7 @@ app.post('/goal/add', requireLogin, function(req, res) {
 app.post('/goal/remove', requireLogin, function(req, res) {
   if (req.body && notNegative(req.body.index)) {
     // select the goal with the corresponding index in the goals array
-    mongoDB.collection(MONGO_COLLECTION_NAME).aggregate([
+    mongoDB.collection(MONGO_COLLECTION).aggregate([
       { $match: { _id: req.user._id } },
       {
         $project: {
@@ -288,7 +288,7 @@ app.post('/goal/remove', requireLogin, function(req, res) {
         result[0].totalProgress.progress - progressChange
       );
 
-      mongoDB.collection(MONGO_COLLECTION_NAME).updateOne(
+      mongoDB.collection(MONGO_COLLECTION).updateOne(
         { _id: req.user._id },
         {
           // decrease total goal and total progress from totalProgress
@@ -319,7 +319,7 @@ app.post('/goal/remove', requireLogin, function(req, res) {
 app.post('/calendar/update', requireLogin, function(req, res) {
   if (req.body && req.body.weekday && req.body.content) {
     // update the day's plan
-    mongoDB.collection(MONGO_COLLECTION_NAME).updateOne(
+    mongoDB.collection(MONGO_COLLECTION).updateOne(
       {
         _id: req.user._id,
         "days.weekday": req.body.weekday
@@ -349,7 +349,7 @@ app.post('/user/login', function(req, res) {
     res.status(400).render('400', { error400Message: 'Missing password' });
   } else {
     // try to find the provided username in the database
-    mongoDB.collection(MONGO_COLLECTION_NAME).find({ '_id': req.body.username })
+    mongoDB.collection(MONGO_COLLECTION).find({ '_id': req.body.username })
       .toArray(function(err, users) {
         if (err) {
           res.status(500).send('500: Error fetching users from database');
@@ -398,7 +398,7 @@ app.post('/user/register', function(req, res) {
     req.session.reset();
 
     // try to find the provided username in the database
-    mongoDB.collection(MONGO_COLLECTION_NAME).find({ '_id': req.body.username })
+    mongoDB.collection(MONGO_COLLECTION).find({ '_id': req.body.username })
       .toArray(function(errFind, users) {
         if (errFind) {
           res.status(500).send('500: Error fetching users from database');
@@ -413,7 +413,7 @@ app.post('/user/register', function(req, res) {
           });
         } else {
           // register this user
-          mongoDB.collection(MONGO_COLLECTION_NAME).insertOne(
+          mongoDB.collection(MONGO_COLLECTION).insertOne(
             {
               '_id': req.body.username,
               'hash': getHash(req.body.password),
@@ -540,7 +540,7 @@ function isAlphaNumeric(str) {
 MongoClient.connect(mongoURL, function(err, client) {
   if (err) throw err;
 
-  mongoDB = client.db(MONGO_DB_NAME);
+  mongoDB = client.db(MONGO_DB);
 
   app.listen(PORT, function() {
     console.log('========================================');
